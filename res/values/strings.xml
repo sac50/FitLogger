@@ -3,5 +3,12 @@
 
     <string name="hello">Hello World, FitLoggerActivity!</string>
     <string name="app_name">FitLogger</string>
+    <string-array name="modules">
+        	<item> Start a Workout</item>
+        	<item> Create/Edit Workout</item>
+        	<item> Analytics</item>
+        	<item> History</item>
+        	<item> Calendar </item>
+    </string-array>
 
 </resources>
