@@ -17,11 +17,17 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
+        public static final int realtabcontent=0x01010000;
         public static final int tvTitle=0x7f060000;
     }
     public static final class layout {
-        public static final int home_screen=0x7f030000;
-        public static final int main=0x7f030001;
+        public static final int create_exercise_tab=0x7f030000;
+        public static final int create_workout_tab=0x7f030001;
+        public static final int edit_exercise_tab=0x7f030002;
+        public static final int edit_workout_tab=0x7f030003;
+        public static final int home_screen=0x7f030004;
+        public static final int main=0x7f030005;
+        public static final int workout_exercise_module=0x7f030006;
     }
     public static final class string {
         public static final int app_name=0x7f040001;
