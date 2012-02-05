@@ -1,7 +1,9 @@
 package com.cwru.controller;
 
 import android.app.ListActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -29,7 +31,12 @@ public class HomeScreen extends ListActivity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View view, int position,
 					long id) {
-				Toast.makeText(getApplicationContext(), ((TextView) view).getText(), Toast.LENGTH_LONG).show();
+
+				// Create/Edit Exercise and Workout Module
+				if (position == 1) {
+					Intent intent = new Intent(HomeScreen.this, CreateEditTabActivity.class);
+					startActivity(intent);
+				}
 			}        	
         });
     }
