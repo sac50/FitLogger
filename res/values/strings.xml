@@ -11,4 +11,19 @@
         	<item> Calendar </item>
     </string-array>
 
+    <string name="workoutName">Workout Name</string>
+    <string name="workoutType">Workout Type</string>
+    <string-array name="workoutTypes">
+        	<item>Strength</item>
+        	<item>Cardio</item>
+        	<item>Stretching</item>
+    </string-array>
+    
+    
+    <string-array name="exerciseBank">
+        <item>Bench Press</item>
+    	<item>Incline Bench</item>
+    	<item>Bicep Curl</item>
+    	<item>Skull Crusher</item>
+    </string-array>
 </resources>

@@ -1,128 +1,54 @@
 package com.cwru.controller;
 
-import java.util.Hashtable;
+import android.app.TabActivity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.TabHost;
 
 import com.cwru.R;
 
-import android.content.Context;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
-import android.view.View;
-import android.widget.TabHost;
-import android.widget.TabHost.TabContentFactory;
 
-public class CreateEditTabActivity extends FragmentActivity implements TabHost.OnTabChangeListener {
-
-	private TabHost mTabHost;
-	private Hashtable<String, TabInfo> mapTabInfo = new Hashtable<String, TabInfo>();
-	private TabInfo mLastTab = null;
+public class CreateEditTabActivity  extends TabActivity {
 	
-	private class TabInfo {	
-		private String tag;
-		private Class clss;
-		private Bundle args;
-		private Fragment fragment;
-		
-		TabInfo(String tag, Class clazz, Bundle args) {
-			this.tag = tag;
-			this.clss = clazz;
-			this.args = args;
-		}
-	}
-	
-	class TabFactory implements TabContentFactory {
-		private final Context mContext;
-		
-		public TabFactory(Context context) {
-			mContext = context;
-		}
-
-		@Override
-		public View createTabContent(String tag) {
-			View v = new View(mContext);
-			v.setMinimumHeight(0);
-			v.setMinimumWidth(0);
-			return v;
-		}
-	}
+	private TabHost tabHost; // Activity TabHost
+	private TabHost.TabSpec tabSpec; // TabSpec to use for all tabs
+	private String lastTabTag;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		// Inflate Layout
 		setContentView(R.layout.workout_exercise_module);
-		// Set up Tab Host
-		initializeTabHost(savedInstanceState);
-		if (savedInstanceState != null) {
-			mTabHost.setCurrentTabByTag(savedInstanceState.getString("tab")); 
-			// Sets the tab as per the saved state
-		}
-	}
-	
-	public void onSavedInstanceState(Bundle outState) {
-		outState.putString("tab", mTabHost.getCurrentTabTag());
-		super.onSaveInstanceState(outState);
-	}
-	
-	private void initializeTabHost(Bundle args) {
-		mTabHost = (TabHost)findViewById(android.R.id.tabhost);
-		mTabHost.setup();
-		TabInfo tabInfo = null;
-		addTab(this, mTabHost, mTabHost.newTabSpec("Tab1").setIndicator("Tab 1"), (tabInfo = new TabInfo("Tab1", CreateWorkoutFragment.class, args)));	
-		mapTabInfo.put(tabInfo.tag, tabInfo);
-		addTab(this, mTabHost, mTabHost.newTabSpec("Tab2").setIndicator("Tab 2"), (tabInfo = new TabInfo("Tab2", CreateExerciseFragment.class, args)));	
-		mapTabInfo.put(tabInfo.tag, tabInfo);
-		addTab(this, mTabHost, mTabHost.newTabSpec("Tab3").setIndicator("Tab 3"), (tabInfo = new TabInfo("Tab3", EditWorkoutFragment.class, args)));	
-		mapTabInfo.put(tabInfo.tag, tabInfo);
-		addTab(this, mTabHost, mTabHost.newTabSpec("Tab4").setIndicator("Tab 4"), (tabInfo = new TabInfo("Tab4", EditExerciseFragment.class, args)));	
-		mapTabInfo.put(tabInfo.tag, tabInfo);
 		
-		this.onTabChanged("Tab1");
-		mTabHost.setOnTabChangedListener(this);
-	}
-	
-	private static void addTab(CreateEditTabActivity activity, TabHost tabHost, TabHost.TabSpec tabSpec, TabInfo tabInfo) {
-		// Attach tab vew factory to the spec
-		tabSpec.setContent(activity.new TabFactory(activity));
-		String tag = tabSpec.getTag();
-		// Check to see if we already have a fragment for this tab, from previous saved sate, if so, 
-		// deactivate it because our initial state is that a tab isn't shown
-		tabInfo.fragment = activity.getSupportFragmentManager().findFragmentByTag(tag);
-		if (tabInfo.fragment != null && !tabInfo.fragment.isDetached()) {
-			FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
-			ft.detach(tabInfo.fragment);
-			ft.commit();
-			activity.getSupportFragmentManager().executePendingTransactions();
-		}
+		// Get Tab Host
+		tabHost = getTabHost();
 		
+		// Create Workout Tab
+		Intent intent = new Intent().setClass(this, CreateWorkoutActivity.class);
+		tabSpec = tabHost.newTabSpec("createWorkout").setIndicator("Create Workout").setContent(intent);
 		tabHost.addTab(tabSpec);
-	}
 	
-	@Override
-	public void onTabChanged(String tag) {
-		TabInfo newTab = (TabInfo) this.mapTabInfo.get(tag);
-		if (mLastTab != newTab) {
-			FragmentTransaction ft = this.getSupportFragmentManager().beginTransaction();
-			if (mLastTab != null) {
-				if (mLastTab.fragment != null) {
-					ft.detach(mLastTab.fragment);
-				}
-			}
-			if (newTab != null) {
-				if (newTab.fragment == null) {
-					newTab.fragment = Fragment.instantiate(this, newTab.clss.getName(), newTab.args);
-					ft.add(R.id.realtabcontent, newTab.fragment, newTab.tag);
-				} else {
-					ft.attach(newTab.fragment);
-				}
-			}
-			
-			mLastTab = newTab;
-			ft.commit();
-			this.getSupportFragmentManager().executePendingTransactions();
-		}			
+		// Edit Workout Tab
+		intent = new Intent().setClass(this, EditWorkoutActivity.class);
+		tabSpec = tabHost.newTabSpec("editWorkout").setIndicator("Edit Workout").setContent(intent);
+		tabHost.addTab(tabSpec);
+		
+		// Create Exercises Tab
+		intent = new Intent().setClass(this, CreateExerciseActivity.class);
+		tabSpec = tabHost.newTabSpec("createExercise").setIndicator("Create Exercise").setContent(intent);
+		tabHost.addTab(tabSpec);
+		
+		// Edit Exercises Tab
+		intent = new Intent().setClass(this, EditExerciseActivity.class);
+		tabSpec = tabHost.newTabSpec("editExercise").setIndicator("Edit Exercise").setContent(intent);
+		tabHost.addTab(tabSpec);
+		
+		// Set current Tab
+		// Default to Last chosen tab or if none chosen, go to create workout tab
+		if (lastTabTag == null) { 
+			tabHost.setCurrentTabByTag("createWorkout");
+		}
+		tabHost.setCurrentTabByTag(lastTabTag);
+		
 	}
 
 	

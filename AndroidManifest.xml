@@ -4,7 +4,11 @@
     android:versionCode="1"
     android:versionName="1.0" >
 
+    <supports-screens
+  		android:largeScreens="true" />
+    
     <uses-sdk android:minSdkVersion="8" />
+    
 
     <application
         android:icon="@drawable/ic_launcher"
@@ -19,6 +23,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".controller.CreateEditTabActivity" />
+        <activity android:name=".controller.CreateExerciseActivity" />
+        <activity android:name=".controller.CreateWorkoutActivity" />
+        <activity android:name=".controller.EditExerciseActivity" />
+        <activity android:name=".controller.EditWorkoutActivity" />
     </application>
 
 </manifest>
