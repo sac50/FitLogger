@@ -19,6 +19,14 @@
         	<item>Stretching</item>
     </string-array>
     
+    <string name="exerciseName">Exercise Name</string>
+    <string name="exerciseType">Exercise Type</string>
+    <string-array name="exersiseTypes">
+        	<item>Cardio</item>
+        	<item>Strength - Bicep</item>
+        	<item>Strength - Chest</item>
+        	<item>Strength - Tricep</item>
+    </string-array>
     
     <string-array name="exerciseBank">
         <item>Bench Press</item>
