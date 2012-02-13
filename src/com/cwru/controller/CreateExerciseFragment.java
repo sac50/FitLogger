@@ -15,6 +15,7 @@ public class CreateExerciseFragment extends Fragment {
 		if (container == null) {
 			return null;
 		}
+		
 		return (LinearLayout) inflater.inflate(R.layout.create_exercise_tab, container, false);
 	}
 }
