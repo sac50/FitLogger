@@ -3,6 +3,8 @@ package com.cwru.controller;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -13,10 +15,13 @@ import com.cwru.R;
 
 public class HomeScreen extends ListActivity {
 	
+	public static boolean isTablet;
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_screen);
+        setTabletStatus();
         
         String[] modules = getResources().getStringArray(R.array.modules);
         setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, modules));
@@ -36,5 +41,22 @@ public class HomeScreen extends ListActivity {
 				}
 			}        	
         });
+    }
+    
+    private void setTabletStatus() {
+    	Display display = getWindowManager().getDefaultDisplay();
+    	int width = display.getWidth();
+    	int height = display.getHeight();
+    	
+    	int minTabWidth = 600;
+    	int minTabHeight = 600;
+    	if (width >= minTabWidth && height >= minTabHeight) {
+    		isTablet = true;
+    		Log.d("Tablet Status", "TABLET");
+    	}
+    	else {
+    		isTablet = false;
+    		Log.d("Tablet Status", "PHONE");
+    	}
     }
 }

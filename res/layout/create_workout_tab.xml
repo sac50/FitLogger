@@ -3,9 +3,17 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:id="@+id/LLcreateWorkoutTabContainer"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     
      >   
+     
+     <FrameLayout
+        android:id="@+id/FLmainFrame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="5sp"
+        android:paddingRight="5sp"
+     />
     
     
 
