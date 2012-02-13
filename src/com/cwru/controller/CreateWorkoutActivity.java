@@ -25,8 +25,8 @@ public class CreateWorkoutActivity extends FragmentActivity {
 			ExerciseSequenceFragment esequence = new ExerciseSequenceFragment();
 			
 			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-			transaction.add(R.id.FLcreateWorkoutTabLeftFrame, ebank);
-			transaction.add(R.id.FLcreateWorkoutTabMiddleFrame, information);
+			transaction.add(R.id.FLcreateWorkoutTabLeftFrame, information);
+			transaction.add(R.id.FLcreateWorkoutTabMiddleFrame, ebank);
 			transaction.add(R.id.FLcreateWorkoutTabRightFrame, esequence);
 			transaction.commit();
 			
