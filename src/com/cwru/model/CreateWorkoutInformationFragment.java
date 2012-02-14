@@ -36,6 +36,7 @@ public class CreateWorkoutInformationFragment extends Fragment {
 		spinner.setAdapter(adapter);
 		
 		Button button = new Button(this.getActivity());
+		button.setText("Add Exercises");
 		button.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -43,6 +44,7 @@ public class CreateWorkoutInformationFragment extends Fragment {
 				FragmentTransaction transaction = getFragmentManager().beginTransaction();
 				// Replace the workout information fragment with the exercise bank
 				transaction.replace(R.id.FLmainFrame, new ExerciseBankFragment());	
+				transaction.addToBackStack(null);
 				transaction.commit();
 			}			
 		});
