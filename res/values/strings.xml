@@ -27,6 +27,16 @@
         	<item>Strength - Chest</item>
         	<item>Strength - Tricep</item>
     </string-array>
+    <string name="exerciseSubType">Exercise Sub-Type</string>
+    <string-array name="exerciseSubTypes">
+       		<item>Set-based</item>
+       		<item>Countup Timer</item>
+       		<item>Countdown Timer</item>
+       		<item>Intervals</item>
+       		<item>Distance</item>
+    </string-array>
+    
+    <string name="done">Done</string>
     
     <string-array name="exerciseBank">
         <item>Bench Press</item>
