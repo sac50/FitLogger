@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.cwru.R;
-import com.cwru.model.CheckBoxArrayAdapter.CheckBoxRow;
 
 public class ExerciseBankFragment extends ListFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

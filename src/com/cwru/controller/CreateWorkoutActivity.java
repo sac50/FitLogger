@@ -3,7 +3,6 @@ package com.cwru.controller;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-import android.widget.Button;
 
 import com.cwru.R;
 import com.cwru.model.CreateWorkoutInformationFragment;
