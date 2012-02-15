@@ -68,7 +68,7 @@ public class CreateExerciseActivity extends Activity {
 				
 			}
 		});
-		
+		*/
 		Button doneButton = (Button) findViewById(R.id.btnCreateExerciseDone);
 		doneButton.setOnClickListener(new View.OnClickListener() {
 			
@@ -83,6 +83,6 @@ public class CreateExerciseActivity extends Activity {
 			}
 		});
 		
-		*/
+		
 	}
 }
