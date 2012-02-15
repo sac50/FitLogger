@@ -2,10 +2,13 @@ package com.cwru.model;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
@@ -31,6 +34,23 @@ public class CreateWorkoutInformationFragment extends Fragment {
 		Spinner spinner = (Spinner) view.findViewById(R.id.spnWorkoutType);
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.getActivity().getBaseContext(), R.array.workoutTypes, android.R.layout.simple_spinner_item);
 		spinner.setAdapter(adapter);
+		
+		Button button = new Button(this.getActivity());
+		button.setText("Add Exercises");
+		button.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// Create new transaction
+				FragmentTransaction transaction = getFragmentManager().beginTransaction();
+				// Replace the workout information fragment with the exercise bank
+				transaction.replace(R.id.FLmainFrame, new ExerciseBankFragment());	
+				transaction.addToBackStack(null);
+				transaction.commit();
+			}			
+		});
+		
+		LinearLayout ll = (LinearLayout) view.findViewById(R.id.LLCreateWorkoutInfo);
+		ll.addView(button);
 	
 		return view;
 	}

@@ -1,10 +1,8 @@
 package com.cwru.controller;
 
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 
 import com.cwru.R;
 import com.cwru.model.CreateWorkoutInformationFragment;
@@ -28,12 +26,13 @@ public class CreateWorkoutActivity extends FragmentActivity {
 				transaction.add(R.id.FLcreateWorkoutTabRightFrame, esequence);
 				transaction.commit();
 			}
-			else {
+			else {				
 				CreateWorkoutInformationFragment information = new CreateWorkoutInformationFragment();
 				FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 				transaction.add(R.id.FLmainFrame, information);
 				transaction.commit();
 			}
+			
 		}
 			
 }
