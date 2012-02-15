@@ -49,7 +49,7 @@ public class CreateExerciseActivity extends Activity {
 			      // Do nothing.
 			    }
 		});
-		
+		/*
 		Spinner subTypeSpinner = (Spinner) findViewById(R.id.spnCreateExerciseSubType);
 		ArrayAdapter<CharSequence> exerSubTypeAdapter = ArrayAdapter.createFromResource(this,
 				R.array.exerciseSubTypes, android.R.layout.simple_spinner_item);
@@ -82,5 +82,7 @@ public class CreateExerciseActivity extends Activity {
 				mDbHelper.close();
 			}
 		});
+		
+		*/
 	}
 }
