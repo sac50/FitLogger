@@ -14,9 +14,11 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 
 import com.cwru.R;
-import com.cwru.controller.HomeScreen;
 import com.cwru.controller.WorkoutExerciseListing;
 
 /**
@@ -42,43 +44,47 @@ public class CreateWorkoutInformationFragment extends Fragment {
 		if (c.orientation == Configuration.ORIENTATION_LANDSCAPE) {
 			Log.d("Steve", "Horizontal1");
 			/* Place Checkboxes all in one row */
-			LinearLayout ll = new LinearLayout(this.getActivity());
-			ll.setOrientation(LinearLayout.HORIZONTAL);
-			ll.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
-			ll.setGravity(android.view.Gravity.CENTER_HORIZONTAL);
-
+			TableLayout tl = (TableLayout)  view.findViewById(R.id.tlCreateWorkoutInformationCheckBoxTable);
+			TableRow tr = new TableRow(this.getActivity());
+			tr.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+			
 			CheckBox sunday = new CheckBox(this.getActivity());
 			sunday.setText("S");
-			sunday.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+			sunday.setTag("chkRepeatSunday");
+			tr.addView(sunday);
+
 			CheckBox monday = new CheckBox(this.getActivity());
 			monday.setText("M");
-			monday.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+			monday.setTag("chkRepeatMonday");
+			tr.addView(monday);
+			
 			CheckBox tuesday = new CheckBox(this.getActivity());
 			tuesday.setText("T");
-			tuesday.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+			tuesday.setTag("chkRepeatTuesday");
+			tr.addView(tuesday);
+			
 			CheckBox wednesday = new CheckBox(this.getActivity());
 			wednesday.setText("W");
-			wednesday.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+			wednesday.setTag("chkRepeatWednesday");
+			tr.addView(wednesday);
+
 			CheckBox thursday = new CheckBox(this.getActivity());
 			thursday.setText("R");
-			thursday.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+			thursday.setTag("chkRepeatThursday");
+			tr.addView(thursday);
+			
 			CheckBox friday = new CheckBox(this.getActivity());
 			friday.setText("F");
-			friday.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+			friday.setTag("chkRepeatFriday");
+			tr.addView(friday);
+			
 			CheckBox saturday = new CheckBox(this.getActivity());
 			saturday.setText("S");
-			saturday.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+			saturday.setTag("chkRepeatSaturday");
+			tr.addView(saturday);
 
-			ll.addView(sunday);
-			ll.addView(monday);
-			ll.addView(tuesday);
-			ll.addView(wednesday);
-			ll.addView(thursday);
-			ll.addView(friday);
-			ll.addView(saturday);
-			
-			LinearLayout llcontainer = (LinearLayout) view.findViewById(R.id.llCreateWorkoutInformationContainer);
-			llcontainer.addView(ll);
+			tl.addView(tr, new TableLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+		
 		} 
 		/* Portrait View */
 		else {
