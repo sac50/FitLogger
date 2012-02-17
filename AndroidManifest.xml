@@ -27,6 +27,7 @@
         <activity android:name=".controller.CreateWorkoutActivity" />
         <activity android:name=".controller.EditExerciseActivity" />
         <activity android:name=".controller.EditWorkoutActivity" />
+        <activity android:name=".controller.WorkoutExerciseListing" />
     </application>
 
 </manifest>
