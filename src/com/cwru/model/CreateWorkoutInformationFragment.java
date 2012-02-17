@@ -1,18 +1,23 @@
 package com.cwru.model;
 
+import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
+import android.widget.ScrollView;
 
 import com.cwru.R;
+import com.cwru.controller.HomeScreen;
+import com.cwru.controller.WorkoutExerciseListing;
 
 /**
  * 
@@ -29,29 +34,118 @@ public class CreateWorkoutInformationFragment extends Fragment {
 		if (container == null) {
 			return null;			
 		}
+		Log.d("Create Workout Information Fragment", "F");
+		//return inflater.inflate(R.layout.create_workout_information, container, false);
+		View view =  (ScrollView) inflater.inflate(R.layout.create_workout_information, container, false);
+		Configuration c = this.getResources().getConfiguration();
+		/* Lanscape View */
+		if (c.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+			Log.d("Steve", "Horizontal1");
+			/* Place Checkboxes all in one row */
+			LinearLayout ll = new LinearLayout(this.getActivity());
+			ll.setOrientation(LinearLayout.HORIZONTAL);
+			ll.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+			ll.setGravity(android.view.Gravity.CENTER_HORIZONTAL);
+
+			CheckBox sunday = new CheckBox(this.getActivity());
+			sunday.setText("S");
+			sunday.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+			CheckBox monday = new CheckBox(this.getActivity());
+			monday.setText("M");
+			monday.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+			CheckBox tuesday = new CheckBox(this.getActivity());
+			tuesday.setText("T");
+			tuesday.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+			CheckBox wednesday = new CheckBox(this.getActivity());
+			wednesday.setText("W");
+			wednesday.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+			CheckBox thursday = new CheckBox(this.getActivity());
+			thursday.setText("R");
+			thursday.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+			CheckBox friday = new CheckBox(this.getActivity());
+			friday.setText("F");
+			friday.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+			CheckBox saturday = new CheckBox(this.getActivity());
+			saturday.setText("S");
+			saturday.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+
+			ll.addView(sunday);
+			ll.addView(monday);
+			ll.addView(tuesday);
+			ll.addView(wednesday);
+			ll.addView(thursday);
+			ll.addView(friday);
+			ll.addView(saturday);
+			
+			LinearLayout llcontainer = (LinearLayout) view.findViewById(R.id.llCreateWorkoutInformationContainer);
+			llcontainer.addView(ll);
+		} 
+		/* Portrait View */
+		else {
+			/* Place Checkboxes in two rows */
+			Log.d("STEVE", "PORTRAIT VIEW ");
+			LinearLayout l1 = new LinearLayout(this.getActivity());
+			l1.setOrientation(LinearLayout.HORIZONTAL);
+			l1.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+			
+			LinearLayout l2 = new LinearLayout(this.getActivity());
+			l2.setOrientation(LinearLayout.HORIZONTAL);
+			l2.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+			
+			CheckBox sunday = new CheckBox(this.getActivity());
+			sunday.setText("S");
+			sunday.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+			CheckBox monday = new CheckBox(this.getActivity());
+			monday.setText("M");
+			monday.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+			CheckBox tuesday = new CheckBox(this.getActivity());
+			tuesday.setText("T");
+			tuesday.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+			CheckBox wednesday = new CheckBox(this.getActivity());
+			wednesday.setText("W");
+			wednesday.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+			CheckBox thursday = new CheckBox(this.getActivity());
+			thursday.setText("R");
+			thursday.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+			CheckBox friday = new CheckBox(this.getActivity());
+			friday.setText("F");
+			friday.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+			CheckBox saturday = new CheckBox(this.getActivity());
+			saturday.setText("S");
+			saturday.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+			
+			l1.addView(sunday);
+			l1.addView(monday);
+			l1.addView(tuesday);
+			l2.addView(wednesday);
+			l2.addView(thursday);
+			l2.addView(friday);
+			l2.addView(saturday);
+			
+			LinearLayout llcontainer = (LinearLayout) view.findViewById(R.id.llCreateWorkoutInformationContainer);
+			llcontainer.addView(l1);
+			llcontainer.addView(l2);
+			
+		}
 		
-		View view =  (LinearLayout) inflater.inflate(R.layout.create_workout_information, container, false);
-		Spinner spinner = (Spinner) view.findViewById(R.id.spnWorkoutType);
-		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.getActivity().getBaseContext(), R.array.workoutTypes, android.R.layout.simple_spinner_item);
-		spinner.setAdapter(adapter);
-		
+		// Button to Create Workout
 		Button button = new Button(this.getActivity());
-		button.setText("Add Exercises");
+		button.setText("Create Workout");
 		button.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// Create new transaction
-				FragmentTransaction transaction = getFragmentManager().beginTransaction();
-				// Replace the workout information fragment with the exercise bank
-				transaction.replace(R.id.FLmainFrame, new ExerciseBankFragment());	
-				transaction.addToBackStack(null);
-				transaction.commit();
+				/* TODO
+				 * Insert Workout into database
+				 */
+				Intent intent = new Intent(CreateWorkoutInformationFragment.this.getActivity(), WorkoutExerciseListing.class);
+				startActivity(intent);
 			}			
 		});
 		
-		LinearLayout ll = (LinearLayout) view.findViewById(R.id.LLCreateWorkoutInfo);
+		LinearLayout ll = (LinearLayout) view.findViewById(R.id.llCreateWorkoutInformationContainer);
 		ll.addView(button);
-	
+		
 		return view;
 	}
+
 }

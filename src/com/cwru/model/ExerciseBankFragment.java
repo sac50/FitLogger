@@ -33,7 +33,7 @@ public class ExerciseBankFragment extends ListFragment {
 				// Create new transaction
 				FragmentTransaction transaction = getFragmentManager().beginTransaction();
 				// Replace the workout information fragment with the exercise bank
-				transaction.replace(R.id.FLmainFrame, new ExerciseSequenceFragment());	
+				transaction.replace(R.id.flCreateWorkoutMainFrame, new ExerciseSequenceFragment());	
 				transaction.addToBackStack(null);
 				transaction.commit();
 			}			

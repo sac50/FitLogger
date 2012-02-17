@@ -18,6 +18,7 @@
         	<item>Cardio</item>
         	<item>Stretching</item>
     </string-array>
+    <string name="workoutRepeats">Repeats:</string>
     
     <string name="exerciseName">Exercise Name</string>
     <string name="exerciseType">Exercise Type</string>
