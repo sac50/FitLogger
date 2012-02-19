@@ -36,14 +36,33 @@
     </string-array>
     <string name="exerciseSubType">Exercise Sub-Type</string>
     <string-array name="exerciseSubTypes">
-       		<item>Set-based</item>
+       		<item>Distance</item>
        		<item>Countup Timer</item>
        		<item>Countdown Timer</item>
        		<item>Intervals</item>
-       		<item>Distance</item>
+       		<item>Set-based</item>
     </string-array>
     
     <string name="done">Done</string>
+    
+    <string name="sets">Sets:</string>
+    <string name="weight">Weight</string>
+    <string name="reps">Reps</string>
+    <string name="addSet">Add Set</string>
+    <string name="removeSet">Remove Set</string>
+    <string name="setNumber">Number of Sets:</string>
+    <integer-array name="setNumbers">
+        	<item>1</item>
+        	<item>2</item>
+        	<item>3</item>
+        	<item>4</item>
+        	<item>5</item>
+        	<item>6</item>
+        	<item>7</item>
+        	<item>8</item>
+        	<item>9</item>
+        	<item>10</item>
+    </integer-array>
     
     <string-array name="exerciseBank">
         <item>Bench Press</item>

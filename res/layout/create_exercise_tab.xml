@@ -1,35 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/svCreateExercise"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical">
+    android:layout_height="fill_parent" >
 
-    <TextView 
-        android:id="@+id/tvCreateExerciseExerciseName"
-        android:text="@string/exerciseName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-    />
-    
-    <EditText
-        android:id="@+id/etCreateExerciseName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" 
-        android:hint="@string/exerciseName" >
-        
-    </EditText>
+    <LinearLayout
+        android:id="@+id/llCreateExercise"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
 
-    <TextView 
-        android:id="@+id/tvCreateExerciseExerciseType"
-        android:text="@string/exerciseName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-    />
-    
-    <Spinner
-        android:id="@+id/spnCreateExerciseType"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" 
-        android:prompt="@string/exerciseType"/>
+        <TextView
+            android:id="@+id/tvCreateExerciseExerciseName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/exerciseName" />
 
-</LinearLayout>
+        <EditText
+            android:id="@+id/etCreateExerciseName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/exerciseName" >
+        </EditText>
+
+        <TextView
+            android:id="@+id/tvCreateExerciseExerciseType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/exerciseName" />
+
+        <Spinner
+            android:id="@+id/spnCreateExerciseType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:prompt="@string/exerciseType" />
+
+        <TextView
+            android:id="@+id/tvCreateExerciseSubType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/exerciseSubType" />
+
+        <Spinner
+            android:id="@+id/spnCreateExerciseSubType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:prompt="@string/exerciseSubType" />
+
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/llCreateExerciseSets"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone" >
+
+            <TextView
+                android:id="@+id/tvcreateExerciseSets"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sets" />
+
+            <!--
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/llSetGeneration"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone" >
+
+            <TextView
+                android:id="@+id/tvCreateExerciseWeight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/weight" />
+
+            <EditText
+                android:id="@+id/etCreateExerciseWeight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/tvCreateExerciseReps"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/reps" />
+
+            <EditText
+                android:id="@+id/etCreateExerciseReps"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:inputType="number" />
+        </LinearLayout>
+            -->
+
+            <LinearLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/llAddRemoveSets"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <Button
+                    android:id="@+id/btnCreateExerciseAddSet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/addSet" />
+
+                <Button
+                    android:id="@+id/btnCreateExerciseRemoveSet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/removeSet" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnCreateExerciseDone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/done" />
+    </LinearLayout>
+
+</ScrollView>
