@@ -6,7 +6,6 @@ import java.util.List;
 import com.cwru.R;
 import com.cwru.dao.DbAdapter;
 import com.cwru.model.Exercise;
-import com.cwru.model.SetSpinnerFragment;
 
 import android.app.Activity;
 import android.os.Bundle;
