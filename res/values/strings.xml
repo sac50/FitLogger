@@ -19,6 +19,12 @@
         	<item>Stretching</item>
     </string-array>
     <string name="workoutRepeats">Repeats:</string>
+    <string-array name="workoutRepeatWeeks">
+        	<item>Weekly</item>
+        	<item>Bi-weekly</item>
+        	<item>3 weeks</item>
+        	<item>4 weeks</item>
+    </string-array>
     
     <string name="exerciseName">Exercise Name</string>
     <string name="exerciseType">Exercise Type</string>

@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.cwru.R;
+import com.cwru.controller.HomeScreen;
 
 public class ExerciseBankFragment extends ListFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -25,22 +26,26 @@ public class ExerciseBankFragment extends ListFragment {
 		CheckBoxArrayAdapter adapter = new CheckBoxArrayAdapter(this.getActivity(), getExerciseBankList());
 		this.setListAdapter(adapter);
 
-		Button button = new Button(this.getActivity());
-		button.setText("Order Exercises for Workout");
-		button.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// Create new transaction
-				FragmentTransaction transaction = getFragmentManager().beginTransaction();
-				// Replace the workout information fragment with the exercise bank
-				transaction.replace(R.id.flCreateWorkoutMainFrame, new ExerciseSequenceFragment());	
-				transaction.addToBackStack(null);
-				transaction.commit();
-			}			
-		});
+		if (!HomeScreen.isTablet) {
+			Button button = new Button(this.getActivity());
+			button.setText("Order Exercises for Workout");
+			button.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					/*
+					// Create new transaction
+					FragmentTransaction transaction = getFragmentManager().beginTransaction();
+					// Replace the workout information fragment with the exercise bank
+					transaction.replace(R.id.flCreateWorkoutMainFrame, new ExerciseSequenceFragment());	
+					transaction.addToBackStack(null);
+					transaction.commit();
+					*/
+				}			
+			});			
+			LinearLayout ll = (LinearLayout) view.findViewById(R.id.llExerciseBank);
+			ll.addView(button);
+		}
 		
-		LinearLayout ll = (LinearLayout) view.findViewById(R.id.llExerciseBank);
-		ll.addView(button);
 		return view;
 	}
 	

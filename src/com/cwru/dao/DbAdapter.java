@@ -10,6 +10,7 @@ import android.util.Log;
 
 import com.cwru.model.Exercise;
 import com.cwru.model.Set;
+import com.cwru.model.Workout;
 
 public class DbAdapter {
 	private DatabaseHelper dbHelper;
@@ -31,11 +32,16 @@ public class DbAdapter {
 //			+ "integer not null, sets integer, reps integer, weight real, "
 //			+ "time integer, time_type boolean, distance real, interval"
 //			+ "integer, comment text);";
-
+/*
 	private static final String CREATE_WORKOUTS_TABLE = 
 			"create table workouts (_id integer primary key autoincrement, "
 			+ "name text not null, type text not null, exercise_sequence "
 			+ "text not null, coment text, repeatable boolean not null);";
+*/
+	private static final String CREATE_WORKOUTS_TABLE =
+			"create table workouts (_id integer primary key autoincrement, "
+			+ "name text not null, workout_type text not null, exercise_sequence "
+			+ "text not null, comment text);";
 	private static final String CREATE_EXERCISES_TABLE = 
 			"create table exercises (_id integer primary key autoincrement, "
 			+ "name text not null, type text not null, sets integer, "
@@ -52,7 +58,7 @@ public class DbAdapter {
 			+ "time integer, time_type boolean, distance real, interval"
 			+ "integer, comment text);";
 
-	private static final String DATABASE_NAME = "FitLogger Data";
+	private static final String DATABASE_NAME = "FitLoggerData";
 	private static final String DATABASE_TABLE_WORKOUT = "workouts";
 	private static final String DATABASE_TABLE_EXERCISE = "exercises";
 	private static final String DATABASE_TABLE_SET = "sets";
@@ -73,6 +79,7 @@ public class DbAdapter {
 			db.execSQL(CREATE_EXERCISES_TABLE);
 			db.execSQL(CREATE_SETS_TABLE);
 			db.execSQL(CREATE_WORKOUT_RESULTS_TABLE);
+			Log.d("Steve", "DB CREATES");
 		}
 
 		@Override
@@ -103,6 +110,23 @@ public class DbAdapter {
 
 	public void close() {
 		dbHelper.close();
+	}
+	
+	public long createWorkout(Workout workout) {
+		Log.d("Workout in DB CREATE STATEMENT Name: ", workout.getName());
+		Log.d("Type: ", workout.getType());
+		Log.d("Sequence", workout.getExerciseSequence());
+		ContentValues initialValues = new ContentValues();
+		initialValues.put("name", workout.getName());
+		initialValues.put("workout_type",workout.getType());
+		initialValues.put("exercise_Sequence",workout.getExerciseSequence());
+		//initialValues.put("comment", workout.getComment());
+		
+		return db.insert(DATABASE_TABLE_WORKOUT, null, initialValues);
+	}
+	
+	public Cursor getAllWorkouts() { 
+		return db.rawQuery("select * from workouts", new String [0]);
 	}
 
 	public long createExercise(Exercise ex) {
