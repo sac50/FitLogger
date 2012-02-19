@@ -3,6 +3,8 @@ package com.cwru.controller;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.widget.Button;
+import android.widget.LinearLayout;
 
 import com.cwru.R;
 import com.cwru.model.ExerciseBankFragment;
@@ -26,7 +28,10 @@ public class WorkoutExerciseListing extends FragmentActivity {
 		}
 		/* Phone - Show exercise bank and exercise sequence independently and linked to each other */
 		else {
-			
+			ExerciseBankFragment ebank = new ExerciseBankFragment();
+			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+			transaction.add(R.id.llWorkoutExerciseListingContainer, ebank);
+			transaction.commit();
 		}
 	}
 }

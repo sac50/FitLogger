@@ -6,6 +6,7 @@ import java.util.List;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,18 +33,17 @@ public class ExerciseBankFragment extends ListFragment {
 			button.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					/*
 					// Create new transaction
 					FragmentTransaction transaction = getFragmentManager().beginTransaction();
 					// Replace the workout information fragment with the exercise bank
-					transaction.replace(R.id.flCreateWorkoutMainFrame, new ExerciseSequenceFragment());	
+					transaction.replace(R.id.llWorkoutExerciseListingContainer, new ExerciseSequenceFragment());	
 					transaction.addToBackStack(null);
 					transaction.commit();
-					*/
 				}			
 			});			
 			LinearLayout ll = (LinearLayout) view.findViewById(R.id.llExerciseBank);
 			ll.addView(button);
+			Log.d("BUTTON", "ADDED BUTTON TO BANK FRAGMENT");
 		}
 		
 		return view;
@@ -53,6 +53,22 @@ public class ExerciseBankFragment extends ListFragment {
 		List<ExerciseBankRow> list = new ArrayList<ExerciseBankRow>();
 		list.add(get("Bench Press"));
 		list.add(get("Bicepts Curl"));
+		list.add(get("Squats"));
+		list.add(get("Squats"));
+		list.add(get("Squats"));
+		list.add(get("Squats"));
+		list.add(get("Squats"));
+		list.add(get("Squats"));
+		list.add(get("Squats"));list.add(get("Squats"));
+		list.add(get("Squats"));
+		list.add(get("Squats"));
+		list.add(get("Squats"));
+		list.add(get("Squats"));
+		list.add(get("Squats"));
+		list.add(get("Squats"));
+		list.add(get("Squats"));
+		list.add(get("Squats"));
+		list.add(get("Squats"));
 		list.add(get("Squats"));
 		
 		return list;
