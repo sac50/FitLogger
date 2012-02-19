@@ -1,7 +1,7 @@
 package com.cwru.model;
 
+import android.content.Intent;
 import android.content.res.Configuration;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -21,6 +21,7 @@ import android.widget.TableRow;
 
 import com.cwru.R;
 import com.cwru.controller.HomeScreen;
+import com.cwru.controller.WorkoutExerciseListing;
 import com.cwru.dao.DbAdapter;
 
 /**
@@ -210,17 +211,11 @@ public class CreateWorkoutInformationFragment extends Fragment {
 			/* Create Workout in the Database */
 			mDbHelper.open();
 			mDbHelper.createWorkout(workoutToCreate);
-			Cursor cursor = mDbHelper.getAllWorkouts();
-			String [] columnNames = cursor.getColumnNames();
-			
-			
-			while (cursor.moveToNext()) {
-				for (int i = 0; i < columnNames.length; i++) {
-					if (cursor.getString(i) != null) 
-						Log.d("Column " + i, columnNames[i] + " : " + cursor.getString(i));
-				}
-			}
 			mDbHelper.close();
+			
+			/* Launch intent to allow exercises to be added to workout and the sequence to be set */
+			Intent intent = new Intent(CreateWorkoutInformationFragment.this.getActivity(), WorkoutExerciseListing.class);
+			startActivity(intent);			
 		}
 	};
 	
