@@ -128,6 +128,14 @@ public class DbAdapter {
 	public Cursor getAllWorkouts() { 
 		return db.rawQuery("select * from workouts", new String [0]);
 	}
+	
+	public Cursor getAllExercises() { 
+		String columns [] = {"name"};
+		Cursor cursor = db.query(DATABASE_TABLE_EXERCISE, columns, null, null, null, null, null);
+		if (cursor == null) { Log.d("Steve", "Cursor for exercises is null");}
+		return cursor;
+		//return db.rawQuery("select * from exercises", new String [0]);
+	}
 
 	public long createExercise(Exercise ex) {
 		ContentValues initialValues = new ContentValues();

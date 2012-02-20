@@ -3,6 +3,7 @@ package com.cwru.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
@@ -10,37 +11,34 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.cwru.R;
 import com.cwru.controller.HomeScreen;
+import com.cwru.dao.DbAdapter;
 
 public class ExerciseBankFragment extends ListFragment {
+	private DbAdapter mDbHelper;
+
+	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (container == null) {
 			return null;
 		}
 		
 		View view = (LinearLayout) inflater.inflate(R.layout.exercise_bank, container, false);
+		// Set DB Object
+		mDbHelper = new DbAdapter(this.getActivity());
+		
 		CheckBoxArrayAdapter adapter = new CheckBoxArrayAdapter(this.getActivity(), getExerciseBankList());
+
 		this.setListAdapter(adapter);
 
 		if (!HomeScreen.isTablet) {
 			Button button = new Button(this.getActivity());
 			button.setText("Order Exercises for Workout");
-			button.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					// Create new transaction
-					FragmentTransaction transaction = getFragmentManager().beginTransaction();
-					// Replace the workout information fragment with the exercise bank
-					transaction.replace(R.id.llWorkoutExerciseListingContainer, new ExerciseSequenceFragment());	
-					transaction.addToBackStack(null);
-					transaction.commit();
-				}			
-			});			
+			button.setOnClickListener(orderExercises);
 			LinearLayout ll = (LinearLayout) view.findViewById(R.id.llExerciseBank);
 			ll.addView(button);
 			Log.d("BUTTON", "ADDED BUTTON TO BANK FRAGMENT");
@@ -49,28 +47,32 @@ public class ExerciseBankFragment extends ListFragment {
 		return view;
 	}
 	
+	/**
+	 * Create Workout Button Click Listener
+	 */
+	View.OnClickListener orderExercises = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			// Create new transaction
+			FragmentTransaction transaction = getFragmentManager().beginTransaction();
+			// Replace the workout information fragment with the exercise bank
+			transaction.replace(R.id.llWorkoutExerciseListingContainer, new ExerciseSequenceFragment());	
+			transaction.addToBackStack(null);
+			transaction.commit();			
+		}
+		
+	};
+	
 	private List<ExerciseBankRow> getExerciseBankList() {
 		List<ExerciseBankRow> list = new ArrayList<ExerciseBankRow>();
-		list.add(get("Bench Press"));
-		list.add(get("Bicepts Curl"));
-		list.add(get("Squats"));
-		list.add(get("Squats"));
-		list.add(get("Squats"));
-		list.add(get("Squats"));
-		list.add(get("Squats"));
-		list.add(get("Squats"));
-		list.add(get("Squats"));list.add(get("Squats"));
-		list.add(get("Squats"));
-		list.add(get("Squats"));
-		list.add(get("Squats"));
-		list.add(get("Squats"));
-		list.add(get("Squats"));
-		list.add(get("Squats"));
-		list.add(get("Squats"));
-		list.add(get("Squats"));
-		list.add(get("Squats"));
-		list.add(get("Squats"));
-		
+		/* Query the DB to get the exercises available */
+		mDbHelper.open();
+		Cursor cursor = mDbHelper.getAllExercises();
+		while (cursor.moveToNext()) {
+			Log.d("Exercise name", cursor.getString(cursor.getColumnIndex("name")));
+			list.add(get(cursor.getString(cursor.getColumnIndex("name"))));
+		}
+		mDbHelper.close();
 		return list;
 	}
 	

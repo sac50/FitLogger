@@ -1,5 +1,6 @@
 package com.cwru.controller;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
@@ -7,6 +8,7 @@ import android.util.Log;
 
 import com.cwru.R;
 import com.cwru.model.CreateWorkoutInformationFragment;
+import com.cwru.model.ExerciseBankFragment;
 
 public class CreateWorkoutActivity extends FragmentActivity {
 	
@@ -18,21 +20,17 @@ public class CreateWorkoutActivity extends FragmentActivity {
 			Log.d("HELLO", "STEVE");
 			
 			if (HomeScreen.isTablet) {
+				/** TODO 
+				 * Uncomment this to start with create workout information fragment
+				 */
+				/*
 				CreateWorkoutInformationFragment information = new CreateWorkoutInformationFragment();
 				FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 				transaction.add(R.id.flCreateWorkoutMainFrame, information);
 				transaction.commit();
-				/*
-				CreateWorkoutInformationFragment information = new CreateWorkoutInformationFragment();
-				ExerciseBankFragment ebank = new ExerciseBankFragment();
-				ExerciseSequenceFragment esequence = new ExerciseSequenceFragment();
-				
-				FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-				transaction.add(R.id.FLcreateWorkoutTabLeftFrame, information);
-				transaction.add(R.id.FLcreateWorkoutTabMiddleFrame, ebank);
-				transaction.add(R.id.FLcreateWorkoutTabRightFrame, esequence);
-				transaction.commit();
 				*/
+				Intent intent = new Intent(this, WorkoutExerciseListing.class);
+				startActivity(intent);
 				Log.d("STEVE", "TABLET NOT PHONE");
 			}
 			else {				
