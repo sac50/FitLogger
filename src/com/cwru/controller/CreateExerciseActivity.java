@@ -192,87 +192,6 @@ public class CreateExerciseActivity extends FragmentActivity {
 			}
 		});
 		
-		if (inflatedSets.size() > 0) {
-			setVar = new Set();
-			setList = new ArrayList<Set>();
-			EditText weightText = (EditText) inflatedSets.get(0).findViewById(R.id.etCreateExerciseWeight);
-			weightText.setOnKeyListener(new View.OnKeyListener() {
-				
-				@Override
-				public boolean onKey(View v, int keyCode, KeyEvent event) {
-					for (LinearLayout inflatedSet : inflatedSets) {
-						String replace = inflatedSet.findViewById(R.id.etCreateExerciseWeight).toString();
-						if (replace.length() < 1) {
-							replace = inflatedSets.get(0).findViewById(R.id.etCreateExerciseWeight).toString();
-							EditText replaceWeight = (EditText) inflatedSet.findViewById(R.id.etCreateExerciseWeight);
-							replaceWeight.setText(replace);
-						}
-					}
-					
-					return true;
-				}
-			});
-			
-			weightText.addTextChangedListener(new TextWatcher() {
-
-				@Override
-				public void afterTextChanged(Editable arg0) {
-					
-				}
-
-				@Override
-				public void beforeTextChanged(CharSequence arg0, int arg1,
-						int arg2, int arg3) {
-					// TODO Auto-generated method stub
-					
-				}
-
-				@Override
-				public void onTextChanged(CharSequence s, int arg1,
-						int arg2, int arg3) {
-					LinearLayout inflatedSet;
-					for (int i = 1; i < inflatedSets.size(); i++) {
-						inflatedSet = inflatedSets.get(i);
-						String replace = inflatedSet.findViewById(R.id.etCreateExerciseWeight).toString();
-						if (replace == null || replace.length() < 1 || replace.equals(s.toString())) {
-							replace = s.toString();
-							EditText replaceWeight = (EditText) inflatedSet.findViewById(R.id.etCreateExerciseWeight);
-							replaceWeight.setText(replace);
-						}
-					}
-				}
-				
-			});
-			
-			EditText repsText = (EditText) inflatedSets.get(0).findViewById(R.id.etCreateExerciseReps);
-			repsText.setOnKeyListener(new View.OnKeyListener() {
-				
-				@Override
-				public boolean onKey(View v, int keyCode, KeyEvent event) {
-					for (LinearLayout inflatedSet : inflatedSets) {
-						String replace = inflatedSet.findViewById(R.id.etCreateExerciseReps).toString();
-						if (replace.length() < 1) {
-							replace = inflatedSets.get(0).findViewById(R.id.etCreateExerciseReps).toString();
-							EditText replaceReps = (EditText) inflatedSet.findViewById(R.id.etCreateExerciseReps);
-							replaceReps.setText(replace);
-						}
-					}
-					
-					return true;
-				}
-			});
-			
-//			for (LinearLayout inflatedSet : inflatedSets) {
-//				repsText = (EditText) inflatedSet.findViewById(R.id.etCreateExerciseReps);
-//				weightText = (EditText) inflatedSet.findViewById(R.id.etCreateExerciseWeight);
-//				
-//				setVar.setReps(Integer.parseInt(repsText.toString()));
-//				setVar.setWeight(Double.parseDouble(weightText.toString()));
-//				
-//				setList.add(setVar);
-//			}
-		}
-		
 		Button doneButton = (Button) findViewById(R.id.btnCreateExerciseDone);
 		doneButton.setOnClickListener(new View.OnClickListener() {
 			
@@ -283,13 +202,7 @@ public class CreateExerciseActivity extends FragmentActivity {
 				ex.setType(exType);
 				ex.setSets(inflatedSets.size());
 				setVar = new Set();
-//				if (inflatedSets.size() > 0) {
-//					ex.setSets(inflatedSets.size());
-//					for (int i = 0; i < ex.getSets(); i++) {
-//						set.setWeight(Double.parseDouble(inflatedSets.get(i).findViewById(R.id.etCreateExerciseWeight).toString()));
-//						set.setReps(Integer.parseInt(inflatedSets.get(i).findViewById(R.id.etCreateExerciseReps).toString()));
-//					}
-//				}
+				
 				mDbHelper.open();
 				exId = mDbHelper.createExercise(ex);
 				for (LinearLayout inflatedSet : inflatedSets) {
