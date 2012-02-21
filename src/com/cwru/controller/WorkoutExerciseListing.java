@@ -1,10 +1,10 @@
 package com.cwru.controller;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-import android.widget.Button;
-import android.widget.LinearLayout;
+import android.util.Log;
 
 import com.cwru.R;
 import com.cwru.model.ExerciseBankFragment;
@@ -22,8 +22,8 @@ public class WorkoutExerciseListing extends FragmentActivity {
 			ExerciseBankFragment ebank = new ExerciseBankFragment();
 			ExerciseSequenceFragment esequence = new ExerciseSequenceFragment();
 			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-			transaction.add(R.id.flWorkoutExerciseListingLeftFrame, ebank);
-			transaction.add(R.id.flWorkoutExerciseListingRightFrame, esequence);
+			transaction.add(R.id.flWorkoutExerciseListingLeftFrame, ebank, "exerciseBank");
+			transaction.add(R.id.flWorkoutExerciseListingRightFrame, esequence, "exerciseSequence");
 			transaction.commit();
 		}
 		/* Phone - Show exercise bank and exercise sequence independently and linked to each other */
@@ -35,4 +35,5 @@ public class WorkoutExerciseListing extends FragmentActivity {
 			transaction.commit();
 		}
 	}
+
 }

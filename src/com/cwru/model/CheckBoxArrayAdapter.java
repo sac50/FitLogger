@@ -2,9 +2,9 @@ package com.cwru.model;
 
 import java.util.List;
 
-import com.cwru.R;
-
 import android.app.Activity;
+import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,14 +13,18 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
+import com.cwru.R;
+
 public class CheckBoxArrayAdapter extends ArrayAdapter<ExerciseBankRow> {
 	private final List<ExerciseBankRow> list;
 	private final Activity context;
+	private final ListFragment fragment;
 	
-	public CheckBoxArrayAdapter(Activity context, List<ExerciseBankRow> list) {
+	public CheckBoxArrayAdapter(Activity context, List<ExerciseBankRow> list, ListFragment fragment) {
 		super(context, com.cwru.R.layout.exercise_bank_checkbox_row, list);
 		this.context = context;
 		this.list = list;
+		this.fragment = fragment;
 	}
 	
 	static class CheckBoxRow {
@@ -44,6 +48,11 @@ public class CheckBoxArrayAdapter extends ArrayAdapter<ExerciseBankRow> {
 				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 					ExerciseBankRow ebRow = (ExerciseBankRow) row.checkBox.getTag();
 					ebRow.setSelected(buttonView.isChecked());
+					Log.d("Steve", "Checked box has been checked");
+					Log.d("Steve", "CheckBox Tag: " + ebRow.getExerciseName());
+					//ExerciseSequenceFragment esequence = new ExerciseSequenceFragment();
+					ExerciseSequenceFragment esequence = (ExerciseSequenceFragment) fragment.getFragmentManager().findFragmentByTag("exerciseSequence");
+					esequence.addItems(ebRow.getExerciseName());
 				}
 			});
 			

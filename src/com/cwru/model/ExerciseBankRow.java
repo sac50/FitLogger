@@ -12,5 +12,6 @@ public class ExerciseBankRow {
 	public boolean isSelected() { return selected; }
 	public void setExerciseName(String exerciseName) { this.exerciseName = exerciseName; }
 	public void setSelected(boolean selected) { this.selected = selected; }
+
 }
 

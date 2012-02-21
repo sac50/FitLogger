@@ -30,6 +30,8 @@ public final class DragNDropAdapter extends BaseAdapter implements RemoveListene
     private int[] mLayouts;
     private LayoutInflater mInflater;
     private ArrayList<String> mContent;
+    
+    
 
     public DragNDropAdapter(Context context, ArrayList<String> content) {
         init(context,new int[]{android.R.layout.simple_list_item_1},new int[]{android.R.id.text1}, content);
@@ -47,6 +49,14 @@ public final class DragNDropAdapter extends BaseAdapter implements RemoveListene
     	mContent = content;
     }
     
+    /**
+     * Add element to the mContent
+     */
+    public void addExerciseToAdapter(String exercise) {
+    	mContent.add(exercise);
+    	this.notifyDataSetChanged();
+    }
+   
     /**
      * The number of items in the list
      * @see android.widget.ListAdapter#getCount()

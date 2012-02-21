@@ -23,14 +23,15 @@ public class CreateWorkoutActivity extends FragmentActivity {
 				/** TODO 
 				 * Uncomment this to start with create workout information fragment
 				 */
-				/*
+				
 				CreateWorkoutInformationFragment information = new CreateWorkoutInformationFragment();
 				FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 				transaction.add(R.id.flCreateWorkoutMainFrame, information);
 				transaction.commit();
-				*/
+				/*
 				Intent intent = new Intent(this, WorkoutExerciseListing.class);
 				startActivity(intent);
+				*/
 				Log.d("STEVE", "TABLET NOT PHONE");
 			}
 			else {				

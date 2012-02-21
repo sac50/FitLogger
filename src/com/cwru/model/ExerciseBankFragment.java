@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 
 import com.cwru.R;
 import com.cwru.controller.HomeScreen;
@@ -21,7 +22,6 @@ import com.cwru.dao.DbAdapter;
 public class ExerciseBankFragment extends ListFragment {
 	private DbAdapter mDbHelper;
 
-	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (container == null) {
 			return null;
@@ -31,10 +31,10 @@ public class ExerciseBankFragment extends ListFragment {
 		// Set DB Object
 		mDbHelper = new DbAdapter(this.getActivity());
 		
-		CheckBoxArrayAdapter adapter = new CheckBoxArrayAdapter(this.getActivity(), getExerciseBankList());
-
+		CheckBoxArrayAdapter adapter = new CheckBoxArrayAdapter(this.getActivity(), getExerciseBankList(), this);
+		
 		this.setListAdapter(adapter);
-
+		
 		if (!HomeScreen.isTablet) {
 			Button button = new Button(this.getActivity());
 			button.setText("Order Exercises for Workout");
