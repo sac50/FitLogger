@@ -16,22 +16,6 @@ public class DbAdapter {
 	private SQLiteDatabase db;
 	private static final String TAG = "dbHelper";
 
-//	private static final String DATABASE_CREATE = "create table workouts (_id integer primary key autoincrement, "
-//			+ "name text not null, type text not null, exercise_sequence "
-//			+ "text not null, coment text, repeatable boolean not null);"
-//			+ "create table exercises (_id integer primary key autoincrement, "
-//			+ "name text not null, type text not null, sets integer, "
-//			+ "time integer, is_countdown boolean, distance real,"
-//			+ "distance_type text, interval integer, comment text, boolean deleted not null);"
-//			+ "create table sets (_id integer primary key autoincrement, "
-//			+ "exercise_id integer not null, reps integer not null, "
-//			+ "weight real not null);"
-//			+ "create table workout_results (_id integer primary key autoincrement, "
-//			+ "date text not null, workout_id integer not null, exercise_id "
-//			+ "integer not null, sets integer, reps integer, weight real, "
-//			+ "time integer, time_type boolean, distance real, interval"
-//			+ "integer, comment text);";
-
 	private static final String CREATE_WORKOUTS_TABLE = 
 			"create table workouts (_id integer primary key autoincrement, "
 			+ "name text not null, type text not null, exercise_sequence "
