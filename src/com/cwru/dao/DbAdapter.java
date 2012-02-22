@@ -113,13 +113,11 @@ public class DbAdapter {
 	}
 	
 	public long createWorkout(Workout workout) {
-		Log.d("Workout in DB CREATE STATEMENT Name: ", workout.getName());
-		Log.d("Type: ", workout.getType());
-		Log.d("Sequence", workout.getExerciseSequence());
 		ContentValues initialValues = new ContentValues();
 		initialValues.put("name", workout.getName());
 		initialValues.put("workout_type",workout.getType());
-		initialValues.put("exercise_Sequence",workout.getExerciseSequence());
+		// Initial Workout has blank exercise sequence
+		initialValues.put("exercise_Sequence", "");
 		//initialValues.put("comment", workout.getComment());
 		
 		return db.insert(DATABASE_TABLE_WORKOUT, null, initialValues);
@@ -129,12 +127,27 @@ public class DbAdapter {
 		return db.rawQuery("select * from workouts", new String [0]);
 	}
 	
-	public Cursor getAllExercises() { 
-		String columns [] = {"name"};
+	/** TODO
+	 * Enforce that all workout names must be unique
+	 * @return
+	 */
+	public Cursor getExerciseSequence(String workoutName) {
+		String query = "select exercise_sequence from workouts where name = '" + workoutName + "'";
+		Cursor cursor = db.rawQuery(query, null);
+		return cursor;
+	}
+	
+	public void updateWorkoutExerciseSequence(String exerciseSequence, String workoutName) {
+		String query = "update workouts set exercise_sequence = '" + exerciseSequence + "' where name = '" + workoutName + "'";
+		Log.d("Update Exercise Sequence", query);
+		db.execSQL(query);
+	}
+	
+	public Cursor getAllExercises() { 		
+		String columns [] = {"_id", "name", "type", "sets", "time", "is_countdown", "distance", "distance_type", "interval", "comment", "deleted"};
 		Cursor cursor = db.query(DATABASE_TABLE_EXERCISE, columns, null, null, null, null, null);
 		if (cursor == null) { Log.d("Steve", "Cursor for exercises is null");}
 		return cursor;
-		//return db.rawQuery("select * from exercises", new String [0]);
 	}
 
 	public long createExercise(Exercise ex) {

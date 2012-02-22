@@ -13,6 +13,15 @@ public class Exercise {
 	private String distanceType;
 	private String comment;
 	
+	public Exercise() {
+		// Default Constructor
+	}
+	
+	public Exercise (Long id, String name) {
+		this.name = name;
+		this.id = id;
+	}
+	
 	public Long getId() {
 		return id;
 	}

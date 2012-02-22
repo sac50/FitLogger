@@ -23,14 +23,20 @@ import com.cwru.utils.RemoveListener;
 
 public class ExerciseSequenceFragment extends ListFragment {
 	private DbAdapter mDbHelper;
-	private ArrayList<String> exerciseList = new ArrayList<String>();
+	private ArrayList<String> exerciseNameList = new ArrayList<String>(); // For List to Display to Screen
+	private ArrayList<Exercise> exerciseList = new ArrayList<Exercise>();
 	public DragNDropAdapter adapter;
+	private String workoutName;
+	
+	public ExerciseSequenceFragment(String workoutName) {
+		this.workoutName = workoutName;
+	}
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d("onCreate", "Adpater created");
-		adapter = new DragNDropAdapter(this.getActivity(), new int[]{R.layout.exercise_sequence_row}, new int[]{R.id.TextView01}, exerciseList);//new DragNDropAdapter(this,content)
+		adapter = new DragNDropAdapter(this.getActivity(), new int[]{R.layout.exercise_sequence_row}, new int[]{R.id.TextView01}, exerciseNameList);//new DragNDropAdapter(this,content)
 
 	}
 	@Override
@@ -116,23 +122,12 @@ public class ExerciseSequenceFragment extends ListFragment {
 	    };
 	    
 	    public void addItems(String exercise) {
-	    	exerciseList.add(exercise);
-	    	if (adapter == null) {
-	    		Log.d("NULL", "NULL ADAPTER");
-	    	}
+	    	exerciseNameList.add(exercise);
 	    	this.adapter.notifyDataSetChanged();
 	    }
 	    
-	    /*
-	    private ArrayList<String> getExercise() { 
-	    	mDbHelper.open();
-	    	Cursor cursor = mDbHelper.getAllExercises();
-	    	ArrayList<String> exercises = new ArrayList<String>();
-	    	while (cursor.moveToNext()) {	    		
-	    		exercises.add(cursor.getString(0));
-	    	}
-	    	mDbHelper.close();
-	    	return exercises;
-	    }	
-	    */
+	    public void removeItem(String exercise) {
+	    	exerciseNameList.remove(exercise);
+	    	this.adapter.notifyDataSetChanged();
+	    }
 }

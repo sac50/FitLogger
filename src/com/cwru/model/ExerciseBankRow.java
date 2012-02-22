@@ -1,16 +1,19 @@
 package com.cwru.model;
 
 public class ExerciseBankRow {
-	private String exerciseName;
+	private Exercise exercise;
 	private boolean selected;
+	private String workoutName;
 	
-	public ExerciseBankRow(String exerciseName) {
-		this.exerciseName = exerciseName;
+	public ExerciseBankRow(Exercise exercise, String workoutName) {
+		this.exercise = exercise;
+		this.workoutName = workoutName;
 	}
 	
-	public String getExerciseName() { return exerciseName; }
+	public String getWorkoutName() { return workoutName; }
+	public String getExerciseName() { return exercise.getName(); }
+	public Long getExerciseId() { return exercise.getId(); }
 	public boolean isSelected() { return selected; }
-	public void setExerciseName(String exerciseName) { this.exerciseName = exerciseName; }
 	public void setSelected(boolean selected) { this.selected = selected; }
 
 }
