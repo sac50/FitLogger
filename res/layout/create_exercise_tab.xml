@@ -197,18 +197,18 @@
                 android:orientation="horizontal" >
 
                 <Button
-                    android:id="@+id/btnCreateExerciseAddSet"
-                    android:layout_width="60dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="70dp"
-                    android:text="@string/plus" />
-
-                <Button
                     android:id="@+id/btnCreateExerciseRemoveSet"
                     android:layout_width="60dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="60dp"
+                    android:layout_marginLeft="70dp"
                     android:text="@string/minus" />
+
+                <Button
+                    android:id="@+id/btnCreateExerciseAddSet"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="60dp"
+                    android:text="@string/plus" />
             </LinearLayout>
         </LinearLayout>
 
