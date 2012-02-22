@@ -52,11 +52,18 @@
     </string-array>
     
     <string name="exerciseCountdown">Timer Duration</string>
-    <string-array name="exerciseCountdowns">
+    <string name="timeType">Time Type</string>
+    <string-array name="timeTypes">
        		<item>seconds</item>
        		<item>minutes</item>
        		<item>hours</item>
     </string-array>
+    
+    <string name="exerciseIntervalName">Name</string>
+    <string name="exerciseIntervalTime">Time</string>
+    <string name="exerciseIntervals">Intervals</string>
+    <string name="exerciseIntervalSets">Interval Sets</string>
+    <string name="one">1</string>
     
     <string name="done">Done</string>
     
