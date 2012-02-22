@@ -57,10 +57,11 @@ public class CheckBoxArrayAdapter extends ArrayAdapter<ExerciseBankRow> {
 					Long exerciseId = ebRow.getExerciseId();
 					String workoutName = ebRow.getWorkoutName();
 					String exerciseSequence = "";
+					Exercise exercise = new Exercise(exerciseId, ebRow.getExerciseName());
 					if (isChecked) {
 						ebRow.setSelected(buttonView.isChecked());
 						ExerciseSequenceFragment esequenceFragment = (ExerciseSequenceFragment) fragment.getFragmentManager().findFragmentByTag("exerciseSequence");
-						esequenceFragment.addItems(ebRow.getExerciseName());
+						esequenceFragment.addItems(exercise);
 						ebRow.setSelected(true);
 						/** 
 						 * TODO add exercise to database for this workout
@@ -85,7 +86,7 @@ public class CheckBoxArrayAdapter extends ArrayAdapter<ExerciseBankRow> {
 					else {
 						ebRow.setSelected(buttonView.isChecked());
 						ExerciseSequenceFragment esequence = (ExerciseSequenceFragment) fragment.getFragmentManager().findFragmentByTag("exerciseSequence");
-						esequence.removeItem(ebRow.getExerciseName());
+						esequence.removeItem(exercise);
 						ebRow.setSelected(false);
 						/**
 						 * TODO remove exercise in database for workout

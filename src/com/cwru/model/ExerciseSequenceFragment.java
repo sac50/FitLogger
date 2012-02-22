@@ -2,6 +2,7 @@ package com.cwru.model;
 
 import java.util.ArrayList;
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
@@ -23,7 +24,7 @@ import com.cwru.utils.RemoveListener;
 
 public class ExerciseSequenceFragment extends ListFragment {
 	private DbAdapter mDbHelper;
-	private ArrayList<String> exerciseNameList = new ArrayList<String>(); // For List to Display to Screen
+//	private ArrayList<String> exerciseNameList = new ArrayList<String>(); // For List to Display to Screen
 	private ArrayList<Exercise> exerciseList = new ArrayList<Exercise>();
 	public DragNDropAdapter adapter;
 	private String workoutName;
@@ -36,7 +37,7 @@ public class ExerciseSequenceFragment extends ListFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d("onCreate", "Adpater created");
-		adapter = new DragNDropAdapter(this.getActivity(), new int[]{R.layout.exercise_sequence_row}, new int[]{R.id.TextView01}, exerciseNameList);//new DragNDropAdapter(this,content)
+		adapter = new DragNDropAdapter(this.getActivity(), new int[]{R.layout.exercise_sequence_row}, new int[]{R.id.TextView01}, exerciseList);//new DragNDropAdapter(this,content)
 
 	}
 	@Override
@@ -76,10 +77,27 @@ public class ExerciseSequenceFragment extends ListFragment {
 			new DropListener() {
 	        public void onDrop(int from, int to) {
 	        	ListAdapter adapter = getListAdapter();
+	        	
 	        	if (adapter instanceof DragNDropAdapter) {
 	        		((DragNDropAdapter)adapter).onDrop(from, to);
 	        		getListView().invalidateViews();
 	        	}
+	        	
+	        	// Get updated sequence
+		        String exerciseSequence = "";
+		        for (int i = 0; i < exerciseList.size(); i++) {
+		        	exerciseSequence += exerciseList.get(i).getId()+",";
+		        	Log.d("Exercise Sequence List AFTER: " + i, exerciseList.get(i).getName() + "(" + exerciseList.get(i).getId() + ")");
+		        }
+		        /*
+		         * Update DB workout exercise sequence to refelct order change
+		         */
+		        mDbHelper.open();
+				// Sequence is #,#,#,#,#,
+				
+				// update sequence in db
+				mDbHelper.updateWorkoutExerciseSequence(exerciseSequence, workoutName);
+				mDbHelper.close();					
 	        }
 	    };
 	    
@@ -121,13 +139,15 @@ public class ExerciseSequenceFragment extends ListFragment {
 	    	
 	    };
 	    
-	    public void addItems(String exercise) {
-	    	exerciseNameList.add(exercise);
+	    public void addItems(Exercise exercise) {
+	    	Log.d("ExerciseSequenceFragment-addItems", exercise.getName());
+	    	exerciseList.add(exercise);
 	    	this.adapter.notifyDataSetChanged();
 	    }
 	    
-	    public void removeItem(String exercise) {
-	    	exerciseNameList.remove(exercise);
+	    public void removeItem(Exercise exercise) {
+	    	exerciseList.remove(exercise);
 	    	this.adapter.notifyDataSetChanged();
 	    }
+	    
 }

@@ -22,6 +22,19 @@ public class Exercise {
 		this.id = id;
 	}
 	
+	@Override 
+	public boolean equals(Object that) {
+	    //check for self-comparison
+	    if ( this == that ) return true;
+	    if ( !(that instanceof Exercise) ) return false;
+	    // Cast object
+	    Exercise exercise = (Exercise) that;
+	    if (this.name.equals(exercise.name)) {
+	    	return true;
+	    }
+	    return false;	    
+	}
+	
 	public Long getId() {
 		return id;
 	}
