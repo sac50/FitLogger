@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 
 import com.cwru.R;
 import com.cwru.controller.HomeScreen;
@@ -20,8 +21,12 @@ import com.cwru.dao.DbAdapter;
 
 public class ExerciseBankFragment extends ListFragment {
 	private DbAdapter mDbHelper;
-
+	private String workoutName;
 	
+	public ExerciseBankFragment (String workoutName) { 
+		this.workoutName = workoutName;
+	}
+
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (container == null) {
 			return null;
@@ -31,10 +36,10 @@ public class ExerciseBankFragment extends ListFragment {
 		// Set DB Object
 		mDbHelper = new DbAdapter(this.getActivity());
 		
-		CheckBoxArrayAdapter adapter = new CheckBoxArrayAdapter(this.getActivity(), getExerciseBankList());
-
+		CheckBoxArrayAdapter adapter = new CheckBoxArrayAdapter(this.getActivity(), getExerciseBankList(), this);
+		
 		this.setListAdapter(adapter);
-
+		
 		if (!HomeScreen.isTablet) {
 			Button button = new Button(this.getActivity());
 			button.setText("Order Exercises for Workout");
@@ -56,7 +61,7 @@ public class ExerciseBankFragment extends ListFragment {
 			// Create new transaction
 			FragmentTransaction transaction = getFragmentManager().beginTransaction();
 			// Replace the workout information fragment with the exercise bank
-			transaction.replace(R.id.llWorkoutExerciseListingContainer, new ExerciseSequenceFragment());	
+			transaction.replace(R.id.llWorkoutExerciseListingContainer, new ExerciseSequenceFragment(workoutName));	
 			transaction.addToBackStack(null);
 			transaction.commit();			
 		}
@@ -70,14 +75,17 @@ public class ExerciseBankFragment extends ListFragment {
 		Cursor cursor = mDbHelper.getAllExercises();
 		while (cursor.moveToNext()) {
 			Log.d("Exercise name", cursor.getString(cursor.getColumnIndex("name")));
-			list.add(get(cursor.getString(cursor.getColumnIndex("name"))));
+			String exerciseName = cursor.getString(cursor.getColumnIndex("name"));
+			Long exerciseId = cursor.getLong(cursor.getColumnIndex("_id"));
+			Exercise exercise = new Exercise(exerciseId, exerciseName);
+			list.add(get(exercise, workoutName));
 		}
 		mDbHelper.close();
 		return list;
 	}
 	
-	private ExerciseBankRow get(String s) {
-		return new ExerciseBankRow(s);
+	private ExerciseBankRow get(Exercise exercise, String workoutName) {
+		return new ExerciseBankRow(exercise, workoutName);
 	}
 		
 		

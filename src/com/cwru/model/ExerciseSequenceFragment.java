@@ -2,8 +2,10 @@ package com.cwru.model;
 
 import java.util.ArrayList;
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +13,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.ScrollView;
 
 import com.cwru.R;
+import com.cwru.dao.DbAdapter;
 import com.cwru.utils.DragListener;
 import com.cwru.utils.DragNDropAdapter;
 import com.cwru.utils.DragNDropListView;
@@ -21,16 +23,36 @@ import com.cwru.utils.DropListener;
 import com.cwru.utils.RemoveListener;
 
 public class ExerciseSequenceFragment extends ListFragment {
+	private DbAdapter mDbHelper;
+//	private ArrayList<String> exerciseNameList = new ArrayList<String>(); // For List to Display to Screen
+	private ArrayList<Exercise> exerciseList = new ArrayList<Exercise>();
+	public DragNDropAdapter adapter;
+	private String workoutName;
 	
+	public ExerciseSequenceFragment(String workoutName) {
+		this.workoutName = workoutName;
+	}
+	
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		Log.d("onCreate", "Adpater created");
+		adapter = new DragNDropAdapter(this.getActivity(), new int[]{R.layout.exercise_sequence_row}, new int[]{R.id.TextView01}, exerciseList);//new DragNDropAdapter(this,content)
+
+	}
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		mDbHelper = new DbAdapter(this.getActivity());
+
+		/*
 		ArrayList<String> content = new ArrayList<String>(mListContent.length);
 		for (int i=0; i < mListContent.length; i++) {
 		  	content.add(mListContent[i]);
 		}
-		    
-		setListAdapter(new DragNDropAdapter(this.getActivity(), new int[]{R.layout.exercise_sequence_row}, new int[]{R.id.TextView01}, content));//new DragNDropAdapter(this,content)
+		*/
+		Log.d("onActivityCreated", "set adapter");
+		setListAdapter(adapter);
 		ListView listView = getListView();
 		
 		if (listView instanceof DragNDropListView) {
@@ -44,8 +66,9 @@ public class ExerciseSequenceFragment extends ListFragment {
 		if (container == null) {
 			return null;
 		}
+		
 		View view =  (LinearLayout) inflater.inflate(R.layout.exercise_sequence, container, false);
-	        
+
 	      
 		return view;
 	}
@@ -54,10 +77,27 @@ public class ExerciseSequenceFragment extends ListFragment {
 			new DropListener() {
 	        public void onDrop(int from, int to) {
 	        	ListAdapter adapter = getListAdapter();
+	        	
 	        	if (adapter instanceof DragNDropAdapter) {
 	        		((DragNDropAdapter)adapter).onDrop(from, to);
 	        		getListView().invalidateViews();
 	        	}
+	        	
+	        	// Get updated sequence
+		        String exerciseSequence = "";
+		        for (int i = 0; i < exerciseList.size(); i++) {
+		        	exerciseSequence += exerciseList.get(i).getId()+",";
+		        	Log.d("Exercise Sequence List AFTER: " + i, exerciseList.get(i).getName() + "(" + exerciseList.get(i).getId() + ")");
+		        }
+		        /*
+		         * Update DB workout exercise sequence to refelct order change
+		         */
+		        mDbHelper.open();
+				// Sequence is #,#,#,#,#,
+				
+				// update sequence in db
+				mDbHelper.updateWorkoutExerciseSequence(exerciseSequence, workoutName);
+				mDbHelper.close();					
 	        }
 	    };
 	    
@@ -99,6 +139,15 @@ public class ExerciseSequenceFragment extends ListFragment {
 	    	
 	    };
 	    
-	    private static String[] mListContent={"Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "Item 6", "Item 7"};
-	
+	    public void addItems(Exercise exercise) {
+	    	Log.d("ExerciseSequenceFragment-addItems", exercise.getName());
+	    	exerciseList.add(exercise);
+	    	this.adapter.notifyDataSetChanged();
+	    }
+	    
+	    public void removeItem(Exercise exercise) {
+	    	exerciseList.remove(exercise);
+	    	this.adapter.notifyDataSetChanged();
+	    }
+	    
 }

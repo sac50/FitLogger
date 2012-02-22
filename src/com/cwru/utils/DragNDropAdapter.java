@@ -17,6 +17,9 @@
 package com.cwru.utils;
 
 import java.util.ArrayList;
+
+import com.cwru.model.Exercise;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,17 +32,29 @@ public final class DragNDropAdapter extends BaseAdapter implements RemoveListene
 	private int[] mIds;
     private int[] mLayouts;
     private LayoutInflater mInflater;
-    private ArrayList<String> mContent;
+    private ArrayList<Exercise> mContent;
+    
+    
 
-    public DragNDropAdapter(Context context, ArrayList<String> content) {
+    public DragNDropAdapter(Context context, ArrayList<Exercise> content) {
+    	/** 
+    	 * TODO 
+    	 * create string name array for exrcises
+    	 */
+    	
+    	ArrayList<String> exerciseList = new ArrayList<String>();
+    	for (int i = 0; i < mContent.size(); i ++) {
+    		exerciseList.add(mContent.get(i).getName());
+    	}
+    	
         init(context,new int[]{android.R.layout.simple_list_item_1},new int[]{android.R.id.text1}, content);
     }
     
-    public DragNDropAdapter(Context context, int[] itemLayouts, int[] itemIDs, ArrayList<String> content) {
+    public DragNDropAdapter(Context context, int[] itemLayouts, int[] itemIDs, ArrayList<Exercise> content) {
     	init(context,itemLayouts,itemIDs, content);
     }
 
-    private void init(Context context, int[] layouts, int[] ids, ArrayList<String> content) {
+    private void init(Context context, int[] layouts, int[] ids, ArrayList<Exercise> content) {
     	// Cache the LayoutInflate to avoid asking for a new one each time.
     	mInflater = LayoutInflater.from(context);
     	mIds = ids;
@@ -47,6 +62,14 @@ public final class DragNDropAdapter extends BaseAdapter implements RemoveListene
     	mContent = content;
     }
     
+    /**
+     * Add element to the mContent
+     */
+    public void addExerciseToAdapter(Exercise exercise) {
+    	mContent.add(exercise);
+    	this.notifyDataSetChanged();
+    }
+   
     /**
      * The number of items in the list
      * @see android.widget.ListAdapter#getCount()
@@ -64,7 +87,7 @@ public final class DragNDropAdapter extends BaseAdapter implements RemoveListene
      * @see android.widget.ListAdapter#getItem(int)
      */
     public String getItem(int position) {
-        return mContent.get(position);
+        return mContent.get(position).getName();
     }
 
     /**
@@ -105,7 +128,7 @@ public final class DragNDropAdapter extends BaseAdapter implements RemoveListene
         }
 
         // Bind the data efficiently with the holder.
-        holder.text.setText(mContent.get(position));
+        holder.text.setText(mContent.get(position).getName());
 
         return convertView;
     }
@@ -120,7 +143,7 @@ public final class DragNDropAdapter extends BaseAdapter implements RemoveListene
 	}
 
 	public void onDrop(int from, int to) {
-		String temp = mContent.get(from);
+		Exercise temp = mContent.get(from);
 		mContent.remove(from);
 		mContent.add(to,temp);
 	}

@@ -207,7 +207,10 @@ public class CreateWorkoutInformationFragment extends Fragment {
 			Log.d("Workout Repeat Weeks", workoutRepeatWeeks);
 			Log.d("Repeat Days", repeatDays);
 			
-			Workout workoutToCreate = new Workout(workoutName, workoutType, workoutRepeatWeeks);
+			/** TODO
+			 * Add workout repeat information to insert command
+			 */
+			Workout workoutToCreate = new Workout(workoutName, workoutType);
 			/* Create Workout in the Database */
 			mDbHelper.open();
 			mDbHelper.createWorkout(workoutToCreate);
@@ -215,6 +218,7 @@ public class CreateWorkoutInformationFragment extends Fragment {
 			
 			/* Launch intent to allow exercises to be added to workout and the sequence to be set */
 			Intent intent = new Intent(CreateWorkoutInformationFragment.this.getActivity(), WorkoutExerciseListing.class);
+			intent.putExtra("WorkoutName", workoutName);
 			startActivity(intent);			
 		}
 	};
