@@ -8,6 +8,7 @@ public class Exercise {
 	private String type;
 	private int sets;
 	private Long time = 0L;
+	private String timeType;
 	private Boolean isCountdown = true;
 	private Double distance = 0.0;
 	private String distanceType;
@@ -42,6 +43,12 @@ public class Exercise {
 	}
 	public void setTime(Long time) {
 		this.time = time;
+	}
+	public String getTimeType() {
+		return timeType;
+	}
+	public void setTimeType(String timeType) {
+		this.timeType = timeType;
 	}
 	public Boolean getIsCountdown() {
 		return isCountdown;

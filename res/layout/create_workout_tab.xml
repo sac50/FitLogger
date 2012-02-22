@@ -8,11 +8,9 @@
      >   
      
      <FrameLayout
-        android:id="@+id/FLmainFrame"
+        android:id="@+id/flCreateWorkoutMainFrame"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="5sp"
-        android:paddingRight="5sp"
      />
     
 

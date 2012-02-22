@@ -1,49 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:id="@+id/LLcreateWorkoutTabContainer"
-    android:baselineAligned="false" >   
-    
+<ScrollView  xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/svCreateWorkoutTab"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent" 
+>	
+	
     <FrameLayout
-        android:id="@+id/FLcreateWorkoutTabLeftFrame"
-        android:layout_width="0px"
-        android:layout_height="match_parent"
-        android:layout_weight="31"
-        android:paddingLeft="5sp"
-        android:paddingRight="5sp"
+        android:id="@+id/flCreateWorkoutMainFrame"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
      />
-    
-    <FrameLayout 
-        android:id="@+id/FLcreateWorkoutBorder1"
- 		android:layout_width="2px"
- 		android:layout_height="match_parent"
- 		android:background="#FFFFFF"     
-    />
-    
-    <FrameLayout
-        android:id="@+id/FLcreateWorkoutTabMiddleFrame"
-        android:layout_width="0px"
-        android:layout_height="match_parent"
-        android:layout_weight="31"
-        android:paddingLeft="5sp"
-        android:paddingRight="5sp"
-    />
-    
-    <FrameLayout 
-        android:id="@+id/FLcreateWorkoutBorder2"
- 		android:layout_width="2px"
- 		android:layout_height="match_parent"
- 		android:background="#FFFFFF"     
-    />
-    
-    <FrameLayout
-        android:id="@+id/FLcreateWorkoutTabRightFrame"
-        android:layout_width="0px"
-        android:layout_height="match_parent"
-        android:layout_weight="31"
-        android:paddingLeft="5sp"
-        android:paddingRight="5sp"
-    />
-
-</LinearLayout>
+	    
+	    
+</ScrollView>

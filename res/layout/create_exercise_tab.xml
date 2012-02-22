@@ -28,7 +28,7 @@
             android:id="@+id/tvCreateExerciseExerciseType"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/exerciseName" />
+            android:text="@string/exerciseType" />
 
         <Spinner
             android:id="@+id/spnCreateExerciseType"
@@ -50,6 +50,54 @@
 
         <LinearLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/llCreateExerciseDistance"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone" >
+            
+            <EditText
+	            android:id="@+id/etCreateExerciseDistance"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:hint="@string/exerciseDistance"
+	            android:inputType="numberDecimal" >
+        	</EditText>
+        	
+            <Spinner
+	            android:id="@+id/spnCreateExerciseDistance"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:prompt="@string/exerciseDistance" />
+            
+        </LinearLayout>
+        
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/llCreateExerciseCountdown"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone" >
+            
+            <EditText
+	            android:id="@+id/etCreateExerciseCountdown"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:hint="@string/exerciseCountdown"
+	            android:inputType="number" >
+        	</EditText>
+        	
+            <Spinner
+	            android:id="@+id/spnCreateExerciseCountdown"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:prompt="@string/exerciseCountdown" />
+            
+        </LinearLayout>
+        
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/llCreateExerciseSets"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -62,42 +110,6 @@
                 android:layout_height="wrap_content"
                 android:text="@string/sets" />
 
-            <!--
-        <LinearLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/llSetGeneration"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:visibility="gone" >
-
-            <TextView
-                android:id="@+id/tvCreateExerciseWeight"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/weight" />
-
-            <EditText
-                android:id="@+id/etCreateExerciseWeight"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-            <TextView
-                android:id="@+id/tvCreateExerciseReps"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/reps" />
-
-            <EditText
-                android:id="@+id/etCreateExerciseReps"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:inputType="number" />
-        </LinearLayout>
-            -->
-
             <LinearLayout
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/llAddRemoveSets"
@@ -107,23 +119,28 @@
 
                 <Button
                     android:id="@+id/btnCreateExerciseAddSet"
-                    android:layout_width="wrap_content"
+                    android:layout_width="60dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/addSet" />
+                    android:layout_marginLeft="70dp"
+                    android:text="@string/plus" />
 
                 <Button
                     android:id="@+id/btnCreateExerciseRemoveSet"
-                    android:layout_width="wrap_content"
+                    android:layout_width="60dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/removeSet" />
+                    android:layout_marginLeft="60dp"
+                    android:text="@string/minus" />
+
             </LinearLayout>
         </LinearLayout>
 
         <Button
             android:id="@+id/btnCreateExerciseDone"
-            android:layout_width="wrap_content"
+            android:layout_width="116dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="100dp"
             android:text="@string/done" />
+
     </LinearLayout>
 
 </ScrollView>

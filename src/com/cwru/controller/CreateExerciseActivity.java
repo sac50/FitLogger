@@ -8,10 +8,12 @@ import com.cwru.dao.DbAdapter;
 import com.cwru.model.Exercise;
 import com.cwru.model.Set;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -21,15 +23,21 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class CreateExerciseActivity extends FragmentActivity {
 	DbAdapter mDbHelper;
 	EditText mNameText;
 	String exType;
+	EditText exDistanceText;
+	String exDistanceType;
+	EditText exCountdownText;
+	String exCountdownType;
 	List<LinearLayout> inflatedSets = new ArrayList<LinearLayout>();
 	List<Set> setList;
 	Set setVar;
 	Long exId;
+	Spinner subTypeSpinner;
 	
 	
 	
@@ -62,7 +70,7 @@ public class CreateExerciseActivity extends FragmentActivity {
 			    }
 		});
 		
-		Spinner subTypeSpinner = (Spinner) findViewById(R.id.spnCreateExerciseSubType);
+		subTypeSpinner = (Spinner) findViewById(R.id.spnCreateExerciseSubType);
 		ArrayAdapter<CharSequence> exerSubTypeAdapter = ArrayAdapter.createFromResource(this,
 				R.array.exerciseSubTypes, android.R.layout.simple_spinner_item);
 		exerSubTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -72,9 +80,101 @@ public class CreateExerciseActivity extends FragmentActivity {
 			@Override
 			public void onItemSelected(AdapterView<?> parent,
 					View view, int pos, long id) {
+				final LinearLayout distanceLayout = (LinearLayout) findViewById(R.id.llCreateExerciseDistance);
+				final LinearLayout countdownLayout = (LinearLayout) findViewById(R.id.llCreateExerciseCountdown);
 				final LinearLayout setLayout = (LinearLayout) findViewById(R.id.llCreateExerciseSets);
 				
-				if ("Set-based".equals(parent.getItemAtPosition(pos).toString())) {
+				if ("Distance".equals(parent.getItemAtPosition(pos).toString())) {
+					countdownLayout.setVisibility(8);
+					setLayout.setVisibility(8);
+					while (!inflatedSets.isEmpty()) {
+						int position = inflatedSets.size() - 1;
+						setLayout.removeView(inflatedSets.get(position));
+						inflatedSets.remove(position);
+					}
+					
+					distanceLayout.setVisibility(0);
+					
+					exDistanceText = (EditText) findViewById(R.id.etCreateExerciseDistance);
+					
+					Spinner distanceSpinner = (Spinner) findViewById(R.id.spnCreateExerciseDistance);
+					ArrayAdapter<CharSequence> exerDistanceAdapter = ArrayAdapter.createFromResource(parent.getContext(),
+							R.array.exerciseDistances, android.R.layout.simple_spinner_item);
+					exerDistanceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+					distanceSpinner.setAdapter(exerDistanceAdapter);
+					distanceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+						
+						@Override
+						public void onItemSelected(AdapterView<?> parent,
+								View view, int pos, long id) {
+							exDistanceType = parent.getItemAtPosition(pos).toString();
+						}
+						
+						@Override
+						public void onNothingSelected(AdapterView parent) {
+							
+						}
+					});
+				}
+				
+				else if ("Countdown Timer".equals(parent.getItemAtPosition(pos).toString())) {
+					distanceLayout.setVisibility(8);
+					setLayout.setVisibility(8);
+					while (!inflatedSets.isEmpty()) {
+						int position = inflatedSets.size() - 1;
+						setLayout.removeView(inflatedSets.get(position));
+						inflatedSets.remove(position);
+					}
+					
+					countdownLayout.setVisibility(0);
+					
+					exCountdownText = (EditText) findViewById(R.id.etCreateExerciseCountdown);
+					
+					Spinner countdownSpinner = (Spinner) findViewById(R.id.spnCreateExerciseCountdown);
+					ArrayAdapter<CharSequence> exerCountdownAdapter = ArrayAdapter.createFromResource(parent.getContext(),
+							R.array.exerciseCountdowns, android.R.layout.simple_spinner_item);
+					exerCountdownAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+					countdownSpinner.setAdapter(exerCountdownAdapter);
+					countdownSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+						
+						@Override
+						public void onItemSelected(AdapterView<?> parent,
+								View view, int pos, long id) {
+							exCountdownType = parent.getItemAtPosition(pos).toString();
+						}
+						
+						@Override
+						public void onNothingSelected(AdapterView parent) {
+							
+						}
+					});
+				}
+				
+				else if ("Countup Timer".equals(parent.getItemAtPosition(pos).toString())) {
+					countdownLayout.setVisibility(8);
+					distanceLayout.setVisibility(8);
+					setLayout.setVisibility(8);
+					while (!inflatedSets.isEmpty()) {
+						int position = inflatedSets.size() - 1;
+						setLayout.removeView(inflatedSets.get(position));
+						inflatedSets.remove(position);
+					}
+				}
+				
+				else if ("Intervals".equals(parent.getItemAtPosition(pos).toString())) {
+					countdownLayout.setVisibility(8);
+					distanceLayout.setVisibility(8);
+					setLayout.setVisibility(8);
+					while (!inflatedSets.isEmpty()) {
+						int position = inflatedSets.size() - 1;
+						setLayout.removeView(inflatedSets.get(position));
+						inflatedSets.remove(position);
+					}
+				}
+				
+				else if ("Set-based".equals(parent.getItemAtPosition(pos).toString())) {
+					countdownLayout.setVisibility(8);
+					distanceLayout.setVisibility(8);
 					setLayout.setVisibility(0);
 					
 					for (int i = 0; i < 3; i++) {
@@ -139,8 +239,7 @@ public class CreateExerciseActivity extends FragmentActivity {
 									replaceWeight.setText(replace);
 								}
 							}
-						}
-						
+						}	
 					});
 					
 					EditText repsText = (EditText) inflatedSets.get(0).findViewById(R.id.etCreateExerciseReps);
@@ -174,7 +273,6 @@ public class CreateExerciseActivity extends FragmentActivity {
 								}
 							}
 						}
-						
 					});
 				} else {
 					while (!inflatedSets.isEmpty()) {
@@ -203,15 +301,62 @@ public class CreateExerciseActivity extends FragmentActivity {
 				ex.setSets(inflatedSets.size());
 				setVar = new Set();
 				
+				Context context = getApplicationContext();
+				CharSequence text;
+				int duration = Toast.LENGTH_SHORT;
+				
 				mDbHelper.open();
-				exId = mDbHelper.createExercise(ex);
-				for (LinearLayout inflatedSet : inflatedSets) {
-					EditText repsText = (EditText) inflatedSet.findViewById(R.id.etCreateExerciseReps);
-					EditText weightText = (EditText) inflatedSet.findViewById(R.id.etCreateExerciseWeight);
+				if ("Distance".equals(subTypeSpinner.getSelectedItem().toString())) {
+					String exDistanceString = exDistanceText.getText().toString();
+					if (exDistanceString.length() > 0) {
+						ex.setDistance(Double.parseDouble(exDistanceString));
+					} else {
+						text = "Please specify a distance.";
+						Toast toast = Toast.makeText(context, text, duration);
+						toast.setGravity(Gravity.CENTER, 0, 0);
+						toast.show();
+						return;
+					}
+					ex.setDistanceType(exDistanceType);
+				} else if ("Countdown Timer".equals(subTypeSpinner.getSelectedItem().toString())) {
+					String exCountdownString = exCountdownText.getText().toString();
+					if (exCountdownString.length() > 0) {
+						ex.setTime(Long.parseLong(exCountdownString));
+						ex.setIsCountdown(true);
+					} else {
+						text = "Please specify a time.";
+						Toast toast = Toast.makeText(context, text, duration);
+						toast.setGravity(Gravity.CENTER, 0, 0);
+						toast.show();
+						return;
+					}
+					ex.setTimeType(exCountdownType);
+				} else if ("Countup Timer".equals(subTypeSpinner.getSelectedItem().toString())) {
+					ex.setIsCountdown(false);
+				} else if ("Intervals".equals(subTypeSpinner.getSelectedItem().toString())) {
 					
-					setVar.setReps(Integer.parseInt(repsText.getText().toString()));
-					setVar.setWeight(Double.parseDouble(weightText.getText().toString()));
-					mDbHelper.createSet(setVar);
+				} else {
+					for (LinearLayout inflatedSet : inflatedSets) {
+						EditText repsText = (EditText) inflatedSet.findViewById(R.id.etCreateExerciseReps);
+						EditText weightText = (EditText) inflatedSet.findViewById(R.id.etCreateExerciseWeight);
+						
+						setVar.setReps(Integer.parseInt(repsText.getText().toString()));
+						setVar.setWeight(Double.parseDouble(weightText.getText().toString()));
+						mDbHelper.createSet(setVar);
+					}
+				}
+				exId = mDbHelper.createExercise(ex);
+				if (exId == 0L) {
+					text = "Exercise Name and Type required";
+					Toast toast = Toast.makeText(context, text, duration);
+					toast.setGravity(Gravity.CENTER, 0, 0);
+					toast.show();
+				}
+				else {
+					text = "Exercise Created";
+					Toast toast = Toast.makeText(context, text, duration);
+					toast.setGravity(Gravity.CENTER, 0, 0);
+					toast.show();
 				}
 				mDbHelper.close();
 			}

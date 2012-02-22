@@ -10,20 +10,21 @@ import android.util.Log;
 
 import com.cwru.model.Exercise;
 import com.cwru.model.Set;
+import com.cwru.model.Workout;
 
 public class DbAdapter {
 	private DatabaseHelper dbHelper;
 	private SQLiteDatabase db;
 	private static final String TAG = "dbHelper";
 
-	private static final String CREATE_WORKOUTS_TABLE = 
+	private static final String CREATE_WORKOUTS_TABLE =
 			"create table workouts (_id integer primary key autoincrement, "
-			+ "name text not null, type text not null, exercise_sequence "
-			+ "text not null, coment text, repeatable boolean not null);";
+			+ "name text not null, workout_type text not null, exercise_sequence "
+			+ "text not null, comment text);";
 	private static final String CREATE_EXERCISES_TABLE = 
 			"create table exercises (_id integer primary key autoincrement, "
 			+ "name text not null, type text not null, sets integer, "
-			+ "time integer, is_countdown boolean, distance real,"
+			+ "time integer, time_type string, is_countdown boolean, distance real,"
 			+ "distance_type text, interval integer, comment text, deleted boolean not null);";
 	private static final String CREATE_SETS_TABLE = 
 			"create table sets (_id integer primary key autoincrement, "
@@ -36,7 +37,7 @@ public class DbAdapter {
 			+ "time integer, time_type boolean, distance real, interval"
 			+ "integer, comment text);";
 
-	private static final String DATABASE_NAME = "FitLogger Data";
+	private static final String DATABASE_NAME = "FitLoggerData";
 	private static final String DATABASE_TABLE_WORKOUT = "workouts";
 	private static final String DATABASE_TABLE_EXERCISE = "exercises";
 	private static final String DATABASE_TABLE_SET = "sets";
@@ -57,6 +58,7 @@ public class DbAdapter {
 			db.execSQL(CREATE_EXERCISES_TABLE);
 			db.execSQL(CREATE_SETS_TABLE);
 			db.execSQL(CREATE_WORKOUT_RESULTS_TABLE);
+			Log.d("Steve", "DB CREATES");
 		}
 
 		@Override
@@ -88,8 +90,38 @@ public class DbAdapter {
 	public void close() {
 		dbHelper.close();
 	}
+	
+	public long createWorkout(Workout workout) {
+		Log.d("Workout in DB CREATE STATEMENT Name: ", workout.getName());
+		Log.d("Type: ", workout.getType());
+		Log.d("Sequence", workout.getExerciseSequence());
+		ContentValues initialValues = new ContentValues();
+		initialValues.put("name", workout.getName());
+		initialValues.put("workout_type",workout.getType());
+		initialValues.put("exercise_Sequence",workout.getExerciseSequence());
+		//initialValues.put("comment", workout.getComment());
+		
+		return db.insert(DATABASE_TABLE_WORKOUT, null, initialValues);
+	}
+	
+	public Cursor getAllWorkouts() { 
+		return db.rawQuery("select * from workouts", new String [0]);
+	}
+	
+	public Cursor getAllExercises() { 
+		String columns [] = {"name"};
+		Cursor cursor = db.query(DATABASE_TABLE_EXERCISE, columns, null, null, null, null, null);
+		if (cursor == null) { Log.d("Steve", "Cursor for exercises is null");}
+		return cursor;
+		//return db.rawQuery("select * from exercises", new String [0]);
+	}
 
 	public long createExercise(Exercise ex) {
+		
+		if (ex.getName() == null || ex.getName().length() == 0
+				|| ex.getType() == null || ex.getType().length() == 0)
+			return 0L;
+		
 		ContentValues initialValues = new ContentValues();
 		initialValues.put("name", ex.getName());
 		initialValues.put("type", ex.getType());
@@ -98,10 +130,11 @@ public class DbAdapter {
 			initialValues.put("sets", ex.getSets());
 		}
 
-		if (!ex.getIsCountdown()) {
+		if (!ex.getIsCountdown() && ex.getTime() == 0L) {
 			initialValues.put("is_countdown", ex.getIsCountdown());
 		} else if (ex.getIsCountdown() && ex.getTime() > 0) {
 			initialValues.put("time", ex.getTime());
+			initialValues.put("time_type", ex.getTimeType());
 			initialValues.put("is_countdown", ex.getIsCountdown());
 		}
 
