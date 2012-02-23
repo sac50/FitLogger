@@ -15,7 +15,6 @@ import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -54,17 +53,17 @@ public class CreateExerciseActivity extends FragmentActivity {
 		textView.setText("Create Exercise Tab");
 		setContentView(R.layout.create_exercise_tab);
 		
+		//Exercise name
 		mNameText = (EditText) findViewById(R.id.etCreateExerciseName);
-		subType = R.array.exerciseCardioSubTypes;
 		
+		//Exercise type spinner
 		Spinner typeSpinner = (Spinner) findViewById(R.id.spnCreateExerciseType);
-		ArrayAdapter<CharSequence> exerTypeAdapter = ArrayAdapter.createFromResource(this,
-				R.array.exersiseTypes, android.R.layout.simple_spinner_item);
-		exerTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		typeSpinner.setAdapter(exerTypeAdapter);
+		initSpinner(R.array.exerciseTypes, typeSpinner);
 		
+		//Exercise subtype spinner. Initialized to the Cardio spinner
 		subTypeSpinner = (Spinner) findViewById(R.id.spnCreateExerciseSubType);
-		initSubTypeSpinner(subType);
+		subType = R.array.exerciseCardioSubTypes;
+		initSpinner(subType, subTypeSpinner);
 		
 		typeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			
@@ -72,12 +71,14 @@ public class CreateExerciseActivity extends FragmentActivity {
 			public void onItemSelected(AdapterView<?> parent,
 			        View view, int pos, long id) {
 				exType = parent.getItemAtPosition(pos).toString();
+				//if the user selects Cardio, display the Cardio subtype spinner
 				if ("Cardio".equals(exType) && subType != R.array.exerciseCardioSubTypes) {
 					subType = R.array.exerciseCardioSubTypes;
-					initSubTypeSpinner(subType);
+					initSpinner(subType, subTypeSpinner);
+				//else if the user selects a Strength type, display Strength subtype spinner
 				} else if (!"Cardio".equals(exType) && subType != R.array.exerciseStrengthSubTypes) {
 					subType = R.array.exerciseStrengthSubTypes;
-					initSubTypeSpinner(subType);
+					initSpinner(subType, subTypeSpinner);
 				}
 			}
 			
@@ -87,43 +88,34 @@ public class CreateExerciseActivity extends FragmentActivity {
 			    }
 		});
 		
-//		subTypeSpinner = (Spinner) findViewById(R.id.spnCreateExerciseSubType);
-//		ArrayAdapter<CharSequence> exerSubTypeAdapter = ArrayAdapter.createFromResource(this,
-//				subType, android.R.layout.simple_spinner_item);
-//		exerSubTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//		subTypeSpinner.setAdapter(exerSubTypeAdapter);
 		subTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			
 			@Override
 			public void onItemSelected(AdapterView<?> parent,
 					View view, int pos, long id) {
+				//layouts for various sub type representations
 				final LinearLayout distanceLayout = (LinearLayout) findViewById(R.id.llCreateExerciseDistance);
 				final LinearLayout countdownLayout = (LinearLayout) findViewById(R.id.llCreateExerciseCountdown);
 				final LinearLayout intervalLayout = (LinearLayout) findViewById(R.id.llCreateExerciseIntervals);
 				final LinearLayout intervalSetLayout = (LinearLayout) findViewById(R.id.llCreateExerciseIntervalSets);
 				final LinearLayout setLayout = (LinearLayout) findViewById(R.id.llCreateExerciseSets);
 				
+				//if sub type is distance
 				if ("Distance".equals(parent.getItemAtPosition(pos).toString())) {
+					//remove any other sub type layout and purge inflatedLayouts
 					countdownLayout.setVisibility(8);
 					intervalLayout.setVisibility(8);
 					intervalSetLayout.setVisibility(8);
 					setLayout.setVisibility(8);
-					while (!inflatedLayouts.isEmpty()) {
-						int position = inflatedLayouts.size() - 1;
-						intervalLayout.removeView(inflatedLayouts.get(position));
-						setLayout.removeView(inflatedLayouts.get(position));
-						inflatedLayouts.remove(position);
-					}
+					clearLayouts(inflatedLayouts, intervalLayout, setLayout);
 					
+					//display the proper layout
 					distanceLayout.setVisibility(0);
 					
 					exDistanceText = (EditText) findViewById(R.id.etCreateExerciseDistance);
 					
 					Spinner distanceSpinner = (Spinner) findViewById(R.id.spnCreateExerciseDistance);
-					ArrayAdapter<CharSequence> exerDistanceAdapter = ArrayAdapter.createFromResource(parent.getContext(),
-							R.array.exerciseDistances, android.R.layout.simple_spinner_item);
-					exerDistanceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-					distanceSpinner.setAdapter(exerDistanceAdapter);
+					initSpinner(R.array.exerciseDistances, distanceSpinner);
 					distanceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 						
 						@Override
@@ -140,26 +132,20 @@ public class CreateExerciseActivity extends FragmentActivity {
 				}
 				
 				else if ("Countdown Timer".equals(parent.getItemAtPosition(pos).toString())) {
+					//remove any other sub type layout and purge inflatedLayouts
 					distanceLayout.setVisibility(8);
 					intervalLayout.setVisibility(8);
 					intervalSetLayout.setVisibility(8);
 					setLayout.setVisibility(8);
-					while (!inflatedLayouts.isEmpty()) {
-						int position = inflatedLayouts.size() - 1;
-						intervalLayout.removeView(inflatedLayouts.get(position));
-						setLayout.removeView(inflatedLayouts.get(position));
-						inflatedLayouts.remove(position);
-					}
+					clearLayouts(inflatedLayouts, intervalLayout, setLayout);
 					
+					//display the proper layout
 					countdownLayout.setVisibility(0);
 					
 					exCountdownText = (EditText) findViewById(R.id.etCreateExerciseCountdown);
 					
 					Spinner countdownSpinner = (Spinner) findViewById(R.id.spnCreateExerciseCountdown);
-					ArrayAdapter<CharSequence> exerCountdownAdapter = ArrayAdapter.createFromResource(parent.getContext(),
-							R.array.timeTypes, android.R.layout.simple_spinner_item);
-					exerCountdownAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-					countdownSpinner.setAdapter(exerCountdownAdapter);
+					initSpinner(R.array.timeTypes, countdownSpinner);
 					countdownSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 						
 						@Override
@@ -176,61 +162,52 @@ public class CreateExerciseActivity extends FragmentActivity {
 				}
 				
 				else if ("Countup Timer".equals(parent.getItemAtPosition(pos).toString())) {
+					//remove any other sub type layout and purge inflatedLayouts
 					countdownLayout.setVisibility(8);
 					distanceLayout.setVisibility(8);
 					intervalLayout.setVisibility(8);
 					intervalSetLayout.setVisibility(8);
 					setLayout.setVisibility(8);
-					while (!inflatedLayouts.isEmpty()) {
-						int position = inflatedLayouts.size() - 1;
-						intervalLayout.removeView(inflatedLayouts.get(position));
-						setLayout.removeView(inflatedLayouts.get(position));
-						inflatedLayouts.remove(position);
-					}
+					clearLayouts(inflatedLayouts, intervalLayout, setLayout);
 				}
 				
 				else if ("Intervals".equals(parent.getItemAtPosition(pos).toString())) {
+					//remove any other sub type layout and purge inflatedLayouts
 					countdownLayout.setVisibility(8);
 					distanceLayout.setVisibility(8);
 					setLayout.setVisibility(8);
-					while (!inflatedLayouts.isEmpty()) {
-						int position = inflatedLayouts.size() - 1;
-						intervalLayout.removeView(inflatedLayouts.get(position));
-						setLayout.removeView(inflatedLayouts.get(position));
-						inflatedLayouts.remove(position);
-					}
+					clearLayouts(inflatedLayouts, intervalLayout, setLayout);
 					
+					//display the proper layouts
 					intervalLayout.setVisibility(0);
 					intervalSetLayout.setVisibility(0);
 					
+					//when first displaying layout, display two intervals
 					for (int i = 0; i < 2; i++) {
 						LinearLayout inflatedLayout;
+						//inflate the interval's layout
 						inflatedLayout = (LinearLayout) View.inflate(parent.getContext(), R.layout.create_exercise_interval_builder, null);
 						inflatedLayouts.add(inflatedLayout);
 						intervalLayout.addView(inflatedLayout);
 						
 						Spinner intervalSpinner = (Spinner) inflatedLayout.findViewById(R.id.spnCreateExerciseIntervalTimeType);
-						ArrayAdapter<CharSequence> exerIntervalAdapter = ArrayAdapter.createFromResource(parent.getContext(),
-								R.array.timeTypes, android.R.layout.simple_spinner_item);
-						exerIntervalAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-						intervalSpinner.setAdapter(exerIntervalAdapter);
+						initSpinner(R.array.timeTypes, intervalSpinner);
 					}
 					
 					Button addInterval = (Button) findViewById(R.id.btnCreateExerciseAddInterval);
 					addInterval.setOnClickListener(new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
+							LinearLayout inflatedLayout;
+							//a maximum of five intervals per exercise can be made
 							if (inflatedLayouts.size() < 5) {
-								LinearLayout inflatedLayout;
+								//inflate the interval's layout
 								inflatedLayout = (LinearLayout) View.inflate(v.getContext(), R.layout.create_exercise_interval_builder, null);
 								inflatedLayouts.add(inflatedLayout);
 								intervalLayout.addView(inflatedLayout);
 								
 								Spinner intervalSpinner = (Spinner) inflatedLayout.findViewById(R.id.spnCreateExerciseIntervalTimeType);
-								ArrayAdapter<CharSequence> exerIntervalAdapter = ArrayAdapter.createFromResource(v.getContext(),
-										R.array.timeTypes, android.R.layout.simple_spinner_item);
-								exerIntervalAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-								intervalSpinner.setAdapter(exerIntervalAdapter);
+								initSpinner(R.array.timeTypes, intervalSpinner);
 							}
 						}
 					});
@@ -239,6 +216,7 @@ public class CreateExerciseActivity extends FragmentActivity {
 					removeInterval.setOnClickListener(new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
+							//an interval exercise must have at least one interval
 							if (inflatedLayouts.size() > 1) {
 								int position = inflatedLayouts.size() - 1;
 								intervalLayout.removeView(inflatedLayouts.get(position));
@@ -247,12 +225,9 @@ public class CreateExerciseActivity extends FragmentActivity {
 						}
 					});
 					
-					Spinner intervalSpinner = (Spinner) findViewById(R.id.spnCreateExerciseIntervalTimeType);
-					ArrayAdapter<CharSequence> exerIntervalAdapter = ArrayAdapter.createFromResource(parent.getContext(),
-							R.array.timeTypes, android.R.layout.simple_spinner_item);
-					exerIntervalAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-					intervalSpinner.setAdapter(exerIntervalAdapter);
-					intervalSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+					Spinner intervalTimeSpinner = (Spinner) findViewById(R.id.spnCreateExerciseIntervalTimeType);
+					initSpinner(R.array.timeTypes, intervalTimeSpinner);
+					intervalTimeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 						
 						@Override
 						public void onItemSelected(AdapterView<?> parent,
@@ -266,14 +241,17 @@ public class CreateExerciseActivity extends FragmentActivity {
 						}
 					});
 					
+					//how many sets of the intervals a user wants to do
 					tvIntervalSets = (TextView) findViewById(R.id.tvIntervalSetNum);
 					tvIntervalSets.setText("1");
 					
+					//increments how many times an interval will be done
 					Button addSet = (Button) findViewById(R.id.btnCreateExerciseAddIntervalSet);
 					addSet.setOnClickListener(new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
 							int setNum = Integer.parseInt(tvIntervalSets.getText().toString());
+							//an interval exercise can be performed up to ten times
 							if (setNum < 10) {
 								setNum++;
 								tvIntervalSets.setText(Integer.toString(setNum));
@@ -281,11 +259,13 @@ public class CreateExerciseActivity extends FragmentActivity {
 						}
 					});
 					
+					//decrements how many times an interval will be done
 					Button removeSet = (Button) findViewById(R.id.btnCreateExerciseRemoveIntervalSet);
 					removeSet.setOnClickListener(new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
 							int setNum = Integer.parseInt(tvIntervalSets.getText().toString());
+							//an interval exercise must be done at least once
 							if (setNum > 1) {
 								setNum--;
 								tvIntervalSets.setText(Integer.toString(setNum));
@@ -296,46 +276,54 @@ public class CreateExerciseActivity extends FragmentActivity {
 				}
 				
 				else if ("Set-based".equals(parent.getItemAtPosition(pos).toString())) {
+					//remove any other sub type layout and purge inflatedLayouts
 					countdownLayout.setVisibility(8);
 					distanceLayout.setVisibility(8);
 					intervalLayout.setVisibility(8);
 					intervalSetLayout.setVisibility(8);
 					setLayout.setVisibility(0);
-					while (!inflatedLayouts.isEmpty()) {
-						int position = inflatedLayouts.size() - 1;
-						intervalLayout.removeView(inflatedLayouts.get(position));
-						setLayout.removeView(inflatedLayouts.get(position));
-						inflatedLayouts.remove(position);
-					}
+					clearLayouts(inflatedLayouts, intervalLayout, setLayout);
 					
+					//initialize the layout with three sets
 					for (int i = 0; i < 3; i++) {
 						LinearLayout inflatedSet;
+						//inflate the set
 						inflatedSet = (LinearLayout) View.inflate(parent.getContext(), R.layout.create_exercise_set_builder, null);
+						//display the number of the set
 						TextView setNum = (TextView) inflatedSet.findViewById(R.id.tvCreateExerciseSetNum);
 						setNum.setText("Set " + (i + 1));
+						
 						inflatedLayouts.add(inflatedSet);
 						setLayout.addView(inflatedSet);
 					}
 					
+					//adds another set to the exercise
 					Button addSet = (Button) findViewById(R.id.btnCreateExerciseAddSet);
 					addSet.setOnClickListener(new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
+							LinearLayout inflatedSet;
+							//no more than ten sets per exercise
 							if (inflatedLayouts.size() < 10) {
-								LinearLayout inflatedSet;
+								//inflate the set
 								inflatedSet = (LinearLayout) View.inflate(v.getContext(), R.layout.create_exercise_set_builder, null);
+								
+								//display the number of the set
 								TextView setNum = (TextView) inflatedSet.findViewById(R.id.tvCreateExerciseSetNum);
 								setNum.setText("Set " + (inflatedLayouts.size() + 1));
+								
 								inflatedLayouts.add(inflatedSet);
 								setLayout.addView(inflatedSet);
 							}
 						}
 					});
 					
+					//removes a set from the exercise
 					Button removeSet = (Button) findViewById(R.id.btnCreateExerciseRemoveSet);
 					removeSet.setOnClickListener(new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
+							//must be at least one set per exercise
 							if (inflatedLayouts.size() > 1) {
 								int position = inflatedLayouts.size() - 1;
 								setLayout.removeView(inflatedLayouts.get(position));
@@ -345,6 +333,8 @@ public class CreateExerciseActivity extends FragmentActivity {
 					});
 					
 					EditText weightText = (EditText) inflatedLayouts.get(0).findViewById(R.id.etCreateExerciseWeight);
+					
+					//auto-fill for weight
 					weightText.addTextChangedListener(new TextWatcher() {
 
 						@Override
@@ -355,21 +345,27 @@ public class CreateExerciseActivity extends FragmentActivity {
 						@Override
 						public void beforeTextChanged(CharSequence arg0, int arg1,
 								int arg2, int arg3) {
-							// TODO Auto-generated method stub
 							
 						}
 
+						//when text is changed in first set's weight param
 						@Override
 						public void onTextChanged(CharSequence s, int arg1,
 								int arg2, int arg3) {
 							LinearLayout inflatedSet;
 							String replace = s.toString();
+							//for every inflated set after the first
 							for (int i = 1; i < inflatedLayouts.size(); i++) {
 								inflatedSet = inflatedLayouts.get(i);
 								String old = ((EditText) inflatedSet.findViewById(R.id.etCreateExerciseWeight)).getText().toString();
+								//if the set's weight value is null or empty
 								if (old == null || old.length() < 1 
+										//OR the first set's weight value is not empty AND 
+										//equal to candidate set's weight value, minus the new char
 										|| replace.length() > 0 && old.equals(replace.substring(0, replace.length() - 1))
+										//OR equal to first set's weight value before a digit was deleted
 										|| old.substring(0, old.length() - 1).equals(replace)) {
+									//set the weight text equal to the first set's weight value
 									EditText replaceWeight = (EditText) inflatedSet.findViewById(R.id.etCreateExerciseWeight);
 									replaceWeight.setText(replace);
 								}
@@ -378,6 +374,8 @@ public class CreateExerciseActivity extends FragmentActivity {
 					});
 					
 					EditText repsText = (EditText) inflatedLayouts.get(0).findViewById(R.id.etCreateExerciseReps);
+					
+					//auto-fill for reps
 					repsText.addTextChangedListener(new TextWatcher() {
 
 						@Override
@@ -392,30 +390,30 @@ public class CreateExerciseActivity extends FragmentActivity {
 							
 						}
 
+						//when text is changed in first set's reps value
 						@Override
 						public void onTextChanged(CharSequence s, int arg1,
 								int arg2, int arg3) {
 							LinearLayout inflatedSet;
 							String replace = s.toString();
+							//for every inflated set after the first
 							for (int i = 1; i < inflatedLayouts.size(); i++) {
 								inflatedSet = inflatedLayouts.get(i);
 								String old = ((EditText) inflatedSet.findViewById(R.id.etCreateExerciseReps)).getText().toString();
+								//if the set's reps value is null or empty
 								if (old == null || old.length() < 1 
+										//OR the first set's reps value is not empty AND 
+										//equal to candidate set's reps value, minus the new char
 										|| replace.length() > 0 && old.equals(replace.substring(0, replace.length() - 1))
+										//OR equal to first set's reps value before a digit was deleted
 										|| old.substring(0, old.length() - 1).equals(replace)) {
+									//set the reps text equal to the first set's reps value
 									EditText replaceReps = (EditText) inflatedSet.findViewById(R.id.etCreateExerciseReps);
 									replaceReps.setText(replace);
 								}
 							}
 						}
 					});
-				} else {
-					while (!inflatedLayouts.isEmpty()) {
-						int position = inflatedLayouts.size() - 1;
-						setLayout.removeView(inflatedLayouts.get(position));
-						inflatedLayouts.remove(position);
-					}
-					setLayout.setVisibility(8);
 				}
 			}
 			
@@ -425,6 +423,7 @@ public class CreateExerciseActivity extends FragmentActivity {
 			}
 		});
 		
+		//submits the exercise to the database if valid data is present
 		Button doneButton = (Button) findViewById(R.id.btnCreateExerciseDone);
 		doneButton.setOnClickListener(new View.OnClickListener() {
 			
@@ -436,10 +435,12 @@ public class CreateExerciseActivity extends FragmentActivity {
 				intervalVar = new Interval();
 				setVar = new Set();
 				
+				//simple params for a Toast display
 				Context context = getApplicationContext();
 				CharSequence text;
 				int duration = Toast.LENGTH_SHORT;
 				
+				//used to signify if intervals or sets need to be created
 				int layoutMarker = -1;
 				
 				mDbHelper.open();
@@ -448,6 +449,7 @@ public class CreateExerciseActivity extends FragmentActivity {
 					if (exDistanceString.length() > 0) {
 						ex.setDistance(Double.parseDouble(exDistanceString));
 					} else {
+						//user needs to submit more info
 						text = "Please specify a distance.";
 						Toast toast = Toast.makeText(context, text, duration);
 						toast.setGravity(Gravity.CENTER, 0, 0);
@@ -461,6 +463,7 @@ public class CreateExerciseActivity extends FragmentActivity {
 						ex.setTime(Long.parseLong(exCountdownString));
 						ex.setIsCountdown(true);
 					} else {
+						//user needs to submit more info
 						text = "Please specify a time.";
 						Toast toast = Toast.makeText(context, text, duration);
 						toast.setGravity(Gravity.CENTER, 0, 0);
@@ -471,13 +474,17 @@ public class CreateExerciseActivity extends FragmentActivity {
 				} else if ("Countup Timer".equals(subTypeSpinner.getSelectedItem().toString())) {
 					ex.setIsCountdown(false);
 				} else if ("Intervals".equals(subTypeSpinner.getSelectedItem().toString())) {
+					//indicate that intervals need to be stored
 					layoutMarker = 0;
 					ex.setIntevalNum(Integer.parseInt(tvIntervalSets.getText().toString()));
 				} else {
+					//indicate that sets need to be stored
 					layoutMarker = 1;
 					ex.setSets(inflatedLayouts.size());
 				}
+				//store the exercise data in the db
 				exId = mDbHelper.createExercise(ex);
+				//if the ID is 0, user needs to specify more info
 				if (exId == 0L) {
 					text = "Exercise Name and Type required";
 					Toast toast = Toast.makeText(context, text, duration);
@@ -485,8 +492,12 @@ public class CreateExerciseActivity extends FragmentActivity {
 					toast.show();
 				}
 				else {
+					//if intervals need to be stored
 					if (layoutMarker == 0) {
+						//list holds the new IDs for deletion from DB if something goes wrong
 						List<Long> intervalIds = new ArrayList<Long>();
+						
+						//for each interval
 						for (LinearLayout inflatedLayout : inflatedLayouts) {							
 							EditText nameText = (EditText) inflatedLayout.findViewById(R.id.etCreateExerciseIntervalName);
 							EditText timeText = (EditText) inflatedLayout.findViewById(R.id.etCreateExerciseIntervalTime);
@@ -495,6 +506,7 @@ public class CreateExerciseActivity extends FragmentActivity {
 							String name = nameText.getText().toString();
 							String time = (timeText.getText().toString());
 							
+							//if the user has specified both name and time, store the interval
 							if (name != null && name.length() > 0 && time != null && time.length() > 0) {
 								intervalVar.setExerciseId(exId);
 								intervalVar.setName(name);
@@ -502,24 +514,32 @@ public class CreateExerciseActivity extends FragmentActivity {
 								intervalVar.setTimeType(timeTypeSpinner.getSelectedItem().toString());
 								
 								intervalIds.add(mDbHelper.createInterval(intervalVar));
+							//else the user needs to specify more info, previous insertions in DB must be rolled back
 							} else {
+								//delete newly inserted exercise from DB
 								mDbHelper.trueDeleteExercise(exId);
+								//delete any intervals that may have already been inserted to DB
 								for (long intervalId : intervalIds) {
 									mDbHelper.deleteInterval(intervalId);
 								}
 								
+								//display to user that more info required
 								text = "Interval names and times required.";
 								Toast toast = Toast.makeText(context, text, duration);
 								toast.setGravity(Gravity.CENTER, 0, 0);
 								toast.show();
 								
-								exId = 0L;
-								break;
+								//end the button press sequence
+								return;
 							}
 							
 						}
+					//if sets need to be stored
 					} else if (layoutMarker == 1) {
+						//list holds the new IDs for deletion from DB if something goes wrong
 						List<Long> setIds = new ArrayList<Long>();
+						
+						//for each set
 						for (LinearLayout inflatedSet : inflatedLayouts) {
 							EditText repsText = (EditText) inflatedSet.findViewById(R.id.etCreateExerciseReps);
 							EditText weightText = (EditText) inflatedSet.findViewById(R.id.etCreateExerciseWeight);
@@ -527,33 +547,38 @@ public class CreateExerciseActivity extends FragmentActivity {
 							String reps = repsText.getText().toString();
 							String weight = weightText.getText().toString();
 							
+							//if user has specified both weight and reps, store the set
 							if (reps != null && reps.length() > 0 && weight != null && weight.length() > 0) {
+								setVar.setExerciseId(exId);
 								setVar.setReps(Integer.parseInt(reps));
 								setVar.setWeight(Double.parseDouble(weight));
 								setIds.add(mDbHelper.createSet(setVar));
+							//else the user needs to specify more info, previous insertions in DB must be rolled back
 							} else {
+								//delete newly inserted exercise from DB
 								mDbHelper.trueDeleteExercise(exId);
+								//delete any sets that may have already been inserted to the DB
 								for (long setId : setIds) {
 									mDbHelper.deleteSet(setId);
 								}
 								
+								//display to user that more info is required
 								text = "Set weight and reps required.";
 								Toast toast = Toast.makeText(context, text, duration);
 								toast.setGravity(Gravity.CENTER, 0, 0);
 								toast.show();
 								
-								exId = 0L;
-								break;
+								//end the button press sequence
+								return;
 							}
 						}
 					}
 					
-					if (exId != 0L) {
-						text = "Exercise Created";
-						Toast toast = Toast.makeText(context, text, duration);
-						toast.setGravity(Gravity.CENTER, 0, 0);
-						toast.show();
-					}
+					//display that the exercise was created
+					text = "Exercise Created";
+					Toast toast = Toast.makeText(context, text, duration);
+					toast.setGravity(Gravity.CENTER, 0, 0);
+					toast.show();
 				}
 				mDbHelper.close();
 			}
@@ -562,10 +587,34 @@ public class CreateExerciseActivity extends FragmentActivity {
 		
 	}
 	
-	private void initSubTypeSpinner(int subType) {
-		ArrayAdapter<CharSequence> exerSubTypeAdapter = ArrayAdapter.createFromResource(this,
-				subType, android.R.layout.simple_spinner_item);
-		exerSubTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		subTypeSpinner.setAdapter(exerSubTypeAdapter);
+	/**
+	 * defines and initializes the array adapter for spinner,
+	 * based on the provided arrayID
+	 * 
+	 * @param arrayID
+	 * @param spinner
+	 */
+	private void initSpinner(int arrayID, Spinner spinner) {
+		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+				arrayID, android.R.layout.simple_spinner_item);
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spinner.setAdapter(adapter);
+	}
+	
+	/**
+	 * purges a list of LinearLayouts for future use,
+	 * and removes these Layout Views from the provided two LinearLayouts
+	 * 
+	 * @param inflatedLayouts
+	 * @param intervalLayout
+	 * @param setLayout
+	 */
+	private void clearLayouts(List<LinearLayout> inflatedLayouts, LinearLayout intervalLayout, LinearLayout setLayout) {
+		while (!inflatedLayouts.isEmpty()) {
+			int position = inflatedLayouts.size() - 1;
+			intervalLayout.removeView(inflatedLayouts.get(position));
+			setLayout.removeView(inflatedLayouts.get(position));
+			inflatedLayouts.remove(position);
+		}
 	}
 }

@@ -28,7 +28,7 @@
     
     <string name="exerciseName">Exercise Name</string>
     <string name="exerciseType">Exercise Type</string>
-    <string-array name="exersiseTypes">
+    <string-array name="exerciseTypes">
         	<item>Cardio</item>
         	<item>Strength - Bicep</item>
         	<item>Strength - Chest</item>
