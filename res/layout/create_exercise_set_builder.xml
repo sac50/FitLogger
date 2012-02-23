@@ -3,32 +3,38 @@
     android:id="@+id/llSetGeneration"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
-
-    <TextView
-        android:id="@+id/tvCreateExerciseWeight"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/weight" />
-
+    android:orientation="horizontal" >
+    
     <EditText
         android:id="@+id/etCreateExerciseWeight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
         android:layout_weight="1"
-        android:inputType="numberDecimal" />
+        android:hint="@string/weight"
+        android:inputType="numberDecimal"
+        android:maxLength="4"
+        android:ems="4" />
 
     <TextView
-        android:id="@+id/tvCreateExerciseReps"
-        android:layout_width="wrap_content"
+        android:id="@+id/tvCreateExerciseSetNum"
+        android:layout_width="38dp"
         android:layout_height="wrap_content"
-        android:text="@string/reps" />
-
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="15dp"
+        android:layout_weight="0.31"
+        android:ems="4"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+    
     <EditText
         android:id="@+id/etCreateExerciseReps"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
         android:layout_weight="1"
-        android:inputType="number" />
+        android:ems="4"
+        android:hint="@string/reps"
+        android:inputType="number"
+        android:maxLength="4" />
 
 </LinearLayout>

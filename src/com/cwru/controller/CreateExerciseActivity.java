@@ -30,6 +30,7 @@ public class CreateExerciseActivity extends FragmentActivity {
 	DbAdapter mDbHelper;
 	EditText mNameText;
 	String exType;
+	int subType;
 	EditText exDistanceText;
 	String exDistanceType;
 	EditText exCountdownText;
@@ -54,18 +55,30 @@ public class CreateExerciseActivity extends FragmentActivity {
 		setContentView(R.layout.create_exercise_tab);
 		
 		mNameText = (EditText) findViewById(R.id.etCreateExerciseName);
+		subType = R.array.exerciseCardioSubTypes;
 		
 		Spinner typeSpinner = (Spinner) findViewById(R.id.spnCreateExerciseType);
 		ArrayAdapter<CharSequence> exerTypeAdapter = ArrayAdapter.createFromResource(this,
 				R.array.exersiseTypes, android.R.layout.simple_spinner_item);
 		exerTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		typeSpinner.setAdapter(exerTypeAdapter);
+		
+		subTypeSpinner = (Spinner) findViewById(R.id.spnCreateExerciseSubType);
+		initSubTypeSpinner(subType);
+		
 		typeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			
 			@Override
 			public void onItemSelected(AdapterView<?> parent,
 			        View view, int pos, long id) {
 				exType = parent.getItemAtPosition(pos).toString();
+				if ("Cardio".equals(exType) && subType != R.array.exerciseCardioSubTypes) {
+					subType = R.array.exerciseCardioSubTypes;
+					initSubTypeSpinner(subType);
+				} else if (!"Cardio".equals(exType) && subType != R.array.exerciseStrengthSubTypes) {
+					subType = R.array.exerciseStrengthSubTypes;
+					initSubTypeSpinner(subType);
+				}
 			}
 			
 			@Override
@@ -74,11 +87,11 @@ public class CreateExerciseActivity extends FragmentActivity {
 			    }
 		});
 		
-		subTypeSpinner = (Spinner) findViewById(R.id.spnCreateExerciseSubType);
-		ArrayAdapter<CharSequence> exerSubTypeAdapter = ArrayAdapter.createFromResource(this,
-				R.array.exerciseSubTypes, android.R.layout.simple_spinner_item);
-		exerSubTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		subTypeSpinner.setAdapter(exerSubTypeAdapter);
+//		subTypeSpinner = (Spinner) findViewById(R.id.spnCreateExerciseSubType);
+//		ArrayAdapter<CharSequence> exerSubTypeAdapter = ArrayAdapter.createFromResource(this,
+//				subType, android.R.layout.simple_spinner_item);
+//		exerSubTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//		subTypeSpinner.setAdapter(exerSubTypeAdapter);
 		subTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			
 			@Override
@@ -97,6 +110,7 @@ public class CreateExerciseActivity extends FragmentActivity {
 					setLayout.setVisibility(8);
 					while (!inflatedLayouts.isEmpty()) {
 						int position = inflatedLayouts.size() - 1;
+						intervalLayout.removeView(inflatedLayouts.get(position));
 						setLayout.removeView(inflatedLayouts.get(position));
 						inflatedLayouts.remove(position);
 					}
@@ -132,6 +146,7 @@ public class CreateExerciseActivity extends FragmentActivity {
 					setLayout.setVisibility(8);
 					while (!inflatedLayouts.isEmpty()) {
 						int position = inflatedLayouts.size() - 1;
+						intervalLayout.removeView(inflatedLayouts.get(position));
 						setLayout.removeView(inflatedLayouts.get(position));
 						inflatedLayouts.remove(position);
 					}
@@ -168,6 +183,7 @@ public class CreateExerciseActivity extends FragmentActivity {
 					setLayout.setVisibility(8);
 					while (!inflatedLayouts.isEmpty()) {
 						int position = inflatedLayouts.size() - 1;
+						intervalLayout.removeView(inflatedLayouts.get(position));
 						setLayout.removeView(inflatedLayouts.get(position));
 						inflatedLayouts.remove(position);
 					}
@@ -179,6 +195,7 @@ public class CreateExerciseActivity extends FragmentActivity {
 					setLayout.setVisibility(8);
 					while (!inflatedLayouts.isEmpty()) {
 						int position = inflatedLayouts.size() - 1;
+						intervalLayout.removeView(inflatedLayouts.get(position));
 						setLayout.removeView(inflatedLayouts.get(position));
 						inflatedLayouts.remove(position);
 					}
@@ -284,10 +301,18 @@ public class CreateExerciseActivity extends FragmentActivity {
 					intervalLayout.setVisibility(8);
 					intervalSetLayout.setVisibility(8);
 					setLayout.setVisibility(0);
+					while (!inflatedLayouts.isEmpty()) {
+						int position = inflatedLayouts.size() - 1;
+						intervalLayout.removeView(inflatedLayouts.get(position));
+						setLayout.removeView(inflatedLayouts.get(position));
+						inflatedLayouts.remove(position);
+					}
 					
 					for (int i = 0; i < 3; i++) {
 						LinearLayout inflatedSet;
 						inflatedSet = (LinearLayout) View.inflate(parent.getContext(), R.layout.create_exercise_set_builder, null);
+						TextView setNum = (TextView) inflatedSet.findViewById(R.id.tvCreateExerciseSetNum);
+						setNum.setText("Set " + (i + 1));
 						inflatedLayouts.add(inflatedSet);
 						setLayout.addView(inflatedSet);
 					}
@@ -299,6 +324,8 @@ public class CreateExerciseActivity extends FragmentActivity {
 							if (inflatedLayouts.size() < 10) {
 								LinearLayout inflatedSet;
 								inflatedSet = (LinearLayout) View.inflate(v.getContext(), R.layout.create_exercise_set_builder, null);
+								TextView setNum = (TextView) inflatedSet.findViewById(R.id.tvCreateExerciseSetNum);
+								setNum.setText("Set " + (inflatedLayouts.size() + 1));
 								inflatedLayouts.add(inflatedSet);
 								setLayout.addView(inflatedSet);
 							}
@@ -533,5 +560,12 @@ public class CreateExerciseActivity extends FragmentActivity {
 		});
 		
 		
+	}
+	
+	private void initSubTypeSpinner(int subType) {
+		ArrayAdapter<CharSequence> exerSubTypeAdapter = ArrayAdapter.createFromResource(this,
+				subType, android.R.layout.simple_spinner_item);
+		exerSubTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		subTypeSpinner.setAdapter(exerSubTypeAdapter);
 	}
 }

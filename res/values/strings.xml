@@ -35,12 +35,16 @@
         	<item>Strength - Tricep</item>
     </string-array>
     <string name="exerciseSubType">Exercise Sub-Type</string>
-    <string-array name="exerciseSubTypes">
-       		<item>Distance</item>
+    <string-array name="exerciseCardioSubTypes">
        		<item>Countdown Timer</item>
        		<item>Countup Timer</item>
+       		<item>Distance</item>
        		<item>Intervals</item>
-       		<item>Set-based</item>
+    </string-array>
+    <string-array name="exerciseStrengthSubTypes">
+        	<item>Set-based</item>
+       		<item>Countdown Timer</item>
+       		<item>Countup Timer</item>
     </string-array>
     
     <string name="exerciseDistance">Distance</string>
@@ -69,6 +73,10 @@
     
     <string name="sets">Sets:</string>
     <string name="weight">Weight</string>
+    <string-array name="weightTypes">
+        <item>lb.</item>
+        <item>kg.</item>
+    </string-array>
     <string name="reps">Reps</string>
     <string name="plus">+</string>
     <string name="minus">-</string>
