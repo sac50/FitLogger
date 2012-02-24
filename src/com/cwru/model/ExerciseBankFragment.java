@@ -39,8 +39,10 @@ public class ExerciseBankFragment extends ListFragment {
 		// Set DB Object
 		mDbHelper = new DbAdapter(this.getActivity());
 		
-		CheckBoxArrayAdapter adapter = new CheckBoxArrayAdapter(this.getActivity(), getExerciseBankList(), this);
+		List<ExerciseBankRow> list = getExerciseBankList();
+		CheckBoxArrayAdapter adapter = new CheckBoxArrayAdapter(this.getActivity(), list, this);
 		this.setListAdapter(adapter);
+	
 		
 		if (!HomeScreen.isTablet) {
 			Button button = new Button(this.getActivity());
@@ -85,9 +87,11 @@ public class ExerciseBankFragment extends ListFragment {
 			Long exerciseId = cursor.getLong(cursor.getColumnIndex("_id"));
 			Exercise exercise = new Exercise(exerciseId, exerciseName);
 			if (exercisesChecked.containsKey(exerciseId)) {
+				Log.d("getExerciseBankList", "set selected TRUE");
 				list.add(get(exercise, workoutName, true));
 			} else {
 				list.add(get(exercise, workoutName, false));
+				Log.d("getExerciseBankList", "set selected FALSE");
 			}
 		}
 		mDbHelper.close();
@@ -117,7 +121,7 @@ public class ExerciseBankFragment extends ListFragment {
 	}
 	
 	private ExerciseBankRow get(Exercise exercise, String workoutName, boolean selectedStatus) {
-		return new ExerciseBankRow(exercise, workoutName);
+		return new ExerciseBankRow(exercise, workoutName, selectedStatus);
 	}
 		
 		

@@ -49,68 +49,7 @@ public class CheckBoxArrayAdapter extends ArrayAdapter<ExerciseBankRow> {
 			row.textView = (TextView) view.findViewById(R.id.tvEBExerciseLabel);
 			row.checkBox = (CheckBox) view.findViewById(R.id.cbEBExerciseCheckbox);
 		
-			// Set Listener for checkbox
-			row.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-				
-				@Override
-				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-					
-					ExerciseBankRow ebRow = (ExerciseBankRow) row.checkBox.getTag();
-					Long exerciseId = ebRow.getExerciseId();
-					String workoutName = ebRow.getWorkoutName();
-					String exerciseSequence = "";
-					Exercise exercise = new Exercise(exerciseId, ebRow.getExerciseName());
-					if (isChecked) {
-						/*
-						 * If phone just add to DB
-						 * Tablet add to exercise sequence fragment
-						 */
-						if (HomeScreen.isTablet) {
-							ExerciseSequenceFragment esequenceFragment = (ExerciseSequenceFragment) fragment.getFragmentManager().findFragmentByTag("exerciseSequence");
-							esequenceFragment.addItems(exercise);
-						}
-						ebRow.setSelected(buttonView.isChecked());						
-						ebRow.setSelected(true);
-						/* 
-						 * Exercises are part of the exercise sequence for a workout
-						 * format is id,id,id,id,id,
-						 * append exercise to end of list
-						 */
-						mDbHelper.open();
-						exerciseSequence = mDbHelper.getExerciseSequence(workoutName);
-						
-						// Append exercise to end of sequence
-						exerciseSequence += exerciseId + ",";
-						// Update Exercise Sequence for workout
-						Log.d("Exercise Sequence", exerciseSequence);
-						mDbHelper.updateWorkoutExerciseSequence(exerciseSequence, workoutName);
-						mDbHelper.close();
-					} 
-					else {
-						if (HomeScreen.isTablet) {
-							ExerciseSequenceFragment esequence = (ExerciseSequenceFragment) fragment.getFragmentManager().findFragmentByTag("exerciseSequence");
-							esequence.removeItem(exercise);
-						}
-						ebRow.setSelected(buttonView.isChecked());						
-						ebRow.setSelected(false);
-						/**
-						 * TODO remove exercise in database for workout
-						 */
-						mDbHelper.open();
-						exerciseSequence = mDbHelper.getExerciseSequence(workoutName);
-
-						// Sequence is #,#,#,#,#,
-						String exerciseToRemove = exerciseId + ",";
-						Log.d("Exercise Sequence BEFORE: ", exerciseSequence);
-						exerciseSequence = exerciseSequence.replace(exerciseToRemove, "");
-						Log.d("Exercise Sequence AFTER: ", exerciseSequence);
-						// update sequence in db
-						mDbHelper.updateWorkoutExerciseSequence(exerciseSequence, workoutName);
-						mDbHelper.close();					
-					}					
-					
-				}
-			});
+			
 			
 			view.setTag(row);
 			row.checkBox.setTag(list.get(position));
@@ -119,10 +58,68 @@ public class CheckBoxArrayAdapter extends ArrayAdapter<ExerciseBankRow> {
 			((CheckBoxRow) view.getTag()).checkBox.setTag(list.get(position));
 		}
 		
-		CheckBoxRow row = (CheckBoxRow) view.getTag();
+		final CheckBoxRow row = (CheckBoxRow) view.getTag();
 		row.textView.setText(list.get(position).getExerciseName());
 		Log.d("Checked or not", "Position: " + position + "NAME: " + list.get(position).getExerciseName() + "STATUS:" + list.get(position).isSelected());
 		row.checkBox.setChecked(list.get(position).isSelected());
+		// Set Listener for checkbox
+		row.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				
+				ExerciseBankRow ebRow = (ExerciseBankRow) row.checkBox.getTag();
+				Long exerciseId = ebRow.getExerciseId();
+				String workoutName = ebRow.getWorkoutName();
+				String exerciseSequence = "";
+				Exercise exercise = new Exercise(exerciseId, ebRow.getExerciseName());
+				if (isChecked) {
+					/*
+					 * If phone just add to DB
+					 * Tablet add to exercise sequence fragment
+					 */
+					if (HomeScreen.isTablet) {
+						ExerciseSequenceFragment esequenceFragment = (ExerciseSequenceFragment) fragment.getFragmentManager().findFragmentByTag("exerciseSequence");
+						esequenceFragment.addItems(exercise);
+					}
+					ebRow.setSelected(buttonView.isChecked());						
+					ebRow.setSelected(true);
+					/* 
+					 * Exercises are part of the exercise sequence for a workout
+					 * format is id,id,id,id,id,
+					 * append exercise to end of list
+					 */
+					mDbHelper.open();
+					exerciseSequence = mDbHelper.getExerciseSequence(workoutName);
+					
+					// Append exercise to end of sequence
+					exerciseSequence += exerciseId + ",";
+					// Update Exercise Sequence for workout
+					Log.d("Exercise Sequence", exerciseSequence);
+					mDbHelper.updateWorkoutExerciseSequence(exerciseSequence, workoutName);
+					mDbHelper.close();
+				} 
+				else {
+					if (HomeScreen.isTablet) {
+						ExerciseSequenceFragment esequence = (ExerciseSequenceFragment) fragment.getFragmentManager().findFragmentByTag("exerciseSequence");
+						esequence.removeItem(exercise);
+					}
+					ebRow.setSelected(buttonView.isChecked());						
+					ebRow.setSelected(false);
+
+					mDbHelper.open();
+					exerciseSequence = mDbHelper.getExerciseSequence(workoutName);
+
+					// Sequence is #,#,#,#,#,
+					String exerciseToRemove = exerciseId + ",";
+					exerciseSequence = exerciseSequence.replace(exerciseToRemove, "");
+					// update sequence in db
+					mDbHelper.updateWorkoutExerciseSequence(exerciseSequence, workoutName);
+					mDbHelper.close();					
+				}					
+				
+			}
+		});
 		return view;
 	}
 }

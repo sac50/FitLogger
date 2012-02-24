@@ -5,9 +5,10 @@ public class ExerciseBankRow {
 	private boolean selected;
 	private String workoutName;
 	
-	public ExerciseBankRow(Exercise exercise, String workoutName) {
+	public ExerciseBankRow(Exercise exercise, String workoutName, boolean selected) {
 		this.exercise = exercise;
 		this.workoutName = workoutName;
+		this.selected = selected;
 	}
 	
 	public String getWorkoutName() { return workoutName; }
