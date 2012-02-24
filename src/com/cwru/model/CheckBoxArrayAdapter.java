@@ -15,6 +15,7 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.cwru.R;
+import com.cwru.controller.HomeScreen;
 import com.cwru.dao.DbAdapter;
 
 public class CheckBoxArrayAdapter extends ArrayAdapter<ExerciseBankRow> {
@@ -47,6 +48,7 @@ public class CheckBoxArrayAdapter extends ArrayAdapter<ExerciseBankRow> {
 			final CheckBoxRow row = new CheckBoxRow();
 			row.textView = (TextView) view.findViewById(R.id.tvEBExerciseLabel);
 			row.checkBox = (CheckBox) view.findViewById(R.id.cbEBExerciseCheckbox);
+		
 			// Set Listener for checkbox
 			row.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 				
@@ -59,23 +61,24 @@ public class CheckBoxArrayAdapter extends ArrayAdapter<ExerciseBankRow> {
 					String exerciseSequence = "";
 					Exercise exercise = new Exercise(exerciseId, ebRow.getExerciseName());
 					if (isChecked) {
-						ebRow.setSelected(buttonView.isChecked());
-						ExerciseSequenceFragment esequenceFragment = (ExerciseSequenceFragment) fragment.getFragmentManager().findFragmentByTag("exerciseSequence");
-						esequenceFragment.addItems(exercise);
-						ebRow.setSelected(true);
-						/** 
-						 * TODO add exercise to database for this workout
+						/*
+						 * If phone just add to DB
+						 * Tablet add to exercise sequence fragment
 						 */
+						if (HomeScreen.isTablet) {
+							ExerciseSequenceFragment esequenceFragment = (ExerciseSequenceFragment) fragment.getFragmentManager().findFragmentByTag("exerciseSequence");
+							esequenceFragment.addItems(exercise);
+						}
+						ebRow.setSelected(buttonView.isChecked());						
+						ebRow.setSelected(true);
 						/* 
 						 * Exercises are part of the exercise sequence for a workout
 						 * format is id,id,id,id,id,
 						 * append exercise to end of list
 						 */
 						mDbHelper.open();
-						Cursor cursor = mDbHelper.getExerciseSequence(workoutName);
-						while (cursor.moveToNext()) {
-							exerciseSequence = cursor.getString(cursor.getColumnIndex("exercise_sequence"));
-						}
+						exerciseSequence = mDbHelper.getExerciseSequence(workoutName);
+						
 						// Append exercise to end of sequence
 						exerciseSequence += exerciseId + ",";
 						// Update Exercise Sequence for workout
@@ -84,18 +87,18 @@ public class CheckBoxArrayAdapter extends ArrayAdapter<ExerciseBankRow> {
 						mDbHelper.close();
 					} 
 					else {
-						ebRow.setSelected(buttonView.isChecked());
-						ExerciseSequenceFragment esequence = (ExerciseSequenceFragment) fragment.getFragmentManager().findFragmentByTag("exerciseSequence");
-						esequence.removeItem(exercise);
+						if (HomeScreen.isTablet) {
+							ExerciseSequenceFragment esequence = (ExerciseSequenceFragment) fragment.getFragmentManager().findFragmentByTag("exerciseSequence");
+							esequence.removeItem(exercise);
+						}
+						ebRow.setSelected(buttonView.isChecked());						
 						ebRow.setSelected(false);
 						/**
 						 * TODO remove exercise in database for workout
 						 */
 						mDbHelper.open();
-						Cursor cursor = mDbHelper.getExerciseSequence(workoutName);
-						while (cursor.moveToNext()) {
-							exerciseSequence = cursor.getString(cursor.getColumnIndex("exercise_sequence"));
-						}
+						exerciseSequence = mDbHelper.getExerciseSequence(workoutName);
+
 						// Sequence is #,#,#,#,#,
 						String exerciseToRemove = exerciseId + ",";
 						Log.d("Exercise Sequence BEFORE: ", exerciseSequence);
@@ -118,6 +121,7 @@ public class CheckBoxArrayAdapter extends ArrayAdapter<ExerciseBankRow> {
 		
 		CheckBoxRow row = (CheckBoxRow) view.getTag();
 		row.textView.setText(list.get(position).getExerciseName());
+		Log.d("Checked or not", "Position: " + position + "NAME: " + list.get(position).getExerciseName() + "STATUS:" + list.get(position).isSelected());
 		row.checkBox.setChecked(list.get(position).isSelected());
 		return view;
 	}
