@@ -133,8 +133,15 @@ public class DbAdapter {
 	}
 	
 	public Cursor getAllExercises() { 		
-		String columns [] = {"_id", "name", "type", "sets", "time", "is_countdown", "distance", "distance_type", "interval", "comment", "deleted"};
+		String columns [] = {"_id", "name", "type", "sets", "time", "is_countdown", "distance", "distance_type", "interval_num", "comment", "deleted"};
 		Cursor cursor = db.query(DATABASE_TABLE_EXERCISE, columns, null, null, null, null, null);
+		if (cursor == null) { Log.d("Steve", "Cursor for exercises is null");}
+		return cursor;
+	}
+	
+	public Cursor getAllUndeletedExercises() {
+		String columns [] = {"_id", "name", "type", "sets", "time", "is_countdown", "distance", "distance_type", "interval_num", "comment", "deleted"};
+		Cursor cursor = db.query(DATABASE_TABLE_EXERCISE, columns, "deleted = 'false'", null, null, null, null);
 		if (cursor == null) { Log.d("Steve", "Cursor for exercises is null");}
 		return cursor;
 	}
@@ -188,6 +195,16 @@ public class DbAdapter {
 		return db.delete(DATABASE_TABLE_EXERCISE, "_id = " + exID, null) > 0;
 	}
 
+	public Cursor getSetsForExercise(long exId) {
+		String columns[] = {"_id", "exerciseId", "weight", "reps"};
+		String selection = "exerciseId = ?";
+		String orderBy = "_id";
+		String[] selectionArgs = {Long.toString(exId)};
+		Cursor cursor = db.query(DATABASE_TABLE_SET, columns, selection, selectionArgs, null, null, orderBy);
+		if (cursor == null) { Log.d("Steve", "Cursor for sets is null");}
+		return cursor;
+	}
+	
 	public long createSet(Set set) {
 		ContentValues initialValues = new ContentValues();
 		initialValues.put("exercise_id", set.getExerciseId());
@@ -208,6 +225,16 @@ public class DbAdapter {
 		args.put("weight", set.getWeight());
 
 		return db.update(DATABASE_TABLE_SET, args, "_id = " + set.getId(), null) > 0;
+	}
+	
+	public Cursor getIntervalsForExercise(long exId) {
+		String columns[] = {"_id", "exerciseId", "name", "time", "timeType"};
+		String selection = "exerciseId = ?";
+		String selectionArgs[] = {Long.toString(exId)};
+		String orderBy = "_id";
+		Cursor cursor = db.query(CREATE_INTERVALS_TABLE, columns, selection, selectionArgs, null, null, orderBy);
+		if (cursor == null) { Log.d("Steve", "Cursor for intervals is null");}
+		return cursor;
 	}
 	
 	public long createInterval(Interval interval) {
