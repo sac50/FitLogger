@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.cwru.model.Exercise;
+import com.cwru.model.Interval;
 import com.cwru.model.Set;
 import com.cwru.model.Workout;
 
@@ -17,27 +18,6 @@ public class DbAdapter {
 	private SQLiteDatabase db;
 	private static final String TAG = "dbHelper";
 
-//	private static final String DATABASE_CREATE = "create table workouts (_id integer primary key autoincrement, "
-//			+ "name text not null, type text not null, exercise_sequence "
-//			+ "text not null, coment text, repeatable boolean not null);"
-//			+ "create table exercises (_id integer primary key autoincrement, "
-//			+ "name text not null, type text not null, sets integer, "
-//			+ "time integer, is_countdown boolean, distance real,"
-//			+ "distance_type text, interval integer, comment text, boolean deleted not null);"
-//			+ "create table sets (_id integer primary key autoincrement, "
-//			+ "exercise_id integer not null, reps integer not null, "
-//			+ "weight real not null);"
-//			+ "create table workout_results (_id integer primary key autoincrement, "
-//			+ "date text not null, workout_id integer not null, exercise_id "
-//			+ "integer not null, sets integer, reps integer, weight real, "
-//			+ "time integer, time_type boolean, distance real, interval"
-//			+ "integer, comment text);";
-/*
-	private static final String CREATE_WORKOUTS_TABLE = 
-			"create table workouts (_id integer primary key autoincrement, "
-			+ "name text not null, type text not null, exercise_sequence "
-			+ "text not null, coment text, repeatable boolean not null);";
-*/
 	private static final String CREATE_WORKOUTS_TABLE =
 			"create table workouts (_id integer primary key autoincrement, "
 			+ "name text not null, workout_type text not null, exercise_sequence "
@@ -45,12 +25,19 @@ public class DbAdapter {
 	private static final String CREATE_EXERCISES_TABLE = 
 			"create table exercises (_id integer primary key autoincrement, "
 			+ "name text not null, type text not null, sets integer, "
-			+ "time integer, is_countdown boolean, distance real,"
-			+ "distance_type text, interval integer, comment text, deleted boolean not null);";
+			+ "time integer, time_type text, is_countdown boolean, distance real,"
+			+ "distance_type text, interval_num integer, "
+			+ "comment text, deleted boolean not null);";
 	private static final String CREATE_SETS_TABLE = 
 			"create table sets (_id integer primary key autoincrement, "
 			+ "exercise_id integer not null, reps integer not null, "
 			+ "weight real not null);";
+	
+	private static final String CREATE_INTERVALS_TABLE = 
+			"create table intervals (_id integer primary key autoincrement, "
+			+ "exercise_id integer not null, name text not null, "
+			+ "time integer not null, time_type integer not null);";
+	
 	private static final String CREATE_WORKOUT_RESULTS_TABLE = 
 			"create table workout_results (_id integer primary key autoincrement, "
 			+ "date text not null, workout_id integer not null, exercise_id "
@@ -62,6 +49,7 @@ public class DbAdapter {
 	private static final String DATABASE_TABLE_WORKOUT = "workouts";
 	private static final String DATABASE_TABLE_EXERCISE = "exercises";
 	private static final String DATABASE_TABLE_SET = "sets";
+	private static final String DATABASE_TABLE_INTERVAL = "intervals";
 	private static final String DATABASE_TABLE_WORKOUT_RESULT = "workout_results";
 	private static final int DATABASE_VERSION = 1;
 
@@ -78,6 +66,7 @@ public class DbAdapter {
 			db.execSQL(CREATE_WORKOUTS_TABLE);
 			db.execSQL(CREATE_EXERCISES_TABLE);
 			db.execSQL(CREATE_SETS_TABLE);
+			db.execSQL(CREATE_INTERVALS_TABLE);
 			db.execSQL(CREATE_WORKOUT_RESULTS_TABLE);
 			Log.d("Steve", "DB CREATES");
 		}
@@ -165,6 +154,11 @@ public class DbAdapter {
 	}
 
 	public long createExercise(Exercise ex) {
+		
+		if (ex.getName() == null || ex.getName().length() == 0
+				|| ex.getType() == null || ex.getType().length() == 0)
+			return 0L;
+		
 		ContentValues initialValues = new ContentValues();
 		initialValues.put("name", ex.getName());
 		initialValues.put("type", ex.getType());
@@ -173,16 +167,21 @@ public class DbAdapter {
 			initialValues.put("sets", ex.getSets());
 		}
 
-		if (!ex.getIsCountdown()) {
+		if (!ex.getIsCountdown() && ex.getTime() == 0L) {
 			initialValues.put("is_countdown", ex.getIsCountdown());
 		} else if (ex.getIsCountdown() && ex.getTime() > 0) {
 			initialValues.put("time", ex.getTime());
+			initialValues.put("time_type", ex.getTimeType());
 			initialValues.put("is_countdown", ex.getIsCountdown());
 		}
 
 		if (ex.getDistance() > 0) {
 			initialValues.put("distance", ex.getDistance());
 			initialValues.put("distance_type", ex.getDistanceType());
+		}
+		
+		if (ex.getIntervalNum() > 0) {
+			initialValues.put("interval_num", ex.getIntervalNum());
 		}
 
 		initialValues.put("comment", ex.getComment() != null ? ex.getComment()
@@ -197,6 +196,10 @@ public class DbAdapter {
 		args.put("deleted", true);
 
 		return db.update(DATABASE_TABLE_EXERCISE, args, "_id = " + exID, null) > 0;
+	}
+	
+	public boolean trueDeleteExercise(long exID) {
+		return db.delete(DATABASE_TABLE_EXERCISE, "_id = " + exID, null) > 0;
 	}
 
 	public long createSet(Set set) {
@@ -218,8 +221,31 @@ public class DbAdapter {
 		args.put("reps", set.getReps());
 		args.put("weight", set.getWeight());
 
-		return db
-				.update(DATABASE_TABLE_SET, args, "_id = " + set.getId(), null) > 0;
+		return db.update(DATABASE_TABLE_SET, args, "_id = " + set.getId(), null) > 0;
+	}
+	
+	public long createInterval(Interval interval) {
+		ContentValues initialValues = new ContentValues();
+		initialValues.put("exercise_id", interval.getExerciseId());
+		initialValues.put("name", interval.getName());
+		initialValues.put("time", interval.getTime());
+		initialValues.put("time_type", interval.getTimeType());
+		
+		return db.insert(DATABASE_TABLE_INTERVAL, null, initialValues);
+	}
+	
+	public boolean deleteInterval(long intervalID) {
+		return db.delete(DATABASE_TABLE_INTERVAL, "_id = " + intervalID, null) > 0;
+	}
+	
+	public boolean updateInterval(Interval interval) {
+		ContentValues args = new ContentValues();
+		args.put("exercise_id", interval.getExerciseId());
+		args.put("name", interval.getName());
+		args.put("time", interval.getTime());
+		args.put("time_type", interval.getTimeType());
+		
+		return db.update(DATABASE_TABLE_INTERVAL, args, "_id = " + interval.getId(), null) > 0;
 	}
 
 }

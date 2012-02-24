@@ -8,9 +8,11 @@ public class Exercise {
 	private String type;
 	private int sets;
 	private Long time = 0L;
+	private String timeType;
 	private Boolean isCountdown = true;
 	private Double distance = 0.0;
 	private String distanceType;
+	private int intervalNum;
 	private String comment;
 	
 	public Exercise() {
@@ -65,6 +67,12 @@ public class Exercise {
 	public void setTime(Long time) {
 		this.time = time;
 	}
+	public String getTimeType() {
+		return timeType;
+	}
+	public void setTimeType(String timeType) {
+		this.timeType = timeType;
+	}
 	public Boolean getIsCountdown() {
 		return isCountdown;
 	}
@@ -82,6 +90,12 @@ public class Exercise {
 	}
 	public void setDistanceType(String distanceType) {
 		this.distanceType = distanceType;
+	}
+	public int getIntervalNum() {
+		return intervalNum;
+	}
+	public void setIntevalNum(int intervalNum) {
+		this.intervalNum = intervalNum;
 	}
 	public String getComment() {
 		return comment;

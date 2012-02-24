@@ -35,34 +35,52 @@
         	<item>Strength - Tricep</item>
     </string-array>
     <string name="exerciseSubType">Exercise Sub-Type</string>
-    <string-array name="exerciseSubTypes">
-       		<item>Distance</item>
-       		<item>Countup Timer</item>
+    <string-array name="exerciseCardioSubTypes">
        		<item>Countdown Timer</item>
+       		<item>Countup Timer</item>
+       		<item>Distance</item>
        		<item>Intervals</item>
-       		<item>Set-based</item>
     </string-array>
+    <string-array name="exerciseStrengthSubTypes">
+        	<item>Set-based</item>
+       		<item>Countdown Timer</item>
+       		<item>Countup Timer</item>
+    </string-array>
+    
+    <string name="exerciseDistance">Distance</string>
+    <string-array name="exerciseDistances">
+       		<item>mile</item>
+       		<item>Km.</item>
+       		<item>m.</item>
+       		<item>yd.</item>
+    </string-array>
+    
+    <string name="exerciseCountdown">Timer Duration</string>
+    <string name="timeType">Time Type</string>
+    <string-array name="timeTypes">
+       		<item>seconds</item>
+       		<item>minutes</item>
+       		<item>hours</item>
+    </string-array>
+    
+    <string name="exerciseIntervalName">Name</string>
+    <string name="exerciseIntervalTime">Time</string>
+    <string name="exerciseIntervals">Intervals</string>
+    <string name="exerciseIntervalSets">Interval Sets</string>
+    <string name="one">1</string>
     
     <string name="done">Done</string>
     
     <string name="sets">Sets:</string>
     <string name="weight">Weight</string>
+    <string-array name="weightTypes">
+        <item>lb.</item>
+        <item>kg.</item>
+    </string-array>
     <string name="reps">Reps</string>
-    <string name="addSet">Add Set</string>
-    <string name="removeSet">Remove Set</string>
+    <string name="plus">+</string>
+    <string name="minus">-</string>
     <string name="setNumber">Number of Sets:</string>
-    <integer-array name="setNumbers">
-        	<item>1</item>
-        	<item>2</item>
-        	<item>3</item>
-        	<item>4</item>
-        	<item>5</item>
-        	<item>6</item>
-        	<item>7</item>
-        	<item>8</item>
-        	<item>9</item>
-        	<item>10</item>
-    </integer-array>
     
     <string-array name="exerciseBank">
         <item>Bench Press</item>
