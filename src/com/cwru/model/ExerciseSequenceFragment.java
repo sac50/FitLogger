@@ -1,6 +1,7 @@
 package com.cwru.model;
 
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 import android.database.Cursor;
 import android.os.Bundle;
@@ -25,25 +26,46 @@ import com.cwru.utils.RemoveListener;
 public class ExerciseSequenceFragment extends ListFragment {
 	private DbAdapter mDbHelper;
 //	private ArrayList<String> exerciseNameList = new ArrayList<String>(); // For List to Display to Screen
-	private ArrayList<Exercise> exerciseList = new ArrayList<Exercise>();
+	private ArrayList<Exercise> exerciseList;
 	public DragNDropAdapter adapter;
 	private String workoutName;
 	
 	public ExerciseSequenceFragment(String workoutName) {
 		this.workoutName = workoutName;
+		/* Get exercise sequence for workout */
+		exerciseList = new ArrayList<Exercise>();
+	
 	}
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d("onCreate", "Adpater created");
+		mDbHelper = new DbAdapter(this.getActivity());
 		adapter = new DragNDropAdapter(this.getActivity(), new int[]{R.layout.exercise_sequence_row}, new int[]{R.id.TextView01}, exerciseList);//new DragNDropAdapter(this,content)
-
+		
+		/** 
+		 * TODO 
+		 * Get exercise sequence parse and get name for each exercise
+		 */
+		initializeExerciseArray();
+	}
+	
+	private void initializeExerciseArray() {
+		// Get the exercise Sequence
+		mDbHelper.open();
+		String exerciseSequence = mDbHelper.getExerciseSequence(workoutName);
+		StringTokenizer st = new StringTokenizer(exerciseSequence,",");
+		while (st.hasMoreTokens()) {
+			Long exerciseId =  Long.parseLong(st.nextToken());
+			Exercise exercise = mDbHelper.getExerciseFromId(exerciseId);
+			exerciseList.add(exercise);
+		}
+		mDbHelper.close();
 	}
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		mDbHelper = new DbAdapter(this.getActivity());
 
 		/*
 		ArrayList<String> content = new ArrayList<String>(mListContent.length);

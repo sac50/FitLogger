@@ -42,9 +42,9 @@ public class WorkoutExerciseListing extends FragmentActivity {
 		/* Phone - Show exercise bank and exercise sequence independently and linked to each other */
 		else {
 			ExerciseBankFragment ebank = new ExerciseBankFragment(workoutName);
-			ExerciseSequenceFragment esequence = new ExerciseSequenceFragment(workoutName);
+			//ExerciseSequenceFragment esequence = new ExerciseSequenceFragment(workoutName);
 			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-			transaction.add(R.id.llWorkoutExerciseListingContainer, esequence);
+			transaction.add(R.id.flWorkoutExerciseListingMainFrame, ebank, "exerciseBank");
 			transaction.commit();
 		}
 	}

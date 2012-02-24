@@ -1,7 +1,9 @@
 package com.cwru.model;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import android.database.Cursor;
 import android.os.Bundle;
@@ -27,6 +29,7 @@ public class ExerciseBankFragment extends ListFragment {
 		this.workoutName = workoutName;
 	}
 
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (container == null) {
 			return null;
@@ -37,7 +40,6 @@ public class ExerciseBankFragment extends ListFragment {
 		mDbHelper = new DbAdapter(this.getActivity());
 		
 		CheckBoxArrayAdapter adapter = new CheckBoxArrayAdapter(this.getActivity(), getExerciseBankList(), this);
-		
 		this.setListAdapter(adapter);
 		
 		if (!HomeScreen.isTablet) {
@@ -52,6 +54,7 @@ public class ExerciseBankFragment extends ListFragment {
 		return view;
 	}
 	
+	
 	/**
 	 * Create Workout Button Click Listener
 	 */
@@ -60,8 +63,10 @@ public class ExerciseBankFragment extends ListFragment {
 		public void onClick(View v) {
 			// Create new transaction
 			FragmentTransaction transaction = getFragmentManager().beginTransaction();
+			ExerciseSequenceFragment esequence = new ExerciseSequenceFragment(workoutName);
+			//transaction.add(R.id.flWorkoutExerciseListingRightFrame, esequence, "exerciseSequence");
 			// Replace the workout information fragment with the exercise bank
-			transaction.replace(R.id.llWorkoutExerciseListingContainer, new ExerciseSequenceFragment(workoutName));	
+			transaction.replace(R.id.flWorkoutExerciseListingMainFrame, esequence);	
 			transaction.addToBackStack(null);
 			transaction.commit();			
 		}
@@ -70,6 +75,7 @@ public class ExerciseBankFragment extends ListFragment {
 	
 	private List<ExerciseBankRow> getExerciseBankList() {
 		List<ExerciseBankRow> list = new ArrayList<ExerciseBankRow>();
+		Hashtable<Long, Boolean> exercisesChecked = getCheckedExercises();
 		/* Query the DB to get the exercises available */
 		mDbHelper.open();
 		Cursor cursor = mDbHelper.getAllExercises();
@@ -78,13 +84,39 @@ public class ExerciseBankFragment extends ListFragment {
 			String exerciseName = cursor.getString(cursor.getColumnIndex("name"));
 			Long exerciseId = cursor.getLong(cursor.getColumnIndex("_id"));
 			Exercise exercise = new Exercise(exerciseId, exerciseName);
-			list.add(get(exercise, workoutName));
+			if (exercisesChecked.containsKey(exerciseId)) {
+				list.add(get(exercise, workoutName, true));
+			} else {
+				list.add(get(exercise, workoutName, false));
+			}
 		}
 		mDbHelper.close();
 		return list;
 	}
 	
-	private ExerciseBankRow get(Exercise exercise, String workoutName) {
+	/*
+	 * Hash table to get exercises that belong to workout
+	 * in the get exercise method we check for collisions to see if exercise should be marked checked on load
+	 */
+	private Hashtable<Long, Boolean> getCheckedExercises() {
+		Hashtable<Long, Boolean> exercises = new Hashtable<Long, Boolean> ();
+		mDbHelper.open();
+		String exerciseSequence = mDbHelper.getExerciseSequence(workoutName);
+		StringTokenizer st = new StringTokenizer(exerciseSequence,",");
+		while (st.hasMoreTokens()) {
+			Long exerciseId =  Long.parseLong(st.nextToken());
+			Exercise exercise = mDbHelper.getExerciseFromId(exerciseId);
+			exercises.put(exerciseId, true);
+		}
+		mDbHelper.close();
+		return exercises;
+		/** TODO
+		 * Add selected parameter for get below and in checkbox adapter check the status of that var to 
+		 * see if it should be checked or not
+		 */
+	}
+	
+	private ExerciseBankRow get(Exercise exercise, String workoutName, boolean selectedStatus) {
 		return new ExerciseBankRow(exercise, workoutName);
 	}
 		

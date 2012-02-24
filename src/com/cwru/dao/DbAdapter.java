@@ -120,10 +120,14 @@ public class DbAdapter {
 	 * Enforce that all workout names must be unique
 	 * @return
 	 */
-	public Cursor getExerciseSequence(String workoutName) {
+	public String getExerciseSequence(String workoutName) {
 		String query = "select exercise_sequence from workouts where name = '" + workoutName + "'";
 		Cursor cursor = db.rawQuery(query, null);
-		return cursor;
+		String exerciseSequence = "";
+		while (cursor.moveToNext()) {
+			exerciseSequence = cursor.getString(cursor.getColumnIndex("exercise_sequence"));
+		}
+		return exerciseSequence;
 	}
 	
 	public void updateWorkoutExerciseSequence(String exerciseSequence, String workoutName) {
@@ -144,6 +148,16 @@ public class DbAdapter {
 		Cursor cursor = db.query(DATABASE_TABLE_EXERCISE, columns, "deleted = 'false'", null, null, null, null);
 		if (cursor == null) { Log.d("Steve", "Cursor for exercises is null");}
 		return cursor;
+	}
+
+	public Exercise getExerciseFromId(Long exerciseId) {
+		String query = "select * from exercises where _id = " + exerciseId;
+		Cursor cursor = db.rawQuery(query, null);
+		String name = "";
+		while (cursor.moveToNext()) {
+			name = cursor.getString(cursor.getColumnIndex("name"));
+		}
+		return new Exercise(exerciseId, name);
 	}
 
 	public long createExercise(Exercise ex) {
