@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -106,21 +107,22 @@ public class EditWorkoutInformation extends Fragment {
 		spnRepeatWeeks.setSelection(adapterRepeatWeeks.getPosition(initialWorkoutRepeats));
 		/* Set check boxes */
 
-		if (initialSunday == 0) { sunday.setChecked(true); }
-		else { sunday.setChecked(false); }
-		if (initialMonday == 0) { monday.setChecked(true); }
-		else { monday.setChecked(false); }
-		if ( initialTuesday == 0) { tuesday.setChecked(true); }
-		else { tuesday.setChecked(false); }		
-		if (initialWednesday == 0) { wednesday.setChecked(true); }
-		else { wednesday.setChecked(false); }
-		if (initialThursday == 0) { thursday.setChecked(true); }
-		else { thursday.setChecked(false); }
-		if (initialFriday == 0) { friday.setChecked(true); }
-		else { friday.setChecked(false); }
-		if (initialSaturday == 0) { saturday.setChecked(true); }
-		else { saturday.setChecked(false); }
-		
+		Log.d("Steve", "--------------------------------------------------------------------------------------");
+		if (initialSunday == 0) { Log.d("Sunday", "Checked"); sunday.setChecked(true); }
+		else { Log.d("Sunday", "Not Checked"); sunday.setChecked(false); }
+		if (initialMonday == 0) { Log.d("Monday", "Checked"); monday.setChecked(true); }
+		else { Log.d("Monday", "Not Checked"); monday.setChecked(false); }
+		if ( initialTuesday == 0) { Log.d("Tuesday", "Checked"); tuesday.setChecked(true); }
+		else { Log.d("Tuesday", "Not Checked"); tuesday.setChecked(false); }		
+		if (initialWednesday == 0) { Log.d("Wednesday", "Checked"); wednesday.setChecked(true); }
+		else {Log.d("Wednesday", "Not Checked");  wednesday.setChecked(false); }
+		if (initialThursday == 0) { Log.d("Thursday", "Checked"); thursday.setChecked(true); }
+		else { Log.d("Thursday", "Not Checked"); thursday.setChecked(false); }
+		if (initialFriday == 0) { Log.d("Friday", "Checked"); friday.setChecked(true); }
+		else { Log.d("Friday", "Not Checked"); friday.setChecked(false); }
+		if (initialSaturday == 0) { Log.d("Saturday", "Checked"); saturday.setChecked(true); }
+		else { Log.d("Saturday", "Not Checked"); saturday.setChecked(false); }
+		Log.d("Steve", "-----------------------------------------------------------------------------------");
 		
 		Configuration c = this.getResources().getConfiguration();
 		/* Lanscape View */
@@ -214,11 +216,11 @@ public class EditWorkoutInformation extends Fragment {
 		// Button to Create Workout
 		Button button = new Button(this.getActivity());
 		button.setText("Update Workout");
-		button.setOnClickListener(createWorkoutListener);
+		button.setOnClickListener(updateWorkoutInformationListener);
 		
 		Button button1 = new Button(this.getActivity());
-		button.setText("Update Exercises and Exercise Ordering");
-		button.setOnClickListener(new OnClickListener() {
+		button1.setText("Update Exercises and Exercise Ordering");
+		button1.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
@@ -231,6 +233,7 @@ public class EditWorkoutInformation extends Fragment {
 		
 		LinearLayout ll = (LinearLayout) view.findViewById(R.id.llCreateWorkoutInformationContainer);
 		ll.addView(button);
+		ll.addView(button1);
 		return view;
 	}
 	
@@ -241,7 +244,7 @@ public class EditWorkoutInformation extends Fragment {
 	/**
 	 * Create Workout Button Click Listener
 	 */
-	View.OnClickListener createWorkoutListener = new View.OnClickListener() {
+	View.OnClickListener updateWorkoutInformationListener = new View.OnClickListener() {
 		
 		@Override
 		public void onClick(View v) {
@@ -250,7 +253,8 @@ public class EditWorkoutInformation extends Fragment {
 			/* if name exists already
 			 * alert error, must have unique name
 			 */
-			if (validateWorkoutName(workoutName)) {
+			// Name different than current and not unique
+			if (!workoutName.equals(initialWorkoutName) && validateWorkoutName(workoutName)) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(EditWorkoutInformation.this.getActivity());
 				builder.setMessage("Error: " + workoutName + " already exists as a workout name.  Please select a unique name for the workout");
 				builder.setNegativeButton("Ok", new DialogInterface.OnClickListener() {
@@ -267,9 +271,7 @@ public class EditWorkoutInformation extends Fragment {
 				String workoutType = (String) spnWorkoutType.getSelectedItem();
 				// Get Repeat Weeks 
 				String workoutRepeatWeeks = (String) spnRepeatWeeks.getSelectedItem();
-				
-				String repeatDays = "";
-				
+								
 				/* Set Default 1 = Not Checked, 0 = Checked.  0 - True 1 - False */
 				int repeatSunday = 1;
 				int repeatMonday = 1;
@@ -287,8 +289,7 @@ public class EditWorkoutInformation extends Fragment {
 				if (friday.isChecked()) { repeatFriday = 0; }
 				if (saturday.isChecked()) { repeatSaturday = 0; }
 				
-				String exerciseSequence = "";
-				Workout workoutToCreate = new Workout(workoutName, workoutType,exerciseSequence, workoutRepeatWeeks, 
+				Workout workoutToUpdate = new Workout(workoutName, workoutType, workoutRepeatWeeks, 
 													  repeatSunday, repeatMonday, repeatTuesday, 
 													  repeatWednesday, repeatThursday, repeatFriday, repeatSaturday);
 				Log.d("Button", "Create Workout Clicked");
@@ -299,13 +300,28 @@ public class EditWorkoutInformation extends Fragment {
 				/** TODO
 				 * Add workout repeat information to insert command
 				 */
-				/* Create Workout in the Database */
-				mDbHelper.createWorkout(workoutToCreate);
+				/* Update Workout in the Database */
+				mDbHelper.updateWorkoutInformation(workoutToUpdate, initialWorkoutName);
+				
+				/* 
+				 * Refresh Workout Listing Fragment
+				 */
+				WorkoutListingFragment workoutListing = new WorkoutListingFragment();
+				EditWorkoutInformation editWorkoutInformation = new EditWorkoutInformation(workoutToUpdate.getName(), EditWorkoutInformation.this.getActivity());
+				// if tablet
+				if (HomeScreen.isTablet) {
+					FragmentTransaction transaction = EditWorkoutInformation.this.getFragmentManager().beginTransaction();
+					transaction.replace(R.id.flEditWorkoutInformationLeftFrame, workoutListing);
+					transaction.replace(R.id.flEditWorkoutInformationRightFrame, editWorkoutInformation);
+					transaction.commit();		
+				}
+				
+				/*
+				 * Launch toast to alert user of workout updated
+				 */
 				
 				/* Launch intent to allow exercises to be added to workout and the sequence to be set */
-				Intent intent = new Intent(EditWorkoutInformation.this.getActivity(), WorkoutExerciseListing.class);
-				intent.putExtra("WorkoutName", workoutName);
-				startActivity(intent);		
+		
 			}
 		}
 	};

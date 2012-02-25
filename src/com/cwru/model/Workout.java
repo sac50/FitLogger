@@ -26,6 +26,22 @@ public class Workout {
 		this.type = type;
 	}
 	
+	public Workout(String workoutName, String workoutType,String workoutRepeatWeeks, int repeatSunday, int repeatMonday,
+			int repeatTuesday, int repeatWednesday, int repeatThursday,	int repeatFriday, int repeatSaturday) {
+		this.name = workoutName;
+		this.type = workoutType;
+		this.exerciseSequence = exerciseSequence;
+		this.repeatWeeks = workoutRepeatWeeks;
+		this.repeatSunday = repeatSunday;
+		this.repeatMonday = repeatMonday;
+		this.repeatTuesday = repeatTuesday;
+		this.repeatWednesday = repeatWednesday;
+		this.repeatThursday = repeatThursday;
+		this.repeatFriday = repeatFriday;
+		this.repeatSaturday = repeatSaturday;
+	}
+
+	
 	public Workout(String workoutName, String workoutType, String exerciseSequence, String workoutRepeatWeeks, int repeatSunday, int repeatMonday,
 			int repeatTuesday, int repeatWednesday, int repeatThursday,	int repeatFriday, int repeatSaturday) {
 		this.name = workoutName;

@@ -140,11 +140,24 @@ public class DbAdapter {
 			int rptThursday = cursor.getInt(cursor.getColumnIndex("repeats_thursday"));
 			int rptFriday = cursor.getInt(cursor.getColumnIndex("repeats_friday"));
 			int rptSaturday = cursor.getInt(cursor.getColumnIndex("repeats_sunday"));
-			
+			Log.d("Su-" + rptSunday + " | Mo-" + rptMonday + " | Tu-" + rptTuesday + " | We-" + rptWednesday + " | Th-" + rptThursday, "");
+			Log.d("STEVE", "Su-" + rptSunday + " | Mo-" + rptMonday + " | Tu-" + rptTuesday + " | We-" + rptWednesday + " | Th-" + rptThursday);
 			workout = new Workout(workoutName, workoutType, exerciseSequence, repeats, rptSunday, rptMonday, rptTuesday, rptWednesday,
 								  rptThursday, rptFriday, rptSaturday);
 		}
+		close();
 		return workout;
+	}
+	
+	public void updateWorkoutInformation(Workout workout, String initialWorkoutName) {
+		String query = "update workouts " + 
+					   "set name = '" + workout.getName() + "', workout_type = '" + workout.getType() + "', repeats = '" + workout.getRepeatWeeks() + "'," +
+					   "repeats_sunday = " + workout.getRepeatSunday() + ", repeats_monday = " + workout.getRepeatMonday() + ", repeats_tuesday = " + workout.getRepeatTuesday() + "," +
+					   "repeats_wednesday = " + workout.getRepeatWednesday() + ", repeats_friday = " + workout.getRepeatFriday() + ", repeats_saturday = " + workout.getRepeatSaturday() +
+					   " where name = '" + initialWorkoutName + "'";
+		open();
+		db.execSQL(query);
+		close();
 	}
 	
 	public Cursor getAllWorkouts() { 

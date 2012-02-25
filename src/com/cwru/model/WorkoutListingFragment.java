@@ -51,7 +51,7 @@ public class WorkoutListingFragment extends ListFragment {
 		// if tablet
 		if (HomeScreen.isTablet) {
 			FragmentTransaction transaction = WorkoutListingFragment.this.getFragmentManager().beginTransaction();
-			transaction.add(R.id.flEditWorkoutInformationRightFrame, editWorkoutInformation);
+			transaction.replace(R.id.flEditWorkoutInformationRightFrame, editWorkoutInformation);
 			transaction.commit();		
 		}
 		/* Launch intent to allow exercises to be added to workout and the sequence to be set */
