@@ -18,6 +18,7 @@ public class EditWorkoutActivity extends FragmentActivity  {
 		// Tablet
 		if (HomeScreen.isTablet) {
 			WorkoutListingFragment workoutListings = new WorkoutListingFragment();
+			workoutListings.setRetainInstance(true);
 			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 			transaction.add(R.id.flEditWorkoutInformationLeftFrame, workoutListings);
 			transaction.commit();

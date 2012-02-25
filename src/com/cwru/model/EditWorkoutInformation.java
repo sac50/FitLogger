@@ -307,7 +307,9 @@ public class EditWorkoutInformation extends Fragment {
 				 * Refresh Workout Listing Fragment
 				 */
 				WorkoutListingFragment workoutListing = new WorkoutListingFragment();
+				workoutListing.setRetainInstance(true);
 				EditWorkoutInformation editWorkoutInformation = new EditWorkoutInformation(workoutToUpdate.getName(), EditWorkoutInformation.this.getActivity());
+				editWorkoutInformation.setRetainInstance(true);
 				// if tablet
 				if (HomeScreen.isTablet) {
 					FragmentTransaction transaction = EditWorkoutInformation.this.getFragmentManager().beginTransaction();

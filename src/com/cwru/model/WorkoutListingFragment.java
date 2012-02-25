@@ -48,6 +48,7 @@ public class WorkoutListingFragment extends ListFragment {
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		String workoutName = (String) getListAdapter().getItem(position);
 		EditWorkoutInformation editWorkoutInformation = new EditWorkoutInformation(workoutName, this.getActivity());
+		editWorkoutInformation.setRetainInstance(true);
 		// if tablet
 		if (HomeScreen.isTablet) {
 			FragmentTransaction transaction = WorkoutListingFragment.this.getFragmentManager().beginTransaction();
