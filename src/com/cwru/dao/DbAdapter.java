@@ -21,7 +21,9 @@ public class DbAdapter {
 	private static final String CREATE_WORKOUTS_TABLE =
 			"create table workouts (_id integer primary key autoincrement, "
 			+ "name text not null, workout_type text not null, exercise_sequence "
-			+ "text not null, comment text);";
+			+ "text not null, repeats text, repeats_sunday int, repeats_monday int," 
+			+ "repeats_tuesday int, repeats_wednesday int, repeats_thursday int, " 
+			+ "repeats_friday int, repeats_saturday int, comment text);";
 	private static final String CREATE_EXERCISES_TABLE = 
 			"create table exercises (_id integer primary key autoincrement, "
 			+ "name text not null, type text not null, sets integer, "
@@ -101,19 +103,65 @@ public class DbAdapter {
 		dbHelper.close();
 	}
 	
-	public long createWorkout(Workout workout) {
+	public void createWorkout(Workout workout) {
+		open();
 		ContentValues initialValues = new ContentValues();
 		initialValues.put("name", workout.getName());
 		initialValues.put("workout_type",workout.getType());
 		// Initial Workout has blank exercise sequence
 		initialValues.put("exercise_Sequence", "");
-		//initialValues.put("comment", workout.getComment());
-		
-		return db.insert(DATABASE_TABLE_WORKOUT, null, initialValues);
+		initialValues.put("repeats", workout.getRepeatWeeks());
+		initialValues.put("repeats_sunday", workout.getRepeatSunday());
+		initialValues.put("repeats_monday", workout.getRepeatMonday());
+		initialValues.put("repeats_tuesday", workout.getRepeatTuesday());
+		initialValues.put("repeats_wednesday", workout.getRepeatWednesday());
+		initialValues.put("repeats_thursday", workout.getRepeatThursday());
+		initialValues.put("repeats_friday", workout.getRepeatFriday());
+		initialValues.put("repeats_saturday", workout.getRepeatSaturday());
+		// comment defaulted to blank, gets set during a workout
+		initialValues.put("comment", "");
+		db.insert(DATABASE_TABLE_WORKOUT, null, initialValues);
+		close();
+	}
+	
+	public Workout getWorkoutFromName(String workoutName) {
+		open();
+		String query = "select * from workouts where name = '" + workoutName + "'";
+		Cursor cursor = db.rawQuery(query, null);
+		Workout workout = null;
+		while (cursor.moveToNext() ) {
+			String workoutType = cursor.getString(cursor.getColumnIndex("workout_type"));
+			String exerciseSequence = cursor.getString(cursor.getColumnIndex("exercise_sequence"));
+			String repeats = cursor.getString(cursor.getColumnIndex("repeats"));
+			int rptSunday = cursor.getInt(cursor.getColumnIndex("repeats_sunday"));
+			int rptMonday = cursor.getInt(cursor.getColumnIndex("repeats_monday"));
+			int rptTuesday = cursor.getInt(cursor.getColumnIndex("repeats_tuesday"));
+			int rptWednesday = cursor.getInt(cursor.getColumnIndex("repeats_wednesday"));
+			int rptThursday = cursor.getInt(cursor.getColumnIndex("repeats_thursday"));
+			int rptFriday = cursor.getInt(cursor.getColumnIndex("repeats_friday"));
+			int rptSaturday = cursor.getInt(cursor.getColumnIndex("repeats_sunday"));
+			
+			workout = new Workout(workoutName, workoutType, exerciseSequence, repeats, rptSunday, rptMonday, rptTuesday, rptWednesday,
+								  rptThursday, rptFriday, rptSaturday);
+		}
+		return workout;
 	}
 	
 	public Cursor getAllWorkouts() { 
 		return db.rawQuery("select * from workouts", new String [0]);
+	}
+	
+	/* Does workout name exist */
+	public boolean workoutNameExist(String workoutName) {
+		open();
+		boolean exists = false;
+		String query = "select _id from workouts where name = '" + workoutName + "'";
+		Cursor cursor = db.rawQuery(query, null);
+		if (cursor.moveToNext()) {
+			exists = true;
+		}
+		close();
+		return exists;
 	}
 	
 	/** TODO
@@ -137,7 +185,7 @@ public class DbAdapter {
 	}
 	
 	public Cursor getAllExercises() { 		
-		String columns [] = {"_id", "name", "type", "sets", "time", "is_countdown", "distance", "distance_type", "interval", "comment", "deleted"};
+		String columns [] = {"_id", "name", "type", "sets", "time", "type", "is_countdown", "distance", "distance_type", "interval_num", "comment", "deleted"};
 		Cursor cursor = db.query(DATABASE_TABLE_EXERCISE, columns, null, null, null, null, null);
 		if (cursor == null) { Log.d("Steve", "Cursor for exercises is null");}
 		return cursor;
