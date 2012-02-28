@@ -25,7 +25,10 @@ public class EditWorkoutActivity extends FragmentActivity  {
 		} 
 		// Phone
 		else {
-			
+			WorkoutListingFragment workoutListings = new WorkoutListingFragment();
+			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+			transaction.add(R.id.flEditWorkoutInformationMainFrame, workoutListings);
+			transaction.commit();
 		}
 	}
 }

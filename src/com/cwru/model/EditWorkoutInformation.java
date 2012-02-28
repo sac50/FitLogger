@@ -2,6 +2,7 @@ package com.cwru.model;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,6 +25,7 @@ import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+import android.widget.Toast;
 
 import com.cwru.R;
 import com.cwru.controller.HomeScreen;
@@ -285,10 +288,12 @@ public class EditWorkoutInformation extends Fragment {
 				if (monday.isChecked()) { repeatMonday = 0; }
 				if (tuesday.isChecked()) { repeatTuesday = 0; }
 				if (wednesday.isChecked()) { repeatWednesday = 0; }
-				if (thursday.isChecked()) { repeatThursday = 0; }
+				if (thursday.isChecked()) { Log.d("STeve", "Repeat Thursday"); repeatThursday = 0; }
 				if (friday.isChecked()) { repeatFriday = 0; }
 				if (saturday.isChecked()) { repeatSaturday = 0; }
 				
+				Log.d("STEVE", "-----------------------------------------------------");
+				Log.d("Steve", "Repeat thursday: " + repeatThursday);
 				Workout workoutToUpdate = new Workout(workoutName, workoutType, workoutRepeatWeeks, 
 													  repeatSunday, repeatMonday, repeatTuesday, 
 													  repeatWednesday, repeatThursday, repeatFriday, repeatSaturday);
@@ -310,7 +315,8 @@ public class EditWorkoutInformation extends Fragment {
 				workoutListing.setRetainInstance(true);
 				EditWorkoutInformation editWorkoutInformation = new EditWorkoutInformation(workoutToUpdate.getName(), EditWorkoutInformation.this.getActivity());
 				editWorkoutInformation.setRetainInstance(true);
-				// if tablet
+				// if tablet to update the workout listing with any update in workout name
+				
 				if (HomeScreen.isTablet) {
 					FragmentTransaction transaction = EditWorkoutInformation.this.getFragmentManager().beginTransaction();
 					transaction.replace(R.id.flEditWorkoutInformationLeftFrame, workoutListing);
@@ -321,6 +327,10 @@ public class EditWorkoutInformation extends Fragment {
 				/*
 				 * Launch toast to alert user of workout updated
 				 */
+				Toast toast = Toast.makeText(EditWorkoutInformation.this.getActivity(), "Workout Updated", Toast.LENGTH_SHORT);
+				toast.setGravity(Gravity.CENTER, 0, 0);
+				toast.show();
+				
 				
 				/* Launch intent to allow exercises to be added to workout and the sequence to be set */
 		

@@ -153,8 +153,8 @@ public class DbAdapter {
 		String query = "update workouts " + 
 					   "set name = '" + workout.getName() + "', workout_type = '" + workout.getType() + "', repeats = '" + workout.getRepeatWeeks() + "'," +
 					   "repeats_sunday = " + workout.getRepeatSunday() + ", repeats_monday = " + workout.getRepeatMonday() + ", repeats_tuesday = " + workout.getRepeatTuesday() + "," +
-					   "repeats_wednesday = " + workout.getRepeatWednesday() + ", repeats_friday = " + workout.getRepeatFriday() + ", repeats_saturday = " + workout.getRepeatSaturday() +
-					   " where name = '" + initialWorkoutName + "'";
+					   "repeats_wednesday = " + workout.getRepeatWednesday() + ", repeats_thursday = " + workout.getRepeatThursday() + ", repeats_friday = " + workout.getRepeatFriday() + 
+					   ", repeats_saturday = " + workout.getRepeatSaturday() + " where name = '" + initialWorkoutName + "'";
 		open();
 		db.execSQL(query);
 		close();

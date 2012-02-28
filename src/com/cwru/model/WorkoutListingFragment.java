@@ -54,6 +54,11 @@ public class WorkoutListingFragment extends ListFragment {
 			FragmentTransaction transaction = WorkoutListingFragment.this.getFragmentManager().beginTransaction();
 			transaction.replace(R.id.flEditWorkoutInformationRightFrame, editWorkoutInformation);
 			transaction.commit();		
+		} else {
+			FragmentTransaction transaction = WorkoutListingFragment.this.getFragmentManager().beginTransaction();
+			transaction.addToBackStack(null);
+			transaction.replace(R.id.flEditWorkoutInformationMainFrame, editWorkoutInformation);
+			transaction.commit();
 		}
 		/* Launch intent to allow exercises to be added to workout and the sequence to be set */
 		/*
@@ -61,7 +66,6 @@ public class WorkoutListingFragment extends ListFragment {
 		intent.putExtra("WorkoutName", workoutName);
 		startActivity(intent);			
 		*/
-		
 	}
 
 	private String [] getWorkoutList() {
