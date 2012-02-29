@@ -1,5 +1,7 @@
 package com.cwru.dao;
 
+import java.util.ArrayList;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -145,6 +147,7 @@ public class DbAdapter {
 			workout = new Workout(workoutName, workoutType, exerciseSequence, repeats, rptSunday, rptMonday, rptTuesday, rptWednesday,
 								  rptThursday, rptFriday, rptSaturday);
 		}
+		cursor.close();
 		close();
 		return workout;
 	}
@@ -160,8 +163,30 @@ public class DbAdapter {
 		close();
 	}
 	
-	public Cursor getAllWorkouts() { 
-		return db.rawQuery("select * from workouts", new String [0]);
+	public Workout [] getAllWorkouts() { 
+		open();
+		ArrayList<Workout> workoutList = new ArrayList<Workout>();
+		Cursor cursor = db.rawQuery("select * from workouts", new String [0]);
+		//Workout(String workoutName, String workoutType,String workoutRepeatWeeks, int repeatSunday, int repeatMonday,
+		//		int repeatTuesday, int repeatWednesday, int repeatThursday,	int repeatFriday, int repeatSaturday)
+		while (cursor.moveToNext()) {
+			String workoutName = cursor.getString(cursor.getColumnIndex("name"));
+			String workoutType = cursor.getString(cursor.getColumnIndex("workout_type"));
+			String workoutRepatWeeks = cursor.getString(cursor.getColumnIndex("repeats"));
+			int repeatSunday = cursor.getInt(cursor.getColumnIndex("repeats_sunday"));
+			int repeatMonday = cursor.getInt(cursor.getColumnIndex("repeats_monday"));
+			int repeatTuesday = cursor.getInt(cursor.getColumnIndex("repeats_tuesday"));
+			int repeatWednesday = cursor.getInt(cursor.getColumnIndex("repeats_wednesday"));
+			int repeatThursday = cursor.getInt(cursor.getColumnIndex("repeats_thursday"));
+			int repeatFriday = cursor.getInt(cursor.getColumnIndex("repeats_friday"));
+			int repeatSaturday = cursor.getInt(cursor.getColumnIndex("repeats_saturday"));
+			Workout workout = new Workout(workoutName, workoutType, workoutRepatWeeks, repeatSunday, repeatMonday, 
+										  repeatTuesday, repeatWednesday, repeatThursday, repeatFriday, repeatSaturday);
+			workoutList.add(workout);
+		}
+		cursor.close();
+		close();
+		return workoutList.toArray(new Workout [0]);
 	}
 	
 	/* Does workout name exist */
@@ -173,6 +198,7 @@ public class DbAdapter {
 		if (cursor.moveToNext()) {
 			exists = true;
 		}
+		cursor.close();
 		close();
 		return exists;
 	}
@@ -182,19 +208,24 @@ public class DbAdapter {
 	 * @return
 	 */
 	public String getExerciseSequence(String workoutName) {
+		open();
 		String query = "select exercise_sequence from workouts where name = '" + workoutName + "'";
 		Cursor cursor = db.rawQuery(query, null);
 		String exerciseSequence = "";
 		while (cursor.moveToNext()) {
 			exerciseSequence = cursor.getString(cursor.getColumnIndex("exercise_sequence"));
 		}
+		cursor.close();
+		close();
 		return exerciseSequence;
 	}
 	
 	public void updateWorkoutExerciseSequence(String exerciseSequence, String workoutName) {
+		open();
 		String query = "update workouts set exercise_sequence = '" + exerciseSequence + "' where name = '" + workoutName + "'";
 		Log.d("Update Exercise Sequence", query);
 		db.execSQL(query);
+		close();
 	}
 	
 	public Cursor getAllExercises() { 		

@@ -104,7 +104,6 @@ public class ExerciseBankFragment extends ListFragment {
 	 */
 	private Hashtable<Long, Boolean> getCheckedExercises() {
 		Hashtable<Long, Boolean> exercises = new Hashtable<Long, Boolean> ();
-		mDbHelper.open();
 		String exerciseSequence = mDbHelper.getExerciseSequence(workoutName);
 		StringTokenizer st = new StringTokenizer(exerciseSequence,",");
 		while (st.hasMoreTokens()) {
@@ -112,7 +111,6 @@ public class ExerciseBankFragment extends ListFragment {
 			Exercise exercise = mDbHelper.getExerciseFromId(exerciseId);
 			exercises.put(exerciseId, true);
 		}
-		mDbHelper.close();
 		return exercises;
 		/** TODO
 		 * Add selected parameter for get below and in checkbox adapter check the status of that var to 

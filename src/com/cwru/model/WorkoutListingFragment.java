@@ -70,12 +70,12 @@ public class WorkoutListingFragment extends ListFragment {
 
 	private String [] getWorkoutList() {
 		ArrayList<String> workoutList = new ArrayList<String>();
-		mDbHelper.open();
-		Cursor cursor = mDbHelper.getAllWorkouts();
-		while (cursor.moveToNext()) {
-			workoutList.add(cursor.getString(cursor.getColumnIndex("name")));
+		Workout [] workouts = mDbHelper.getAllWorkouts();
+		// Get array of workout names for list
+		for (int i = 0; i < workouts.length; i++) { 
+			workoutList.add(workouts[i].getName());
 		}
-		mDbHelper.close();
+
 		return workoutList.toArray(new String [0]);
 	}
 	

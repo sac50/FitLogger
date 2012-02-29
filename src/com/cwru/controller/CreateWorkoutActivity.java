@@ -26,7 +26,7 @@ public class CreateWorkoutActivity extends FragmentActivity {
 				
 				CreateWorkoutInformationFragment information = new CreateWorkoutInformationFragment();
 				FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-				transaction.add(R.id.flCreateWorkoutMainFrame, information);
+				transaction.replace(R.id.flCreateWorkoutMainFrame, information);
 				transaction.commit();
 				/*
 				Intent intent = new Intent(this, WorkoutExerciseListing.class);
@@ -38,7 +38,7 @@ public class CreateWorkoutActivity extends FragmentActivity {
 				System.out.println("HELLO STEVE");
 				CreateWorkoutInformationFragment information = new CreateWorkoutInformationFragment();
 				FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-				transaction.add(R.id.flCreateWorkoutMainFrame, information);
+				transaction.replace(R.id.flCreateWorkoutMainFrame, information);
 				transaction.commit();
 				Log.d("Fragment Commited", "FrAGMENT");
 				
