@@ -89,7 +89,6 @@ public class CheckBoxArrayAdapter extends ArrayAdapter<ExerciseBankRow> {
 					 * format is id,id,id,id,id,
 					 * append exercise to end of list
 					 */
-					mDbHelper.open();
 					exerciseSequence = mDbHelper.getExerciseSequence(workoutName);
 					
 					// Append exercise to end of sequence
@@ -97,7 +96,6 @@ public class CheckBoxArrayAdapter extends ArrayAdapter<ExerciseBankRow> {
 					// Update Exercise Sequence for workout
 					Log.d("Exercise Sequence", exerciseSequence);
 					mDbHelper.updateWorkoutExerciseSequence(exerciseSequence, workoutName);
-					mDbHelper.close();
 				} 
 				else {
 					if (HomeScreen.isTablet) {
@@ -107,7 +105,6 @@ public class CheckBoxArrayAdapter extends ArrayAdapter<ExerciseBankRow> {
 					ebRow.setSelected(buttonView.isChecked());						
 					ebRow.setSelected(false);
 
-					mDbHelper.open();
 					exerciseSequence = mDbHelper.getExerciseSequence(workoutName);
 
 					// Sequence is #,#,#,#,#,
@@ -115,7 +112,6 @@ public class CheckBoxArrayAdapter extends ArrayAdapter<ExerciseBankRow> {
 					exerciseSequence = exerciseSequence.replace(exerciseToRemove, "");
 					// update sequence in db
 					mDbHelper.updateWorkoutExerciseSequence(exerciseSequence, workoutName);
-					mDbHelper.close();					
 				}					
 				
 			}

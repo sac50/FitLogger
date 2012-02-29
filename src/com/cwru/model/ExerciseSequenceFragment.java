@@ -53,7 +53,6 @@ public class ExerciseSequenceFragment extends ListFragment {
 	
 	private void initializeExerciseArray() {
 		// Get the exercise Sequence
-		mDbHelper.open();
 		String exerciseSequence = mDbHelper.getExerciseSequence(workoutName);
 		StringTokenizer st = new StringTokenizer(exerciseSequence,",");
 		while (st.hasMoreTokens()) {
@@ -61,7 +60,6 @@ public class ExerciseSequenceFragment extends ListFragment {
 			Exercise exercise = mDbHelper.getExerciseFromId(exerciseId);
 			exerciseList.add(exercise);
 		}
-		mDbHelper.close();
 	}
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
