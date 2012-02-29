@@ -3,9 +3,9 @@ package com.cwru.controller;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 
 import com.cwru.R;
-import com.cwru.model.EditWorkoutInformation;
 import com.cwru.model.WorkoutListingFragment;
 
 public class EditWorkoutActivity extends FragmentActivity  {
@@ -26,9 +26,17 @@ public class EditWorkoutActivity extends FragmentActivity  {
 		// Phone
 		else {
 			WorkoutListingFragment workoutListings = new WorkoutListingFragment();
+			workoutListings.setRetainInstance(true);
 			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-			transaction.add(R.id.flEditWorkoutInformationMainFrame, workoutListings);
+			transaction.replace(R.id.flEditWorkoutInformationMainFrame, workoutListings, "workoutListings");
 			transaction.commit();
 		}
+	}
+	
+	@Override
+	public void onPause() {
+		super.onPause();
+		Log.d("STEVE", "Edit Workout Activity onPause() Called");
+		
 	}
 }
