@@ -39,8 +39,10 @@ public class ExerciseBankFragment extends ListFragment {
 		// Set DB Object
 		mDbHelper = new DbAdapter(this.getActivity());
 		
-		CheckBoxArrayAdapter adapter = new CheckBoxArrayAdapter(this.getActivity(), getExerciseBankList(), this);
+		List<ExerciseBankRow> list = getExerciseBankList();
+		CheckBoxArrayAdapter adapter = new CheckBoxArrayAdapter(this.getActivity(), list, this);
 		this.setListAdapter(adapter);
+	
 		
 		if (!HomeScreen.isTablet) {
 			Button button = new Button(this.getActivity());
@@ -85,9 +87,11 @@ public class ExerciseBankFragment extends ListFragment {
 			Long exerciseId = cursor.getLong(cursor.getColumnIndex("_id"));
 			Exercise exercise = new Exercise(exerciseId, exerciseName);
 			if (exercisesChecked.containsKey(exerciseId)) {
+				Log.d("getExerciseBankList", "set selected TRUE");
 				list.add(get(exercise, workoutName, true));
 			} else {
 				list.add(get(exercise, workoutName, false));
+				Log.d("getExerciseBankList", "set selected FALSE");
 			}
 		}
 		mDbHelper.close();
@@ -100,7 +104,6 @@ public class ExerciseBankFragment extends ListFragment {
 	 */
 	private Hashtable<Long, Boolean> getCheckedExercises() {
 		Hashtable<Long, Boolean> exercises = new Hashtable<Long, Boolean> ();
-		mDbHelper.open();
 		String exerciseSequence = mDbHelper.getExerciseSequence(workoutName);
 		StringTokenizer st = new StringTokenizer(exerciseSequence,",");
 		while (st.hasMoreTokens()) {
@@ -108,7 +111,6 @@ public class ExerciseBankFragment extends ListFragment {
 			Exercise exercise = mDbHelper.getExerciseFromId(exerciseId);
 			exercises.put(exerciseId, true);
 		}
-		mDbHelper.close();
 		return exercises;
 		/** TODO
 		 * Add selected parameter for get below and in checkbox adapter check the status of that var to 
@@ -117,7 +119,7 @@ public class ExerciseBankFragment extends ListFragment {
 	}
 	
 	private ExerciseBankRow get(Exercise exercise, String workoutName, boolean selectedStatus) {
-		return new ExerciseBankRow(exercise, workoutName);
+		return new ExerciseBankRow(exercise, workoutName, selectedStatus);
 	}
 		
 		

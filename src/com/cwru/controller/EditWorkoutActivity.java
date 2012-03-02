@@ -1,16 +1,42 @@
 package com.cwru.controller;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.widget.TextView;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 
-public class EditWorkoutActivity extends Activity  {
+import com.cwru.R;
+import com.cwru.model.WorkoutListingFragment;
+
+public class EditWorkoutActivity extends FragmentActivity  {
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		TextView textView = new TextView(this);
-		textView.setText("Edit Workout Tab");
-		setContentView(textView);
+		setContentView(R.layout.edit_workout_information);
+		
+		// Tablet
+		if (HomeScreen.isTablet) {
+			WorkoutListingFragment workoutListings = new WorkoutListingFragment();
+			workoutListings.setRetainInstance(true);
+			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+			transaction.add(R.id.flEditWorkoutInformationLeftFrame, workoutListings);
+			transaction.commit();
+		} 
+		// Phone
+		else {
+			WorkoutListingFragment workoutListings = new WorkoutListingFragment();
+			workoutListings.setRetainInstance(true);
+			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+			transaction.replace(R.id.flEditWorkoutInformationMainFrame, workoutListings, "workoutListings");
+			transaction.commit();
+		}
+	}
+	
+	@Override
+	public void onPause() {
+		super.onPause();
+		Log.d("STEVE", "Edit Workout Activity onPause() Called");
+		
 	}
 }
