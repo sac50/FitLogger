@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/svEditExercise"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout 
+        android:id="@+id/LLEditExercise"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+        
+        <TextView
+        	android:id="@+id/tvEditExerciseNameLabel"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:text="@string/exerciseName" />
+    
+    	<TextView 
+        	android:id="@+id/tvEditExerciseName"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:text="TextView"
+        	android:textSize="22sp"/>
+    	
+    	<TextView
+        	android:id="@+id/tvEditExerciseTypeLabel"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:text="@string/exerciseType" 
+        	android:paddingTop="8dp"/>
+    	
+    	<TextView 
+        	android:id="@+id/tvEditExerciseType"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:text="TextView"
+        	android:textSize="22sp"/>
+    	
+    	<TextView
+        	android:id="@+id/tvEditExerciseSubTypeLabel"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:text="@string/exerciseSubType" 
+        	android:paddingTop="8dp"/>
+    	
+    	<TextView 
+        	android:id="@+id/tvEditExerciseSubType"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:text="TextView"
+        	android:textSize="22sp"/>
+    	
+    	<LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/llEditExerciseDistance"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone" >
+
+            <EditText
+                android:id="@+id/etEditExerciseDistance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/exerciseDistance"
+                android:inputType="numberDecimal" >
+            </EditText>
+
+            <Spinner
+                android:id="@+id/spnEditExerciseDistance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:prompt="@string/exerciseDistance" />
+        </LinearLayout>
+
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/llEditExerciseCountdown"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone" >
+
+            <EditText
+                android:id="@+id/etEditExerciseCountdown"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/exerciseCountdown"
+                android:inputType="number" >
+            </EditText>
+
+            <Spinner
+                android:id="@+id/spnEditExerciseCountdown"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:prompt="@string/exerciseCountdown" />
+        </LinearLayout>
+
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/llEditExerciseIntervals"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone" >
+            
+            <TextView
+                android:id="@+id/tvEditExerciseIntervals"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/exerciseIntervals" />
+            
+            <LinearLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/llAddRemoveIntervals"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+                
+                <Button
+                    android:id="@+id/btnEditExerciseRemoveInterval"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="60dp"
+                    android:layout_marginRight="68dp"
+                    android:text="@string/minus" />
+
+                <Button
+                    android:id="@+id/btnEditExerciseAddInterval"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/plus" />
+                
+            </LinearLayout>
+            
+        </LinearLayout>
+        
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/llEditExerciseIntervalSets"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone" >
+
+            <TextView
+                android:id="@+id/tvEditExerciseIntervalSets"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/exerciseIntervalSets" />
+
+            <LinearLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/llAddRemoveIntervalSets"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <Button
+                    android:id="@+id/btnEditExerciseRemoveIntervalSet"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="60dp"
+                    android:text="@string/minus" />
+
+                <TextView
+                    android:id="@+id/tvEditExerciseIntervalSetNum"
+                    android:layout_width="16dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="22dp" />
+
+                <Button
+                    android:id="@+id/btnEditExerciseAddIntervalSet"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/plus" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/llEditExerciseSets"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone" >
+
+            <TextView
+                android:id="@+id/tvEditExerciseSets"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sets" />
+
+            <LinearLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/llAddRemoveSets"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <Button
+                    android:id="@+id/btnEditExerciseRemoveSet"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="70dp"
+                    android:text="@string/minus" />
+
+                <Button
+                    android:id="@+id/btnEditExerciseAddSet"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="60dp"
+                    android:text="@string/plus" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnEditExerciseDone"
+            android:layout_width="116dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="100dp"
+            android:text="@string/done" />
+    </LinearLayout>
+</ScrollView>

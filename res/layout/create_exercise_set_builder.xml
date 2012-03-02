@@ -13,7 +13,7 @@
         android:layout_weight="1"
         android:hint="@string/weight"
         android:inputType="numberDecimal"
-        android:maxLength="4"
+        android:maxLength="5"
         android:ems="4" />
 
     <TextView
