@@ -1,8 +1,11 @@
 package com.cwru.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 
 
-public class Exercise {
+
+public class Exercise implements Parcelable{
 	private Long id;
 	private String name;
 	private String type;
@@ -12,7 +15,8 @@ public class Exercise {
 	private Boolean isCountdown = true;
 	private Double distance = 0.0;
 	private String distanceType;
-	private int intervalNum;
+	private int intervals;
+	private int intervalSets;
 	private String comment;
 	
 	public Exercise() {
@@ -35,6 +39,25 @@ public class Exercise {
 	    	return true;
 	    }
 	    return false;	    
+	}
+	
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int arg1) {
+		dest.writeLong(this.id);
+		dest.writeString(this.name);
+		dest.writeString(this.type);
+		dest.writeLong(this.time);
+		dest.writeString(this.timeType);
+		dest.writeByte((byte) (this.isCountdown ? 1 : 0));
+		dest.writeDouble(this.distance);
+		dest.writeString(this.distanceType);
+		dest.writeInt(this.intervals);
+		dest.writeString(this.comment);
 	}
 	
 	public Long getId() {
@@ -91,11 +114,17 @@ public class Exercise {
 	public void setDistanceType(String distanceType) {
 		this.distanceType = distanceType;
 	}
-	public int getIntervalNum() {
-		return intervalNum;
+	public int getIntervals() {
+		return intervals;
 	}
-	public void setIntevalNum(int intervalNum) {
-		this.intervalNum = intervalNum;
+	public void setIntervals(int intervals) {
+		this.intervals = intervals;
+	}
+	public int getIntervalSets() {
+		return intervalSets;
+	}
+	public void setIntervalSets(int intervalSets) {
+		this.intervalSets = intervalSets;
 	}
 	public String getComment() {
 		return comment;

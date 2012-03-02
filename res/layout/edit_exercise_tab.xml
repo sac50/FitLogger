@@ -2,7 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#00FF00" >
+    android:id="@+id/LLEditExerciseTabContainter"
+    android:orientation="vertical" >
     
+    <FrameLayout
+        android:id="@+id/flEditExerciseMainFrame"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+     />
 
 </LinearLayout>
