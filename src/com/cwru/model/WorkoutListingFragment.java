@@ -21,7 +21,16 @@ import com.cwru.controller.WorkoutExerciseListing;
 import com.cwru.dao.DbAdapter;
 
 public class WorkoutListingFragment extends ListFragment {
+	public static final int EDIT_WORKOUT_LIST = 1;
+	public static final int WORKOUT_WORKFLOW_LIST = 2;
+	
 	private DbAdapter mDbHelper;
+	private int mode;
+
+	public WorkoutListingFragment(int mode){
+		this.mode = mode;
+	}
+	
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -47,6 +56,13 @@ public class WorkoutListingFragment extends ListFragment {
 	@Override 
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		String workoutName = (String) getListAdapter().getItem(position);
+		switch (mode) {
+			case EDIT_WORKOUT_LIST:
+				goToEditWorkoutInformation(workoutName);
+		}
+	}
+	
+	private void goToEditWorkoutInformation(String workoutName) {
 		EditWorkoutInformation editWorkoutInformation = new EditWorkoutInformation(workoutName, this.getActivity());
 		editWorkoutInformation.setRetainInstance(true);
 		// if tablet
@@ -60,12 +76,6 @@ public class WorkoutListingFragment extends ListFragment {
 			transaction.replace(R.id.flEditWorkoutInformationMainFrame, editWorkoutInformation);
 			transaction.commit();
 		}
-		/* Launch intent to allow exercises to be added to workout and the sequence to be set */
-		/*
-		Intent intent = new Intent(WorkoutListingFragment.this.getActivity(), WorkoutExerciseListing.class);
-		intent.putExtra("WorkoutName", workoutName);
-		startActivity(intent);			
-		*/
 	}
 
 	private String [] getWorkoutList() {
