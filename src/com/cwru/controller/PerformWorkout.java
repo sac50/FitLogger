@@ -46,6 +46,7 @@ public class PerformWorkout extends FragmentActivity {
 		int percentage = exerciseCounter / exercisesForWorkout.size();
 		tvPercentDone.setText(percentage + " % Workout Complete");
 		launchExercise();
+
 	}
 	
 	private void launchExercise() {

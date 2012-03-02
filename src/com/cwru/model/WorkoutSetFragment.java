@@ -16,6 +16,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.cwru.R;
+import com.cwru.controller.HomeScreen;
 import com.cwru.dao.DbAdapter;
 
 public class WorkoutSetFragment extends Fragment {
@@ -58,6 +59,23 @@ public class WorkoutSetFragment extends Fragment {
 		tvSetsToDo.setText(sets.length + " Sets to Do");
 		etWeight.setText(sets[setCounter].getWeight() + "");
 		etReps.setText(sets[setCounter].getReps() + "");
+		
+		
+		// if phone show notes and history button
+		if (!HomeScreen.isTablet) {
+			TableLayout tl = (TableLayout) view.findViewById(R.id.tlWorkoutWorkflowSetHistoryNoteRow);
+			Button btnHistory = new Button(this.getActivity());
+			Button btnNotes = new Button(this.getActivity());
+			btnHistory.setText("History");
+			btnNotes.setText("Notes");
+			
+			TableRow tr = new TableRow(WorkoutSetFragment.this.getActivity());
+			tr.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+			tr.addView(btnHistory);
+			tr.addView(btnNotes);
+			tl.addView(tr, new TableLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+
+		}
 		
 		return view;
 	}

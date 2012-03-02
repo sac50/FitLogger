@@ -30,6 +30,15 @@
        	android:layout_height="wrap_content"
        	android:stretchColumns="*"
        >
+       
+	    <TableLayout 	
+		    android:id="@+id/tlWorkoutWorkflowSetHistoryNoteRow"
+	       	android:layout_width="fill_parent"
+	       	android:layout_height="wrap_content"
+	       	android:stretchColumns="*"
+	    >
+		</TableLayout>
+
 	    <TableRow>
 			<TextView
 				android:id="@+id/tvWorkoutWorkflowSetWeightLabel"
