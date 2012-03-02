@@ -4,37 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
     
-    <LinearLayout 
-		    android:id="@+id/llWorkoutWorkflowSetTopBar"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:orientation="horizontal"    
-		>
-		    <Button 
-		        android:id="@+id/btnWorkoutWorkflowSetPrev"
-		    	android:layout_width="wrap_content"
-		    	android:layout_height="wrap_content"
-		    	android:layout_weight="0.33"
-		       	android:text="Prev"		    	
-		    />
-		    
-		    <TextView
-		        android:id="@+id/tvWorkoutWorkflowSetPercentageDone"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:layout_weight="0.33"
-		        android:text=" % Done"
-		    />
-		    
-		    <Button 
-		    	android:id="@+id/btnWorkoutWorkflowSetNext"
-		    	android:layout_width="wrap_content"
-		    	android:layout_height="wrap_content"
-		    	android:layout_weight="0.33"
-		    	android:text="Next"    
-		    />
-	</LinearLayout>
-    
     <FrameLayout 
     	android:id="@+id/flWorkoutWorkflowMainFrame"
     	android:layout_width="match_parent"

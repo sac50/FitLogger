@@ -243,13 +243,27 @@ public class DbAdapter {
 	}
 
 	public Exercise getExerciseFromId(Long exerciseId) {
+		open();
 		String query = "select * from exercises where _id = " + exerciseId;
 		Cursor cursor = db.rawQuery(query, null);
-		String name = "";
+		Exercise ex = new Exercise();;
 		while (cursor.moveToNext()) {
-			name = cursor.getString(cursor.getColumnIndex("name"));
+			ex.setId(cursor.getLong(cursor.getColumnIndex("_id")));
+			ex.setName(cursor.getString(cursor.getColumnIndex("name")));
+			ex.setType(cursor.getString(cursor.getColumnIndex("type")));
+			ex.setSets(cursor.getInt(cursor.getColumnIndex("sets")));
+			ex.setIsCountdown(cursor.getInt(cursor.getColumnIndex("is_countdown")) == 1);
+			ex.setTime(cursor.getLong(cursor.getColumnIndex("time")));
+			ex.setTimeType(cursor.getString(cursor.getColumnIndex("time_type")));
+			ex.setDistance(cursor.getDouble(cursor.getColumnIndex("distance")));
+			ex.setDistanceType(cursor.getString(cursor.getColumnIndex("distance_type")));
+			ex.setIntervals(cursor.getInt(cursor.getColumnIndex("intervals")));
+			ex.setIntervalSets(cursor.getInt(cursor.getColumnIndex("interval_sets")));
+			ex.setComment(cursor.getString(cursor.getColumnIndex("comment")));			
 		}
-		return new Exercise(exerciseId, name);
+		cursor.close();
+		close();
+		return ex;
 	}
 	
 	public Exercise getExerciseFromName(String name) {
@@ -373,6 +387,31 @@ public class DbAdapter {
 		Cursor cursor = db.query(DATABASE_TABLE_SET, columns, selection, selectionArgs, null, null, orderBy);
 		if (cursor == null) { Log.d("Steve", "Cursor for sets is null");}
 		return cursor;
+	}
+	
+	/** TODO
+	 * Refactor these two methods
+	 * @param exId
+	 * @return
+	 */
+	public Set[] getSetsForExercise1(long exId) {
+		open();
+		String columns [] = {"_id", "exercise_id", "weight", "reps"};
+		String selection = "exercise_id = ?";
+		String orderBy = "_id";
+		String [] selectionArgs = {Long.toString(exId)};
+		Cursor cursor = db.query(DATABASE_TABLE_SET, columns, selection, selectionArgs, null, null, orderBy);
+		ArrayList<Set> sets = new ArrayList<Set> ();
+		while (cursor.moveToNext()) {
+			long id = cursor.getLong(cursor.getColumnIndex("_id"));
+			long exerciseId = cursor.getLong(cursor.getColumnIndex("exercise_id"));
+			double weight = cursor.getInt(cursor.getColumnIndex("weight"));
+			int reps = cursor.getInt(cursor.getColumnIndex("reps"));
+			Set set = new Set(id,exerciseId, reps, weight);
+			sets.add(set);
+		}
+		close();
+		return sets.toArray(new Set[0]);
 	}
 	
 	public long createSet(Set set) {

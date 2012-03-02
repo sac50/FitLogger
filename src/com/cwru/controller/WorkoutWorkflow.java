@@ -1,35 +1,25 @@
 package com.cwru.controller;
 
-import java.util.ArrayList;
-
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 
 import com.cwru.R;
-import com.cwru.model.Exercise;
-import com.cwru.model.WorkoutWorkflowSetFragment;
+import com.cwru.model.WorkoutListingFragment;
 
-public class WorkoutWorkflow extends FragmentActivity {
-	
-	ArrayList<Exercise> exercisesForWorkout;
-	
+public class WorkoutWorkflow extends FragmentActivity {	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.workout_workflow);
-		
-		// Tablet
-		if (HomeScreen.isTablet) {
-			
-		}		
-		// Phone
-		else {
-			WorkoutWorkflowSetFragment setFragment = new WorkoutWorkflowSetFragment();
-			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-			transaction.replace(R.id.flWorkoutWorkflowMainFrame, setFragment);
-			transaction.commit();
-		}
+		WorkoutListingFragment workouts = new WorkoutListingFragment(WorkoutListingFragment.WORKOUT_WORKFLOW_LIST);
+		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+		transaction.replace(R.id.flWorkoutWorkflowMainFrame, workouts);
+		transaction.commit();
+		Log.d("Steve", "Workout onCreate call");
 		
 	}
+	
+
 }

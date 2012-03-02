@@ -29,6 +29,7 @@
         <activity android:name=".controller.EditWorkoutActivity" android:configChanges="orientation|keyboardHidden" />
         <activity android:name=".controller.WorkoutExerciseListing" android:configChanges="orientation|keyboardHidden" />
    		<activity android:name=".controller.WorkoutWorkflow" android:configChanges="orientation|keyboardHidden" />
+   		<activity android:name=".controller.PerformWorkout" android:configChanges="orientation|keyboardHidden" />
     </application>
 
 </manifest>
