@@ -243,12 +243,15 @@ public class DbAdapter {
 	}
 
 	public Exercise getExerciseFromId(Long exerciseId) {
+		open();
 		String query = "select * from exercises where _id = " + exerciseId;
 		Cursor cursor = db.rawQuery(query, null);
 		String name = "";
 		while (cursor.moveToNext()) {
 			name = cursor.getString(cursor.getColumnIndex("name"));
 		}
+		cursor.close();
+		close();
 		return new Exercise(exerciseId, name);
 	}
 	
