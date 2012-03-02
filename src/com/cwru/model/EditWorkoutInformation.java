@@ -311,7 +311,7 @@ public class EditWorkoutInformation extends Fragment {
 				/* 
 				 * Refresh Workout Listing Fragment
 				 */
-				WorkoutListingFragment workoutListing = new WorkoutListingFragment();
+				WorkoutListingFragment workoutListing = new WorkoutListingFragment(WorkoutListingFragment.EDIT_WORKOUT_LIST);
 				workoutListing.setRetainInstance(true);
 				EditWorkoutInformation editWorkoutInformation = new EditWorkoutInformation(workoutToUpdate.getName(), EditWorkoutInformation.this.getActivity());
 				editWorkoutInformation.setRetainInstance(true);

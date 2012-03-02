@@ -8,6 +8,17 @@ public class Set {
 	private int reps;
 	private double weight;
 	
+	public Set () {
+		
+	}
+	
+	public Set (long id, long exerciseId, int reps, double weight) {
+		this.id = id; 
+		this.exerciseId = exerciseId; 
+		this.reps = reps;
+		this.weight = weight;
+	}
+	
 	public long getId() {
 		return id;
 	}

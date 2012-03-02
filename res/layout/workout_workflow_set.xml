@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+   	android:id="@+id/llWorkoutWorkflowSetLayoutContainer"
+   	android:layout_width="fill_parent"
+   	android:layout_height="fill_parent"
+   	android:orientation="vertical"
+   >		
+	<TextView 
+	  	android:id="@+id/tvWorkoutWorkflowSetExerciseName"
+	  	android:layout_width="match_parent"
+	  	android:layout_height="wrap_content"
+		android:gravity="center_vertical|center_horizontal"
+		android:padding="10dip"
+	  	android:text="Exercise Name"
+	/>
+	
+	<TextView 
+	    android:id="@+id/tvWorkoutWorkflowSetsToDo"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:gravity="center_vertical|center_horizontal"
+	    android:padding="10dip"
+	    android:text="Reps To Do"
+	/>
+	
+	
+       <TableLayout 
+       	android:id="@+id/tlWorkoutWorkflowSetRecordRow"
+       	android:layout_width="fill_parent"
+       	android:layout_height="wrap_content"
+       	android:stretchColumns="*"
+       >
+       
+	    <TableLayout 	
+		    android:id="@+id/tlWorkoutWorkflowSetHistoryNoteRow"
+	       	android:layout_width="fill_parent"
+	       	android:layout_height="wrap_content"
+	       	android:stretchColumns="*"
+	    >
+		</TableLayout>
+
+	    <TableRow>
+			<TextView
+				android:id="@+id/tvWorkoutWorkflowSetWeightLabel"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Weight"  
+			/>    
+			<EditText 
+				android:id="@+id/etWorkoutWorkflowSetWeightText"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:singleLine="true"
+				android:numeric="decimal"
+				android:maxLength="5"
+				android:minEms="3"
+				android:layout_gravity="left"
+				android:padding="3dip"
+			/>
+			
+			<TextView 
+				android:id="@+id/tvWorkoutWorkflowSetRepsLabel"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Reps"
+			/>
+			
+			<EditText 
+				android:id="@+id/etWorkoutWorkflowSetRepsText"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:singleLine="true"
+				android:numeric="decimal"
+				android:maxLength="5"
+				android:minEms="3"
+				android:layout_gravity="left"
+				android:padding="3dip"
+			/>		        
+	        
+	    </TableRow>
+	</TableLayout>
+	
+	<Button 
+		android:id="@+id/btnWorkoutWorkflowSetRecord"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:paddingLeft="10dip"
+		android:paddingRight="10dip"
+		android:text="Record Set"
+	/>
+	
+	<TableLayout 	
+	    android:id="@+id/tlWorkoutWorkflowSetResults"
+       	android:layout_width="fill_parent"
+       	android:layout_height="wrap_content"
+       	android:stretchColumns="*"
+    >
+	</TableLayout>
+	
+
+</LinearLayout>
+

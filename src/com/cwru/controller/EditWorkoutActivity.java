@@ -17,7 +17,7 @@ public class EditWorkoutActivity extends FragmentActivity  {
 		
 		// Tablet
 		if (HomeScreen.isTablet) {
-			WorkoutListingFragment workoutListings = new WorkoutListingFragment();
+			WorkoutListingFragment workoutListings = new WorkoutListingFragment(WorkoutListingFragment.EDIT_WORKOUT_LIST);
 			workoutListings.setRetainInstance(true);
 			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 			transaction.add(R.id.flEditWorkoutInformationLeftFrame, workoutListings);
@@ -25,7 +25,7 @@ public class EditWorkoutActivity extends FragmentActivity  {
 		} 
 		// Phone
 		else {
-			WorkoutListingFragment workoutListings = new WorkoutListingFragment();
+			WorkoutListingFragment workoutListings = new WorkoutListingFragment(WorkoutListingFragment.EDIT_WORKOUT_LIST);
 			workoutListings.setRetainInstance(true);
 			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 			transaction.replace(R.id.flEditWorkoutInformationMainFrame, workoutListings, "workoutListings");

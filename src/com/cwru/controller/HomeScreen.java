@@ -33,9 +33,14 @@ public class HomeScreen extends ListActivity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View view, int position,
 					long id) {
-
+				Log.d("STEVE", "Position: " + position);
+				// Workout Workflow Module
+				if (position == 0) {
+					Intent intent = new Intent(HomeScreen.this, WorkoutWorkflow.class);
+					startActivity(intent);
+				}
 				// Create/Edit Exercise and Workout Module
-				if (position == 1) {
+				else if (position == 1) {
 					Intent intent = new Intent(HomeScreen.this, CreateEditTabActivity.class);
 					startActivity(intent);
 				}

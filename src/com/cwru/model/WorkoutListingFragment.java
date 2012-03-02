@@ -3,31 +3,40 @@ package com.cwru.model;
 import java.util.ArrayList;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.cwru.R;
 import com.cwru.controller.HomeScreen;
-import com.cwru.controller.WorkoutExerciseListing;
+import com.cwru.controller.PerformWorkout;
 import com.cwru.dao.DbAdapter;
 
 public class WorkoutListingFragment extends ListFragment {
+	public static final int EDIT_WORKOUT_LIST = 1;
+	public static final int WORKOUT_WORKFLOW_LIST = 2;
+	
 	private DbAdapter mDbHelper;
+	private int mode;
+
+	public WorkoutListingFragment(int mode){
+		this.mode = mode;
+	}
+	
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (container == null) {
 			return null;
 		}		
+		Log.d("Steve", "WorkoutListingFragment");
 		View view = (LinearLayout) inflater.inflate(R.layout.workout_listings, container, false);
 		// Set Adapter
 		mDbHelper = new DbAdapter(this.getActivity());
@@ -47,6 +56,26 @@ public class WorkoutListingFragment extends ListFragment {
 	@Override 
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		String workoutName = (String) getListAdapter().getItem(position);
+		Log.d("STEVE", "Workout Listing Click : " + mode);
+		switch (mode) {
+			case EDIT_WORKOUT_LIST:
+				goToEditWorkoutInformation(workoutName);
+				break;
+			case WORKOUT_WORKFLOW_LIST:
+				goToWorkoutWorkflow(workoutName);
+				break;
+		}
+	}
+	
+	private void goToWorkoutWorkflow(String workoutName) {
+		Intent intent = new Intent(this.getActivity(), PerformWorkout.class);
+		intent.putExtra("workoutName", workoutName);
+		this.getActivity().startActivity(intent);
+	}
+	
+	
+	
+	private void goToEditWorkoutInformation(String workoutName) {
 		EditWorkoutInformation editWorkoutInformation = new EditWorkoutInformation(workoutName, this.getActivity());
 		editWorkoutInformation.setRetainInstance(true);
 		// if tablet
@@ -60,20 +89,16 @@ public class WorkoutListingFragment extends ListFragment {
 			transaction.replace(R.id.flEditWorkoutInformationMainFrame, editWorkoutInformation);
 			transaction.commit();
 		}
-		/* Launch intent to allow exercises to be added to workout and the sequence to be set */
-		/*
-		Intent intent = new Intent(WorkoutListingFragment.this.getActivity(), WorkoutExerciseListing.class);
-		intent.putExtra("WorkoutName", workoutName);
-		startActivity(intent);			
-		*/
 	}
 
 	private String [] getWorkoutList() {
+		Log.d("Steve", "getWorkoutList");
 		ArrayList<String> workoutList = new ArrayList<String>();
 		Workout [] workouts = mDbHelper.getAllWorkouts();
 		// Get array of workout names for list
 		for (int i = 0; i < workouts.length; i++) { 
 			workoutList.add(workouts[i].getName());
+			Log.d("Steve", "Workout name " + workouts[i].getName());
 		}
 
 		return workoutList.toArray(new String [0]);

@@ -112,12 +112,10 @@ public class ExerciseSequenceFragment extends ListFragment {
 		        /*
 		         * Update DB workout exercise sequence to refelct order change
 		         */
-		        mDbHelper.open();
 				// Sequence is #,#,#,#,#,
 				
 				// update sequence in db
 				mDbHelper.updateWorkoutExerciseSequence(exerciseSequence, workoutName);
-				mDbHelper.close();					
 	        }
 	    };
 	    
