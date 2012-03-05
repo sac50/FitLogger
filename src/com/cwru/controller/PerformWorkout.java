@@ -48,6 +48,7 @@ public class PerformWorkout extends FragmentActivity {
 		btnPrevious = (Button) this.findViewById(R.id.btnPerformWorkoutPrev);
 		btnNext = (Button) this.findViewById(R.id.btnPerformWorkoutNext);
 		tvPercentDone = (TextView) this.findViewById(R.id.tvPerformWorkoutPercentageDone);
+		Log.d("Size", "ExercisesForWorkout: " + exercisesForWorkout.size());
 		int percentage = exerciseCounter / exercisesForWorkout.size();
 		tvPercentDone.setText(percentage + " % Workout Complete");
 		launchExercise();
@@ -93,7 +94,7 @@ public class PerformWorkout extends FragmentActivity {
 		} 
 		// Distance
 		else if (exerciseToLaunch.getType().equals("Cardio") && exerciseToLaunch.getDistance() != 0) {
-			WorkoutWorkflowDistanceFragment distance = new WorkoutWorkflowDistanceFragment();
+			WorkoutWorkflowDistanceFragment distance = new WorkoutWorkflowDistanceFragment(exerciseToLaunch, this);
 			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 			if (HomeScreen.isTablet) {
 				NotesFragment notes = new NotesFragment();

@@ -24,7 +24,6 @@
 	    android:layout_weight="10"
 	/>
 	
-	
        <TableLayout 
        	android:id="@+id/tlWorkoutWorkflowDistanceRecordRow"
        	android:layout_width="fill_parent"
@@ -32,14 +31,6 @@
        	android:stretchColumns="*"
        	android:layout_weight="30"
        >
-       
-	    <TableLayout 	
-		    android:id="@+id/tlWorkoutWorkflowSetHistoryNoteRow"
-	       	android:layout_width="fill_parent"
-	       	android:layout_height="wrap_content"
-	       	android:stretchColumns="*"
-	    >
-		</TableLayout>
 
 	    <TableRow>
 			<TextView
@@ -78,6 +69,14 @@
 		android:text="Record Set"
 		android:layout_weight="10"
 	/>
+	
+	 <TableLayout 	
+		    android:id="@+id/tlWorkoutWorkflowDistanceHistoryNoteRow"
+	       	android:layout_width="fill_parent"
+	       	android:layout_height="wrap_content"
+	       	android:stretchColumns="*"
+	    >
+	</TableLayout>
 	
 	<TableLayout 	
 	    android:id="@+id/tlWorkoutWorkflowDistanceResults"
