@@ -5,7 +5,7 @@
     android:orientation="vertical" >
     
 	<TextView 
-	  	android:id="@+id/tvWorkoutWorkflowCountdownTimerExerciseName"
+	  	android:id="@+id/tvWorkoutWorkflowCountUpTimerExerciseName"
 	  	android:layout_width="match_parent"
 	  	android:layout_height="wrap_content"
 		android:gravity="center_vertical|center_horizontal"
@@ -14,22 +14,15 @@
 	/>
 	
 	<Chronometer 
-		android:id="@+id/chrWorkoutWorkflowCountdownTimer"
+		android:id="@+id/chrWorkoutWorkflowCountUpTimer"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-	/>
-	
-	<TextView 
-	    android:id="@+id/tvWorkoutWorkflowCountdownTimerTimer"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:gravity="center_vertical|center_horizontal"
-	    android:padding="10dip"
-	    android:text="Timer"
+		android:layout_gravity="center_horizontal"
+		
 	/>
 	
 	<Button 
-		android:id="@+id/btnWorkoutWorkflowCountdownTimerStartPause"
+		android:id="@+id/btnWorkoutWorkflowCountUpTimerStartPause"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:paddingLeft="10dip"
@@ -38,7 +31,7 @@
 	/>
        
     <TableLayout 	
-	    android:id="@+id/tlWorkoutWorkflowSetHistoryNoteRow"
+	    android:id="@+id/tlWorkoutWorkflowCountUpSetHistoryNoteRow"
        	android:layout_width="fill_parent"
        	android:layout_height="wrap_content"
        	android:stretchColumns="*"
@@ -49,7 +42,7 @@
 
 	
 	<TableLayout 	
-	    android:id="@+id/tlWorkoutWorkflowSetResults"
+	    android:id="@+id/tlWorkoutWorkflowCountUpSetResults"
        	android:layout_width="fill_parent"
        	android:layout_height="wrap_content"
        	android:stretchColumns="*"

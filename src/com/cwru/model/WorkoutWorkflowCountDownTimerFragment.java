@@ -2,6 +2,7 @@ package com.cwru.model;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -17,6 +18,7 @@ import com.cwru.R;
 
 public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
 	private Chronometer chrTimer;
+	private CountDownTimer start1;
 	private long startTime;
 	private long countDown;
 	private Exercise exercise;
@@ -27,6 +29,7 @@ public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
 	private boolean complete;
 	private boolean stop;
 	private View frameView;
+	private long time;
 	
 	private TextView tvTimer;
 	private TextView tvExerciseName;
@@ -50,6 +53,30 @@ public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
 			minutes = exercise.getTime()*60;
 			seconds = 0;
 		}
+		
+		time = minutes*60 + seconds;
+		time = time * 1000;
+		Log.d("STEVE", " TIME: " + time);
+		
+		start1 = new CountDownTimer(time, 1000) {
+			@Override
+			public void onTick(long millisUntilFinished) {
+				decreaseTime();
+				tvTimer.setText(getFormatedTime());
+				Log.d("STEVE", "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
+				
+			}
+
+			@Override
+			public void onFinish() {
+				// TODO Auto-generated method stub
+				
+			}
+		};
+
+		
+		// 			start1 = new CountDownTimer(100000, 1000) {
+
 	
 	}
 	
@@ -108,11 +135,28 @@ public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
 	View.OnClickListener updateTimer = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
+			/*
 			if (stop) {
 				stop = false;
 				btnStartStop.setText("Pause");
 				startCountdown(frameView);
+			} else {
+				stop = true;
+				btnStartStop.setText("Start");
+				startCountdown(frameView);
 			}
+			*/
+			if (stop) {
+				stop = false;
+				btnStartStop.setText("Pause");
+				start1.start();				
+			}
+			else {
+				stop = true;
+				btnStartStop.setText("Start");
+				start1.cancel();
+			}
+
 		}
 		
 	};
@@ -130,7 +174,7 @@ public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
 		// only update if stop is false
 		Log.d("Steve", "------------------------------------------------------------------");
 		Log.d("Steve", "Minutes: " + minutes + " | Seconds: " + seconds);
-		if (stop == false) {
+		if (!complete) {
 			if (seconds == 0) {
 				seconds = 60;
 				minutes--;

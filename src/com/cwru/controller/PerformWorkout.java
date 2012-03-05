@@ -14,7 +14,7 @@ import com.cwru.R;
 import com.cwru.dao.DbAdapter;
 import com.cwru.model.Exercise;
 import com.cwru.model.WorkoutSetFragment;
-import com.cwru.model.WorkoutWorkflowCountDownTimerFragment;
+import com.cwru.model.WorkoutWorkflowCountUpTimerFragment;
 
 /**
  * 
@@ -79,7 +79,8 @@ public class PerformWorkout extends FragmentActivity {
 		} 
 		// Countdown time
 		if (exerciseToLaunch.getIsCountdown()) {
-			WorkoutWorkflowCountDownTimerFragment workoutTimer = new WorkoutWorkflowCountDownTimerFragment(exerciseToLaunch, this);
+			//WorkoutWorkflowCountDownTimerFragment workoutTimer = new WorkoutWorkflowCountDownTimerFragment(exerciseToLaunch, this);
+			WorkoutWorkflowCountUpTimerFragment workoutTimer = new WorkoutWorkflowCountUpTimerFragment(exerciseToLaunch, this);
 			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 			transaction.replace(R.id.flPerformWorkoutMainFrame, workoutTimer);
 			transaction.commit();

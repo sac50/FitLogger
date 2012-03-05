@@ -7,7 +7,7 @@
     	android:id="@+id/tvtv"
     	android:layout_width="wrap_content"
     	android:layout_height="wrap_content"
-    	android:text="HEllo Steve"
+    	android:text="Exercise Ordering"
     />
 	<com.cwru.utils.DragNDropListView
   		android:id="@+id/android:list"
