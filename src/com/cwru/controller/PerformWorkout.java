@@ -14,6 +14,7 @@ import com.cwru.R;
 import com.cwru.dao.DbAdapter;
 import com.cwru.model.Exercise;
 import com.cwru.model.WorkoutSetFragment;
+import com.cwru.model.WorkoutWorkflowCountDownTimerFragment;
 
 /**
  * 
@@ -61,18 +62,30 @@ public class PerformWorkout extends FragmentActivity {
 		
 		Exercise exerciseToLaunch = exercisesForWorkout.get(exerciseCounter);
 		String type = exerciseToLaunch.getType();
+		int sets = exerciseToLaunch.getSets();
+		Log.d("STEVE", "SETS: " + sets);
 		Log.d("Steve", "Did Launch: " + type);
 
 		/** TODO 
 		 * Change this to get values from the resource file
 		 */
-		if (type.equals("Strength")) {
+		// Is a set based exercise
+		if (exerciseToLaunch.getSets() != 0) {
 			Log.d("Steve", "-----------------------------------------------------");
 			WorkoutSetFragment workoutSet = new WorkoutSetFragment(exerciseToLaunch, this);
 			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-			transaction.add(R.id.flPerformWorkoutMainFrame, workoutSet);
+			transaction.replace(R.id.flPerformWorkoutMainFrame, workoutSet);
+			transaction.commit();
+		} 
+		// Countdown time
+		if (exerciseToLaunch.getIsCountdown()) {
+			WorkoutWorkflowCountDownTimerFragment workoutTimer = new WorkoutWorkflowCountDownTimerFragment(exerciseToLaunch, this);
+			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+			transaction.replace(R.id.flPerformWorkoutMainFrame, workoutTimer);
 			transaction.commit();
 		}
+		
+		
 	}
 	
 	/**
