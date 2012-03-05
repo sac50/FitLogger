@@ -40,7 +40,9 @@ public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
 		String eType = exercise.getTimeType();
 		if (eType.equals("seconds")) {
 			seconds = exercise.getTime();
-			minutes = 0;
+			minutes = seconds / 60;
+			seconds = seconds % 60;
+			
 		} else if (eType.equals("minutes")) { 
 			minutes = exercise.getTime();
 			seconds = 0;
@@ -48,9 +50,6 @@ public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
 			minutes = exercise.getTime()*60;
 			seconds = 0;
 		}
-		/* Adjust seconds and minutes */
-		minutes = seconds / 60;
-		seconds = seconds % 60;
 	
 	}
 	
@@ -85,7 +84,7 @@ public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
 					if (stop) {
 						
 					}
-					decreaseTime();
+//					decreaseTime();
 					final long value = i;
 					try {
 						Thread.sleep(1000);
@@ -95,6 +94,7 @@ public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
 					handler.post(new Runnable() {
 						@Override
 						public void run() {
+							decreaseTime();
 							Log.d("STEVE", "VALue = " +(startTime - value));
 							tvTimer.setText(getFormatedTime());
 						}
@@ -128,6 +128,8 @@ public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
 	
 	private void decreaseTime() {
 		// only update if stop is false
+		Log.d("Steve", "------------------------------------------------------------------");
+		Log.d("Steve", "Minutes: " + minutes + " | Seconds: " + seconds);
 		if (stop == false) {
 			if (seconds == 0) {
 				seconds = 60;
@@ -137,6 +139,7 @@ public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
 				}
 			}
 			seconds -= 1;		
+			Log.d("Steve", "Minutes: " + minutes + " | Seconds: " + seconds);
 		}
 	}
 }
