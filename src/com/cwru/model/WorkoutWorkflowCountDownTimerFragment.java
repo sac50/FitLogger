@@ -9,12 +9,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.LinearLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.cwru.R;
+import com.cwru.controller.HomeScreen;
 
 public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
 	private Chronometer chrTimer;
@@ -98,6 +102,22 @@ public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
 		tvExerciseName.setText(exercise.getName());
 		tvTimer = (TextView) view.findViewById(R.id.tvWorkoutWorkflowCountdownTimerTimer);
 		tvTimer.setText(getFormatedTime());
+		
+		if (!HomeScreen.isTablet) {
+			TableLayout tl = (TableLayout) view.findViewById(R.id.tlWorkoutWorkflowCountDownHistoryNoteRow);
+			Button btnHistory = new Button(this.getActivity());
+			Button btnNotes = new Button(this.getActivity());
+			btnHistory.setText("History");
+			btnNotes.setText("Notes");
+			
+			TableRow tr = new TableRow(WorkoutWorkflowCountDownTimerFragment.this.getActivity());
+			tr.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+			tr.addView(btnHistory);
+			tr.addView(btnNotes);
+			tl.addView(tr, new TableLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+			
+		}
+		
 		return view;
 	}
 	

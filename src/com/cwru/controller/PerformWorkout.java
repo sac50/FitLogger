@@ -13,7 +13,10 @@ import android.widget.TextView;
 import com.cwru.R;
 import com.cwru.dao.DbAdapter;
 import com.cwru.model.Exercise;
+import com.cwru.model.HistoryFragment;
+import com.cwru.model.NotesFragment;
 import com.cwru.model.WorkoutSetFragment;
+import com.cwru.model.WorkoutWorkflowCountDownTimerFragment;
 import com.cwru.model.WorkoutWorkflowCountUpTimerFragment;
 
 /**
@@ -65,6 +68,7 @@ public class PerformWorkout extends FragmentActivity {
 		int sets = exerciseToLaunch.getSets();
 		Log.d("STEVE", "SETS: " + sets);
 		Log.d("Steve", "Did Launch: " + type);
+		
 
 		/** TODO 
 		 * Change this to get values from the resource file
@@ -74,15 +78,47 @@ public class PerformWorkout extends FragmentActivity {
 			Log.d("Steve", "-----------------------------------------------------");
 			WorkoutSetFragment workoutSet = new WorkoutSetFragment(exerciseToLaunch, this);
 			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-			transaction.replace(R.id.flPerformWorkoutMainFrame, workoutSet);
+			if (HomeScreen.isTablet) {
+				NotesFragment notes = new NotesFragment();
+				HistoryFragment history = new HistoryFragment();
+				transaction.replace(R.id.flPerformWorkoutLeftFrame, workoutSet);
+				transaction.replace(R.id.flPerformWorkoutRightTopFrame, notes);
+				transaction.replace(R.id.flPerformWorkoutRightBottomFrame, history);
+			}
+			else {
+				transaction.replace(R.id.flPerformWorkoutMainFrame, workoutSet);
+			}
 			transaction.commit();
 		} 
 		// Countdown time
-		if (exerciseToLaunch.getIsCountdown()) {
-			//WorkoutWorkflowCountDownTimerFragment workoutTimer = new WorkoutWorkflowCountDownTimerFragment(exerciseToLaunch, this);
+		else if (exerciseToLaunch.getIsCountdown()) {
+			WorkoutWorkflowCountDownTimerFragment workoutTimer = new WorkoutWorkflowCountDownTimerFragment(exerciseToLaunch, this);
+			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+			if (HomeScreen.isTablet) {
+				NotesFragment notes = new NotesFragment();
+				HistoryFragment history = new HistoryFragment();
+				transaction.replace(R.id.flPerformWorkoutLeftFrame, workoutTimer);
+				transaction.replace(R.id.flPerformWorkoutRightTopFrame, notes);
+				transaction.replace(R.id.flPerformWorkoutRightBottomFrame, history);
+			}
+			else {
+				transaction.replace(R.id.flPerformWorkoutMainFrame, workoutTimer);
+			}
+			transaction.commit();
+		}
+		else if (!exerciseToLaunch.getIsCountdown()) {
 			WorkoutWorkflowCountUpTimerFragment workoutTimer = new WorkoutWorkflowCountUpTimerFragment(exerciseToLaunch, this);
 			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-			transaction.replace(R.id.flPerformWorkoutMainFrame, workoutTimer);
+			if (HomeScreen.isTablet) {
+				NotesFragment notes = new NotesFragment();
+				HistoryFragment history = new HistoryFragment();
+				transaction.replace(R.id.flPerformWorkoutLeftFrame, workoutTimer);
+				transaction.replace(R.id.flPerformWorkoutRightTopFrame, notes);
+				transaction.replace(R.id.flPerformWorkoutRightBottomFrame, history);
+			}
+			else {
+				transaction.replace(R.id.flPerformWorkoutMainFrame, workoutTimer);
+			}
 			transaction.commit();
 		}
 		

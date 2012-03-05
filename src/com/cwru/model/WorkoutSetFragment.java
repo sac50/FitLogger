@@ -74,7 +74,7 @@ public class WorkoutSetFragment extends Fragment {
 			tr.addView(btnHistory);
 			tr.addView(btnNotes);
 			tl.addView(tr, new TableLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
-
+			
 		}
 		
 		return view;

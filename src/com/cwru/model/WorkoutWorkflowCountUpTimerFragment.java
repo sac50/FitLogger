@@ -8,11 +8,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.LinearLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 
 import com.cwru.R;
+import com.cwru.controller.HomeScreen;
 
 public class WorkoutWorkflowCountUpTimerFragment extends Fragment {
 
@@ -42,6 +46,24 @@ public class WorkoutWorkflowCountUpTimerFragment extends Fragment {
 		btnStartStop = (Button) view.findViewById(R.id.btnWorkoutWorkflowCountUpTimerStartPause);
 		if (btnStartStop == null) { Log.d("STEVE", "Button null"); }
 		btnStartStop.setOnClickListener(updateTimer);
+		// if phone show notes and history button
+		if (!HomeScreen.isTablet) {
+			TableLayout tl = (TableLayout) view.findViewById(R.id.tlWorkoutWorkflowCountUpSetHistoryNoteRow);
+			Button btnHistory = new Button(this.getActivity());
+			Button btnNotes = new Button(this.getActivity());
+			btnHistory.setText("History");
+			btnNotes.setText("Notes");
+			
+			TableRow tr = new TableRow(WorkoutWorkflowCountUpTimerFragment.this.getActivity());
+			tr.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+			tr.addView(btnHistory);
+			tr.addView(btnNotes);
+			tl.addView(tr, new TableLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+			
+		}
+		
+		
+		
 		chrTimer = (Chronometer) view.findViewById(R.id.chrWorkoutWorkflowCountUpTimer);
 		chrTimer.setText("00:00:00");
 		chrTimer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
