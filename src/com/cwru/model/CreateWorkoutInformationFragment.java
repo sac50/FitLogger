@@ -241,6 +241,9 @@ public class CreateWorkoutInformationFragment extends Fragment {
 				/* Create Workout in the Database */
 				mDbHelper.createWorkout(workoutToCreate);
 				
+				/** TODO
+				 * Change intent launch so tabbed implementation remains
+				 */
 				/* Launch intent to allow exercises to be added to workout and the sequence to be set */
 				Intent intent = new Intent(CreateWorkoutInformationFragment.this.getActivity(), WorkoutExerciseListing.class);
 				intent.putExtra("WorkoutName", workoutName);

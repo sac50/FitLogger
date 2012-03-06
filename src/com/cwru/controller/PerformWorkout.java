@@ -36,6 +36,7 @@ public class PerformWorkout extends FragmentActivity {
 	private Button btnPrevious; 
 	private Button btnNext;
 	private TextView tvPercentDone;
+	private int workoutId;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -43,6 +44,7 @@ public class PerformWorkout extends FragmentActivity {
 		this.setContentView(R.layout.perform_workout);
 		String workoutName = (String) this.getIntent().getExtras().get("workoutName");
 		mDbHelper = new DbAdapter(this);
+		workoutId = mDbHelper.getWorkoutIdFromName(workoutName);
 		getExercisesForWorkout(workoutName);
 		exerciseCounter = 0;
 		btnPrevious = (Button) this.findViewById(R.id.btnPerformWorkoutPrev);
@@ -78,7 +80,7 @@ public class PerformWorkout extends FragmentActivity {
 		// Is a set based exercise
 		if (exerciseToLaunch.getSets() != 0) {
 			Log.d("Steve", "-----------------------------------------------------");
-			WorkoutSetFragment workoutSet = new WorkoutSetFragment(exerciseToLaunch, this);
+			WorkoutSetFragment workoutSet = new WorkoutSetFragment(exerciseToLaunch, this, workoutId);
 			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 			if (HomeScreen.isTablet) {
 				NotesFragment notes = new NotesFragment();
@@ -110,7 +112,7 @@ public class PerformWorkout extends FragmentActivity {
 		}
 		// Countdown time
 		else if (exerciseToLaunch.getIsCountdown()) {
-			WorkoutWorkflowCountDownTimerFragment workoutTimer = new WorkoutWorkflowCountDownTimerFragment(exerciseToLaunch, this);
+			WorkoutWorkflowCountDownTimerFragment workoutTimer = new WorkoutWorkflowCountDownTimerFragment(exerciseToLaunch, this, workoutId);
 			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 			if (HomeScreen.isTablet) {
 				NotesFragment notes = new NotesFragment();

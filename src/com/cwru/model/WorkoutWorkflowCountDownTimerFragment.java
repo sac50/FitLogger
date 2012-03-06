@@ -34,13 +34,15 @@ public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
 	private boolean stop;
 	private View frameView;
 	private long time;
+	private int workoutId;
 	
 	private TextView tvTimer;
 	private TextView tvExerciseName;
 	private Button btnStartStop;
 	
-	public WorkoutWorkflowCountDownTimerFragment (Exercise exercise, Context context) {
+	public WorkoutWorkflowCountDownTimerFragment (Exercise exercise, Context context, int workoutId) {
 		this.exercise = exercise;
+		this.workoutId = workoutId;
 		this.context = context;
 		complete = false;
 		stop = true;
@@ -74,6 +76,20 @@ public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
 			@Override
 			public void onFinish() {
 				// TODO Auto-generated method stub
+				// Store into workout results 
+				/*
+				int id;
+				int workout_id;
+				long exercise_id;
+				int setNumber;
+				int reps;
+				double weight;
+				int time;
+				boolean time_type;
+				double distance;
+				int interval;
+				String comment;
+				*/ // Is this needed??  Now moved to notes fragment
 				
 			}
 		};
@@ -120,37 +136,6 @@ public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
 		
 		return view;
 	}
-	
-	public void startCountdown(View view) {
-		final long totalSeconds = minutes * 60 + seconds;
-		
-		Runnable runnable = new Runnable() {
-			@Override
-			public void run() {
-				for (long i = 0; i <= totalSeconds; i++) {
-					if (stop) {
-						
-					}
-//					decreaseTime();
-					final long value = i;
-					try {
-						Thread.sleep(1000);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-					handler.post(new Runnable() {
-						@Override
-						public void run() {
-							decreaseTime();
-							Log.d("STEVE", "VALue = " +(startTime - value));
-							tvTimer.setText(getFormatedTime());
-						}
-					});
-				}
-			}
-		};
-		new Thread(runnable).start();
-	}	
 	
 	View.OnClickListener updateTimer = new View.OnClickListener() {
 		@Override

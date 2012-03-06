@@ -25,6 +25,7 @@ public class WorkoutSetFragment extends Fragment {
 	private Set[] sets;
 	private int setCounter;
 	private Context context;
+	private int workoutId;
 	
 	private TextView tvExerciseName;
 	private TextView tvSetsToDo;
@@ -33,12 +34,13 @@ public class WorkoutSetFragment extends Fragment {
 	private TableLayout tlRepResults;
 	private Button btnRecord;
 	
-	public WorkoutSetFragment(Exercise exercise, Context context) {
+	public WorkoutSetFragment(Exercise exercise, Context context, int workoutId) {
 		// Set Adapter
 		mDbHelper = new DbAdapter(context);
 		this.exercise = exercise;
 		sets = mDbHelper.getSetsForExercise1(exercise.getId());
 		setCounter = 0;
+		this.workoutId = workoutId;
 		
 	}
 	@Override
@@ -86,7 +88,12 @@ public class WorkoutSetFragment extends Fragment {
 			// increment setCounter
 			setCounter++;
 			double weight = Double.parseDouble(etWeight.getText().toString());
-			double reps = Integer.parseInt(etReps.getText().toString());
+			int reps = Integer.parseInt(etReps.getText().toString());
+			int setNum = setCounter;
+			long exerciseId = exercise.getId();
+			WorkoutResults workoutResult = new WorkoutResults(workoutId, exerciseId, setNum, reps, weight);
+			mDbHelper.storeWorkoutResult(workoutResult);
+			// WorkoutResults (int workout_id, int exercise_id, int setNumber, int reps, double weight)
 			// If more sets, populate with pre determined value
 			if (setCounter < sets.length) { 
 				etWeight.setText(sets[setCounter].getWeight() + "");
@@ -103,17 +110,8 @@ public class WorkoutSetFragment extends Fragment {
 
 			tlRepResults.addView(tr, new TableLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
 		
-			/*
-			TableRow tr = new TableRow(WorkoutSetFragment.this.getActivity());
-			tr.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-			TextView tvWeightRecord = new TextView(WorkoutSetFragment.this.getActivity());
-			TextView tvRepsRecord = new TextView(WorkoutSetFragment.this.getActivity());
-			tvWeightRecord.setText(weight + " wt");
-			tvRepsRecord.setText(reps + " reps");
-			// Add table row
-			tlRepResults.addView(tr, new TableRow.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-			/* TODO
-			 * INSERT REP AND WEIGHT INTO DB
+			/** TODO Database Access
+			 * 
 			 */
 			
 			
