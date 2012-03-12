@@ -1,5 +1,8 @@
 package com.cwru.dao;
 
+import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.ArrayList;
 
 import android.content.ContentValues;
@@ -14,6 +17,7 @@ import com.cwru.model.Exercise;
 import com.cwru.model.Interval;
 import com.cwru.model.Set;
 import com.cwru.model.Workout;
+import com.cwru.model.WorkoutResults;
 
 public class DbAdapter {
 	private DatabaseHelper dbHelper;
@@ -46,9 +50,18 @@ public class DbAdapter {
 			"create table workout_results (_id integer primary key autoincrement, "
 			+ "date text not null, workout_id integer not null, exercise_id "
 			+ "integer not null, sets integer, reps integer, weight real, "
-			+ "time integer, time_type boolean, distance real, interval"
+			+ "time integer, time_type boolean, distance real, interval "
 			+ "integer, comment text);";
-
+	
+	/**TODO
+	 * ADD INTERVALS INTO THE RESULTS
+	 *
+	private static final String CREATE_WORKOUT_RESULTS_TABLE = 
+			"create table workout_results (_id integer primary key autoincrement, " +
+			"workout_id integer not null, exercise_id integer not null, date text not null, " + 
+			"set integer, weight real, reps integer, time integer, distance real,distance_units text, " +
+			"comment text);";
+	*/
 	private static final String DATABASE_NAME = "FitLoggerData";
 	private static final String DATABASE_TABLE_WORKOUT = "workouts";
 	private static final String DATABASE_TABLE_EXERCISE = "exercises";
@@ -105,6 +118,29 @@ public class DbAdapter {
 		dbHelper.close();
 	}
 	
+	public void storeWorkoutResult(WorkoutResults workoutResult) {
+		open();
+		// Get Date
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		//get current date time with Date()
+	    Date date = new Date();
+	    String dateString = dateFormat.format(date);
+		ContentValues values = new ContentValues();
+		values.put("date", dateString);
+		values.put("workout_id", workoutResult.getWorkoutId());
+		values.put("exercise_id", workoutResult.getExerciseId());
+		values.put("sets", workoutResult.getSetNumber());
+		values.put("reps", workoutResult.getReps());
+		values.put("weight", workoutResult.getWeight());
+		values.put("time", workoutResult.getTime());
+		values.put("time_type", workoutResult.getTimeType());
+		values.put("distance", workoutResult.getDistance());
+		values.put("interval", workoutResult.getInterval());
+		values.put("comment", workoutResult.getComment());
+		db.insert(DATABASE_TABLE_WORKOUT_RESULT, null, values);
+		close();
+	}
+	
 	public void createWorkout(Workout workout) {
 		open();
 		ContentValues initialValues = new ContentValues();
@@ -124,6 +160,19 @@ public class DbAdapter {
 		initialValues.put("comment", "");
 		db.insert(DATABASE_TABLE_WORKOUT, null, initialValues);
 		close();
+	}
+	
+	public int getWorkoutIdFromName(String workoutName) {
+		open();
+		String query = "select _id from workouts where name = '" + workoutName + "'";
+		Cursor cursor = db.rawQuery(query, null);
+		int workoutId = -1;
+		while (cursor.moveToNext()) {
+			workoutId = cursor.getInt(cursor.getColumnIndex("_id"));
+		}
+		cursor.close();
+		close();
+		return workoutId;
 	}
 	
 	public Workout getWorkoutFromName(String workoutName) {

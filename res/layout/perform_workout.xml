@@ -30,6 +30,8 @@
 			    android:layout_height="wrap_content"
 			    android:layout_weight="0.33"
 			    android:text=" % Done"
+			    android:paddingLeft="15dip"
+			    
 			/>
 				    
 			<Button 

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+	<TextView 
+	  	android:id="@+id/tvWorkoutWorkflowCountUpTimerExerciseName"
+	  	android:layout_width="match_parent"
+	  	android:layout_height="wrap_content"
+		android:gravity="center_vertical|center_horizontal"
+		android:padding="10dip"
+	  	android:text="Exercise Name"
+	  	android:layout_weight="10"
+	/>
+	
+	<Chronometer 
+		android:id="@+id/chrWorkoutWorkflowCountUpTimer"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center_horizontal"
+		android:gravity="center_vertical|center_horizontal"
+		
+		android:layout_weight="15"
+		
+	/>
+	
+	<Button 
+		android:id="@+id/btnWorkoutWorkflowCountUpTimerStartPause"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:paddingLeft="10dip"
+		android:paddingRight="10dip"
+		android:text="Start"
+		android:layout_weight="10"
+	/>
+       
+    <TableLayout 	
+	    android:id="@+id/tlWorkoutWorkflowCountUpSetHistoryNoteRow"
+       	android:layout_width="fill_parent"
+       	android:layout_height="wrap_content"
+       	android:stretchColumns="*"
+       	android:layout_weight="15"
+    >
+	</TableLayout>
+
+	
+
+	
+	<TableLayout 	
+	    android:id="@+id/tlWorkoutWorkflowCountUpSetResults"
+       	android:layout_width="fill_parent"
+       	android:layout_height="wrap_content"
+       	android:stretchColumns="*"
+       	android:layout_weight="50"
+    >
+	</TableLayout>
+</LinearLayout>

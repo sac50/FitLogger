@@ -13,7 +13,12 @@ import android.widget.TextView;
 import com.cwru.R;
 import com.cwru.dao.DbAdapter;
 import com.cwru.model.Exercise;
+import com.cwru.model.HistoryFragment;
+import com.cwru.model.NotesFragment;
 import com.cwru.model.WorkoutSetFragment;
+import com.cwru.model.WorkoutWorkflowCountDownTimerFragment;
+import com.cwru.model.WorkoutWorkflowCountUpTimerFragment;
+import com.cwru.model.WorkoutWorkflowDistanceFragment;
 
 /**
  * 
@@ -31,6 +36,7 @@ public class PerformWorkout extends FragmentActivity {
 	private Button btnPrevious; 
 	private Button btnNext;
 	private TextView tvPercentDone;
+	private int workoutId;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -38,11 +44,13 @@ public class PerformWorkout extends FragmentActivity {
 		this.setContentView(R.layout.perform_workout);
 		String workoutName = (String) this.getIntent().getExtras().get("workoutName");
 		mDbHelper = new DbAdapter(this);
+		workoutId = mDbHelper.getWorkoutIdFromName(workoutName);
 		getExercisesForWorkout(workoutName);
 		exerciseCounter = 0;
 		btnPrevious = (Button) this.findViewById(R.id.btnPerformWorkoutPrev);
 		btnNext = (Button) this.findViewById(R.id.btnPerformWorkoutNext);
 		tvPercentDone = (TextView) this.findViewById(R.id.tvPerformWorkoutPercentageDone);
+		Log.d("Size", "ExercisesForWorkout: " + exercisesForWorkout.size());
 		int percentage = exerciseCounter / exercisesForWorkout.size();
 		tvPercentDone.setText(percentage + " % Workout Complete");
 		launchExercise();
@@ -61,18 +69,80 @@ public class PerformWorkout extends FragmentActivity {
 		
 		Exercise exerciseToLaunch = exercisesForWorkout.get(exerciseCounter);
 		String type = exerciseToLaunch.getType();
+		int sets = exerciseToLaunch.getSets();
+		Log.d("STEVE", "SETS: " + sets);
 		Log.d("Steve", "Did Launch: " + type);
+		
 
 		/** TODO 
 		 * Change this to get values from the resource file
 		 */
-		if (type.equals("Strength")) {
+		// Is a set based exercise
+		if (exerciseToLaunch.getSets() != 0) {
 			Log.d("Steve", "-----------------------------------------------------");
-			WorkoutSetFragment workoutSet = new WorkoutSetFragment(exerciseToLaunch, this);
+			WorkoutSetFragment workoutSet = new WorkoutSetFragment(exerciseToLaunch, this, workoutId);
 			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-			transaction.add(R.id.flPerformWorkoutMainFrame, workoutSet);
+			if (HomeScreen.isTablet) {
+				NotesFragment notes = new NotesFragment();
+				HistoryFragment history = new HistoryFragment();
+				transaction.replace(R.id.flPerformWorkoutLeftFrame, workoutSet);
+				transaction.replace(R.id.flPerformWorkoutRightTopFrame, notes);
+				transaction.replace(R.id.flPerformWorkoutRightBottomFrame, history);
+			}
+			else {
+				transaction.replace(R.id.flPerformWorkoutMainFrame, workoutSet);
+			}
+			transaction.commit();
+		} 
+		// Distance
+		else if (exerciseToLaunch.getType().equals("Cardio") && exerciseToLaunch.getDistance() != 0) {
+			WorkoutWorkflowDistanceFragment distance = new WorkoutWorkflowDistanceFragment(exerciseToLaunch, this);
+			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+			if (HomeScreen.isTablet) {
+				NotesFragment notes = new NotesFragment();
+				HistoryFragment history = new HistoryFragment();
+				transaction.replace(R.id.flPerformWorkoutLeftFrame, distance);
+				transaction.replace(R.id.flPerformWorkoutRightTopFrame, notes);
+				transaction.replace(R.id.flPerformWorkoutRightBottomFrame, history);
+			}
+			else {
+				transaction.replace(R.id.flPerformWorkoutMainFrame, distance);
+			}
 			transaction.commit();
 		}
+		// Countdown time
+		else if (exerciseToLaunch.getIsCountdown()) {
+			WorkoutWorkflowCountDownTimerFragment workoutTimer = new WorkoutWorkflowCountDownTimerFragment(exerciseToLaunch, this, workoutId);
+			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+			if (HomeScreen.isTablet) {
+				NotesFragment notes = new NotesFragment();
+				HistoryFragment history = new HistoryFragment();
+				transaction.replace(R.id.flPerformWorkoutLeftFrame, workoutTimer);
+				transaction.replace(R.id.flPerformWorkoutRightTopFrame, notes);
+				transaction.replace(R.id.flPerformWorkoutRightBottomFrame, history);
+			}
+			else {
+				transaction.replace(R.id.flPerformWorkoutMainFrame, workoutTimer);
+			}
+			transaction.commit();
+		}
+		else if (!exerciseToLaunch.getIsCountdown()) {
+			WorkoutWorkflowCountUpTimerFragment workoutTimer = new WorkoutWorkflowCountUpTimerFragment(exerciseToLaunch, this);
+			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+			if (HomeScreen.isTablet) {
+				NotesFragment notes = new NotesFragment();
+				HistoryFragment history = new HistoryFragment();
+				transaction.replace(R.id.flPerformWorkoutLeftFrame, workoutTimer);
+				transaction.replace(R.id.flPerformWorkoutRightTopFrame, notes);
+				transaction.replace(R.id.flPerformWorkoutRightBottomFrame, history);
+			}
+			else {
+				transaction.replace(R.id.flPerformWorkoutMainFrame, workoutTimer);
+			}
+			transaction.commit();
+		} 
+		
+		
 	}
 	
 	/**

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+	<TextView 
+	  	android:id="@+id/tvWorkoutWorkflowCountdownTimerExerciseName"
+	  	android:layout_width="match_parent"
+	  	android:layout_height="wrap_content"
+		android:gravity="center_vertical|center_horizontal"
+		android:padding="10dip"
+		android:layout_weight="10"
+	/>
+	
+	<TextView 
+	    android:id="@+id/tvWorkoutWorkflowCountdownTimerTimer"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:gravity="center_vertical|center_horizontal"
+	    android:padding="10dip"
+	    android:layout_weight="15"
+	/>
+	
+	<Button 
+		android:id="@+id/btnWorkoutWorkflowCountdownTimerStartPause"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:paddingLeft="10dip"
+		android:paddingRight="10dip"
+		android:text="Start"
+	    android:layout_weight="10"
+		
+	/>
+       
+    <TableLayout 	
+	    android:id="@+id/tlWorkoutWorkflowCountDownHistoryNoteRow"
+       	android:layout_width="fill_parent"
+       	android:layout_height="wrap_content"
+       	android:stretchColumns="*"
+    	android:layout_weight="15"       	
+    >
+	</TableLayout>
+
+	
+
+	
+	<TableLayout 	
+	    android:id="@+id/tlWorkoutWorkflowSetResults"
+       	android:layout_width="fill_parent"
+       	android:layout_height="wrap_content"
+       	android:stretchColumns="*"
+       	android:layout_weight="50"  
+   	>
+	</TableLayout>
+</LinearLayout>
