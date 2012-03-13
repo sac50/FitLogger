@@ -1,6 +1,7 @@
 package com.cwru.model;
 
 public class Workout {
+	private int id;
 	private String name;
 	private String type;
 	private String exerciseSequence;
@@ -30,7 +31,6 @@ public class Workout {
 			int repeatTuesday, int repeatWednesday, int repeatThursday,	int repeatFriday, int repeatSaturday) {
 		this.name = workoutName;
 		this.type = workoutType;
-		this.exerciseSequence = exerciseSequence;
 		this.repeatWeeks = workoutRepeatWeeks;
 		this.repeatSunday = repeatSunday;
 		this.repeatMonday = repeatMonday;
@@ -56,7 +56,24 @@ public class Workout {
 		this.repeatFriday = repeatFriday;
 		this.repeatSaturday = repeatSaturday;
 	}
+	
+	public Workout(int workoutId, String workoutName, String workoutType, String exerciseSequence, String workoutRepeatWeeks, int repeatSunday, int repeatMonday,
+			int repeatTuesday, int repeatWednesday, int repeatThursday,	int repeatFriday, int repeatSaturday) {
+		this.id = workoutId;
+		this.name = workoutName;
+		this.type = workoutType;
+		this.exerciseSequence = exerciseSequence;
+		this.repeatWeeks = workoutRepeatWeeks;
+		this.repeatSunday = repeatSunday;
+		this.repeatMonday = repeatMonday;
+		this.repeatTuesday = repeatTuesday;
+		this.repeatWednesday = repeatWednesday;
+		this.repeatThursday = repeatThursday;
+		this.repeatFriday = repeatFriday;
+		this.repeatSaturday = repeatSaturday;
+	}
 
+	public int getId() { return id;}
 	public String getName() { return name; }
 	public String getType() { return type; }
 	public String getExerciseSequence() { return exerciseSequence; }

@@ -139,6 +139,7 @@ public class DbAdapter {
 		dbHelper.close();
 	}
 	
+	/** TODO Update to fit new database */
 	public void storeWorkoutResult(WorkoutResults workoutResult) {
 		open();
 		// Get Date
@@ -162,6 +163,10 @@ public class DbAdapter {
 		close();
 	}
 	
+	/**
+	 * Inserts row into the Workout table
+	 * @param workout
+	 */
 	public void createWorkout(Workout workout) {
 		open();
 		ContentValues initialValues = new ContentValues();
@@ -183,6 +188,11 @@ public class DbAdapter {
 		close();
 	}
 	
+	/**
+	 * Returns the id for a workout by querying against the name
+	 * @param workoutName
+	 * @return
+	 */
 	public int getWorkoutIdFromName(String workoutName) {
 		open();
 		String query = "select id from workouts where name = '" + workoutName + "'";
@@ -196,13 +206,19 @@ public class DbAdapter {
 		return workoutId;
 	}
 	
+	/** 
+	 * Query the workout table for a workout by name
+	 * @param workoutName
+	 * @return
+	 */
 	public Workout getWorkoutFromName(String workoutName) {
 		open();
 		String query = "select * from workouts where name = '" + workoutName + "'";
 		Cursor cursor = db.rawQuery(query, null);
 		Workout workout = null;
 		while (cursor.moveToNext() ) {
-			String workoutType = cursor.getString(cursor.getColumnIndex("workout_type"));
+			int workoutId = cursor.getInt(cursor.getColumnIndex("id"));
+			String workoutType = cursor.getString(cursor.getColumnIndex("type"));
 			String exerciseSequence = cursor.getString(cursor.getColumnIndex("exercise_sequence"));
 			String repeats = cursor.getString(cursor.getColumnIndex("repeats"));
 			int rptSunday = cursor.getInt(cursor.getColumnIndex("repeats_sunday"));
@@ -214,7 +230,7 @@ public class DbAdapter {
 			int rptSaturday = cursor.getInt(cursor.getColumnIndex("repeats_sunday"));
 			Log.d("Su-" + rptSunday + " | Mo-" + rptMonday + " | Tu-" + rptTuesday + " | We-" + rptWednesday + " | Th-" + rptThursday, "");
 			Log.d("STEVE", "Su-" + rptSunday + " | Mo-" + rptMonday + " | Tu-" + rptTuesday + " | We-" + rptWednesday + " | Th-" + rptThursday);
-			workout = new Workout(workoutName, workoutType, exerciseSequence, repeats, rptSunday, rptMonday, rptTuesday, rptWednesday,
+			workout = new Workout(workoutId, workoutName, workoutType, exerciseSequence, repeats, rptSunday, rptMonday, rptTuesday, rptWednesday,
 								  rptThursday, rptFriday, rptSaturday);
 		}
 		cursor.close();
@@ -222,9 +238,14 @@ public class DbAdapter {
 		return workout;
 	}
 	
+	/**
+	 * Update the workout table with new information by querying for initial workout name
+	 * @param workout
+	 * @param initialWorkoutName
+	 */
 	public void updateWorkoutInformation(Workout workout, String initialWorkoutName) {
 		String query = "update workouts " + 
-					   "set name = '" + workout.getName() + "', workout_type = '" + workout.getType() + "', repeats = '" + workout.getRepeatWeeks() + "'," +
+					   "set name = '" + workout.getName() + "', type = '" + workout.getType() + "', repeats = '" + workout.getRepeatWeeks() + "'," +
 					   "repeats_sunday = " + workout.getRepeatSunday() + ", repeats_monday = " + workout.getRepeatMonday() + ", repeats_tuesday = " + workout.getRepeatTuesday() + "," +
 					   "repeats_wednesday = " + workout.getRepeatWednesday() + ", repeats_thursday = " + workout.getRepeatThursday() + ", repeats_friday = " + workout.getRepeatFriday() + 
 					   ", repeats_saturday = " + workout.getRepeatSaturday() + " where name = '" + initialWorkoutName + "'";
@@ -233,6 +254,10 @@ public class DbAdapter {
 		close();
 	}
 	
+	/**
+	 * Get List of all workouts that are created in the database
+	 * @return
+	 */
 	public Workout [] getAllWorkouts() { 
 		open();
 		ArrayList<Workout> workoutList = new ArrayList<Workout>();
@@ -240,9 +265,11 @@ public class DbAdapter {
 		//Workout(String workoutName, String workoutType,String workoutRepeatWeeks, int repeatSunday, int repeatMonday,
 		//		int repeatTuesday, int repeatWednesday, int repeatThursday,	int repeatFriday, int repeatSaturday)
 		while (cursor.moveToNext()) {
+			int workoutId = cursor.getInt(cursor.getColumnIndex("id"));
 			String workoutName = cursor.getString(cursor.getColumnIndex("name"));
 			String workoutType = cursor.getString(cursor.getColumnIndex("workout_type"));
 			String workoutRepatWeeks = cursor.getString(cursor.getColumnIndex("repeats"));
+			String exerciseSequence = cursor.getString(cursor.getColumnIndex("exercise_sequence"));
 			int repeatSunday = cursor.getInt(cursor.getColumnIndex("repeats_sunday"));
 			int repeatMonday = cursor.getInt(cursor.getColumnIndex("repeats_monday"));
 			int repeatTuesday = cursor.getInt(cursor.getColumnIndex("repeats_tuesday"));
@@ -250,7 +277,7 @@ public class DbAdapter {
 			int repeatThursday = cursor.getInt(cursor.getColumnIndex("repeats_thursday"));
 			int repeatFriday = cursor.getInt(cursor.getColumnIndex("repeats_friday"));
 			int repeatSaturday = cursor.getInt(cursor.getColumnIndex("repeats_saturday"));
-			Workout workout = new Workout(workoutName, workoutType, workoutRepatWeeks, repeatSunday, repeatMonday, 
+			Workout workout = new Workout(workoutId, workoutName, workoutType, exerciseSequence, workoutRepatWeeks, repeatSunday, repeatMonday, 
 										  repeatTuesday, repeatWednesday, repeatThursday, repeatFriday, repeatSaturday);
 			workoutList.add(workout);
 		}
@@ -259,7 +286,11 @@ public class DbAdapter {
 		return workoutList.toArray(new Workout [0]);
 	}
 	
-	/* Does workout name exist */
+	/**
+	 * Does the workout exist.  Queries by name
+	 * @param workoutName
+	 * @return
+	 */
 	public boolean workoutNameExist(String workoutName) {
 		open();
 		boolean exists = false;
@@ -274,7 +305,7 @@ public class DbAdapter {
 	}
 	
 	/** TODO
-	 * Enforce that all workout names must be unique
+	 * Return the exercise sequence belonging to the workout
 	 * @return
 	 */
 	public String getExerciseSequence(String workoutName) {
@@ -290,6 +321,11 @@ public class DbAdapter {
 		return exerciseSequence;
 	}
 	
+	/**
+	 * Update the exercise sequence for the workout
+	 * @param exerciseSequence
+	 * @param workoutName
+	 */
 	public void updateWorkoutExerciseSequence(String exerciseSequence, String workoutName) {
 		open();
 		String query = "update workouts set exercise_sequence = '" + exerciseSequence + "' where name = '" + workoutName + "'";
