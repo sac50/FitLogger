@@ -334,12 +334,80 @@ public class DbAdapter {
 		close();
 	}
 	
+	/**
+	 * Gets ArrayList of all exercises in the exercise database
+	 * @return
+	 */
+	public ArrayList<Exercise> getAllExercises() {
+		open();
+		ArrayList<Exercise> exerciseList = new ArrayList<Exercise>();
+		String query = "select id, name, type, comment, deleted from exercise";
+		Cursor cursor = db.rawQuery(query, null);
+		while (cursor.moveToNext()) {
+			Long id = cursor.getLong(cursor.getColumnIndex("id"));
+			String name = cursor.getString(cursor.getColumnIndex("name"));
+			String type = cursor.getString(cursor.getColumnIndex("type"));
+			String comment = cursor.getString(cursor.getColumnIndex("comment"));
+			int deleted = cursor.getInt(cursor.getColumnIndex("deleted"));
+			Exercise exercise = new Exercise(id, name, type, comment, deleted);
+			exerciseList.add(exercise);
+		}
+		close();
+		return exerciseList;	
+	}
+	
+	/**
+	 * Return Array List of exercises that are marked undeleted 
+	 * @return
+	 */
+	public ArrayList<Exercise> getAllUndeletedExercises() {
+		open();
+		ArrayList<Exercise> exerciseList = new ArrayList<Exercise>();
+		String query = "select id, name, type, comment, deleted from exercise where deleted = false";
+		Cursor cursor = db.rawQuery(query, null);
+		while (cursor.moveToNext()) {
+			Long id = cursor.getLong(cursor.getColumnIndex("id"));
+			String name = cursor.getString(cursor.getColumnIndex("name"));
+			String type = cursor.getString(cursor.getColumnIndex("type"));
+			String comment = cursor.getString(cursor.getColumnIndex("comment"));
+			int deleted = cursor.getInt(cursor.getColumnIndex("deleted"));
+			Exercise exercise = new Exercise(id, name, type, comment, deleted);
+			exerciseList.add(exercise);
+		}
+		close();
+		return exerciseList;
+	}
+	
+	/**
+	 * Return Array List of all exercises that are marked deleted in the database
+	 * @return
+	 */
+	public ArrayList<Exercise> getAllDeletedExercises() {
+		open();
+		ArrayList<Exercise> exerciseList = new ArrayList<Exercise>();
+		String query = "select id, name, type, comment, deleted from exercise where deleted = true";
+		Cursor cursor = db.rawQuery(query, null);
+		while (cursor.moveToNext()) {
+			Long id = cursor.getLong(cursor.getColumnIndex("id"));
+			String name = cursor.getString(cursor.getColumnIndex("name"));
+			String type = cursor.getString(cursor.getColumnIndex("type"));
+			String comment = cursor.getString(cursor.getColumnIndex("comment"));
+			int deleted = cursor.getInt(cursor.getColumnIndex("deleted"));
+			Exercise exercise = new Exercise(id, name, type, comment, deleted);
+			exerciseList.add(exercise);
+		}
+		close();
+		return exerciseList;
+	}
+	
+	/*
 	public Cursor getAllExercises() { 		
 		String columns [] = {"id", "name", "type", "sets", "time", "is_countdown", "distance", "distance_type", "intervals", "interval_sets", "comment", "deleted"};
 		Cursor cursor = db.query(DATABASE_TABLE_EXERCISE, columns, null, null, null, null, null);
 		if (cursor == null) { Log.d("Steve", "Cursor for exercises is null");}
 		return cursor;
 	}
+	
 	
 	public Cursor getAllUndeletedExercises() {
 		String columns [] = {"id", "name", "type", "sets", "time", "is_countdown", "distance", "distance_type", "intervals", "interval_sets", "comment", "deleted"};
@@ -348,52 +416,52 @@ public class DbAdapter {
 		return cursor;
 	}
 
+	*/
+	
+	/**
+	 * Return Exercise from querying for the exercise id
+	 * @param exerciseId
+	 * @return
+	 */
 	public Exercise getExerciseFromId(Long exerciseId) {
 		open();
 		String query = "select * from exercises where id = " + exerciseId;
 		Cursor cursor = db.rawQuery(query, null);
-		Exercise ex = new Exercise();;
+		Exercise ex = null;
 		while (cursor.moveToNext()) {
-			ex.setId(cursor.getLong(cursor.getColumnIndex("id")));
-			ex.setName(cursor.getString(cursor.getColumnIndex("name")));
-			ex.setType(cursor.getString(cursor.getColumnIndex("type")));
-			ex.setSets(cursor.getInt(cursor.getColumnIndex("sets")));
-			ex.setIsCountdown(cursor.getInt(cursor.getColumnIndex("is_countdown")) == 1);
-			ex.setTime(cursor.getLong(cursor.getColumnIndex("time")));
-			ex.setTimeType(cursor.getString(cursor.getColumnIndex("time_type")));
-			ex.setDistance(cursor.getDouble(cursor.getColumnIndex("distance")));
-			ex.setDistanceType(cursor.getString(cursor.getColumnIndex("distance_type")));
-			ex.setIntervals(cursor.getInt(cursor.getColumnIndex("intervals")));
-			ex.setIntervalSets(cursor.getInt(cursor.getColumnIndex("interval_sets")));
-			ex.setComment(cursor.getString(cursor.getColumnIndex("comment")));			
+			Long id = cursor.getLong(cursor.getColumnIndex("id"));
+			String name = cursor.getString(cursor.getColumnIndex("name"));
+			String type = cursor.getString(cursor.getColumnIndex("type"));
+			String comment = cursor.getString(cursor.getColumnIndex("comment"));
+			int deleted = cursor.getInt(cursor.getColumnIndex("deleted"));
+			ex = new Exercise(id, name, type, comment, deleted);
 		}
 		cursor.close();
 		close();
 		return ex;
 	}
 	
+	/**
+	 * Query for the exercise from the exercise name
+	 * @param name
+	 * @return
+	 */
 	public Exercise getExerciseFromName(String name) {
+		open();
 		String query = "select * from exercises where name = '" + name
 				+ "' and deleted = 0";
 		Cursor cursor = db.rawQuery(query, null);
 
-		Exercise ex = new Exercise();
+		Exercise ex = null;
 		while (cursor.moveToNext()) {
-			ex.setId(cursor.getLong(cursor.getColumnIndex("id")));
-			ex.setName(cursor.getString(cursor.getColumnIndex("name")));
-			ex.setType(cursor.getString(cursor.getColumnIndex("type")));
-			ex.setSets(cursor.getInt(cursor.getColumnIndex("sets")));
-			ex.setIsCountdown(cursor.getInt(cursor.getColumnIndex("is_countdown")) == 1);
-			ex.setTime(cursor.getLong(cursor.getColumnIndex("time")));
-			ex.setTimeType(cursor.getString(cursor.getColumnIndex("time_type")));
-			ex.setDistance(cursor.getDouble(cursor.getColumnIndex("distance")));
-			ex.setDistanceType(cursor.getString(cursor.getColumnIndex("distance_type")));
-			ex.setIntervals(cursor.getInt(cursor.getColumnIndex("intervals")));
-			ex.setIntervalSets(cursor.getInt(cursor.getColumnIndex("interval_sets")));
-			ex.setComment(cursor.getString(cursor.getColumnIndex("comment")));
+			Long id = cursor.getLong(cursor.getColumnIndex("id"));
+			String type = cursor.getString(cursor.getColumnIndex("type"));
+			String comment = cursor.getString(cursor.getColumnIndex("comment"));
+			int deleted = cursor.getInt(cursor.getColumnIndex("deleted"));
+			ex = new Exercise(id, name, type, comment, deleted);
 		}
-		
 		cursor.close();
+		close();
 		return ex;
 	}
 

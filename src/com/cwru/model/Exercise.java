@@ -24,6 +24,7 @@ public class Exercise implements Parcelable{
 	private int intervals;
 	private int intervalSets;
 	private String comment;
+	private int deleted;
 	private int mode;
 	
 	public Exercise() {
@@ -38,6 +39,14 @@ public class Exercise implements Parcelable{
 		this.name = name;
 		this.id = id;
 		this.mode = mode;
+	}
+	
+	public Exercise (Long id, String name, String type, String comment, int deleted) {
+		this.id = id;
+		this.name = name;
+		this.type = type;
+		this.comment = comment; 
+		this.deleted = deleted;
 	}
 	
 	@Override 
