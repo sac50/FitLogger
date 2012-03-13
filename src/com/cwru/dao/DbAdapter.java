@@ -52,7 +52,7 @@ public class DbAdapter {
 	
 	private static final String CREATE_TIME_TABLE = 
 			"create table time (id integer primary key autoincrement, " + 
-			"exercise_id integer not null, time_length integer, time_units text, is_count_up boolean, is_countdown boolean);";
+			"exercise_id integer not null, length integer, units text, is_count_up boolean, is_countdown boolean);";
 	
 	private static final String CREATE_TIME_RESULT_TABLE = 
 			"create table time_result (id integer primary key autoincrement, " + 
@@ -71,28 +71,6 @@ public class DbAdapter {
 			"workout_id integer not null, exercise_id integer not null, " + 
 			"date text not null);";
 				
-			
-			
-			
-	/*
-
-	private static final String CREATE_WORKOUT_RESULTS_TABLE = 
-			"create table workout_results (_id integer primary key autoincrement, "
-			+ "date text not null, workout_id integer not null, exercise_id "
-			+ "integer not null, sets integer, reps integer, weight real, "
-			+ "time integer, time_type boolean, distance real, interval "
-			+ "integer, comment text);";
-	
-	*/
-	/**TODO
-	 * ADD INTERVALS INTO THE RESULTS
-	 *
-	private static final String CREATE_WORKOUT_RESULTS_TABLE = 
-			"create table workout_results (_id integer primary key autoincrement, " +
-			"workout_id integer not null, exercise_id integer not null, date text not null, " + 
-			"set integer, weight real, reps integer, time integer, distance real,distance_units text, " +
-			"comment text);";
-	*/
 	private static final String DATABASE_NAME = "FitLoggerData";
 	private static final String DATABASE_TABLE_WORKOUT = "workouts";
 	private static final String DATABASE_TABLE_EXERCISE = "exercises";
@@ -207,7 +185,7 @@ public class DbAdapter {
 	
 	public int getWorkoutIdFromName(String workoutName) {
 		open();
-		String query = "select _id from workouts where name = '" + workoutName + "'";
+		String query = "select id from workouts where name = '" + workoutName + "'";
 		Cursor cursor = db.rawQuery(query, null);
 		int workoutId = -1;
 		while (cursor.moveToNext()) {
