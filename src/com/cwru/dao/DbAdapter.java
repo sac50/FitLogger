@@ -267,7 +267,7 @@ public class DbAdapter {
 		while (cursor.moveToNext()) {
 			int workoutId = cursor.getInt(cursor.getColumnIndex("id"));
 			String workoutName = cursor.getString(cursor.getColumnIndex("name"));
-			String workoutType = cursor.getString(cursor.getColumnIndex("workout_type"));
+			String workoutType = cursor.getString(cursor.getColumnIndex("type"));
 			String workoutRepatWeeks = cursor.getString(cursor.getColumnIndex("repeats"));
 			String exerciseSequence = cursor.getString(cursor.getColumnIndex("exercise_sequence"));
 			int repeatSunday = cursor.getInt(cursor.getColumnIndex("repeats_sunday"));
