@@ -23,51 +23,66 @@ public class DbAdapter {
 	private DatabaseHelper dbHelper;
 	private SQLiteDatabase db;
 	private static final String TAG = "dbHelper";
-
-	private static final String CREATE_WORKOUTS_TABLE =
-			"create table workouts (_id integer primary key autoincrement, "
-			+ "name text not null, workout_type text not null, exercise_sequence "
-			+ "text not null, repeats text, repeats_sunday int, repeats_monday int," 
-			+ "repeats_tuesday int, repeats_wednesday int, repeats_thursday int, " 
-			+ "repeats_friday int, repeats_saturday int, comment text);";
+	
+	private static final String CREATE_WORKOUTS_TABLE = 
+			"create table workouts (id integer primary key autoincrement, " +
+			"name text not null, type text not null, exercise_sequence text not null, " + 
+			"repeats text, repeats_sunday boolean, repeats_monday boolean, repeats_tuesday boolean, " + 
+			"repeats_wednesday boolean, repeats_thursday boolean, repeats_friday boolean, repeats_saturday boolean, comment text);";
+	
 	private static final String CREATE_EXERCISES_TABLE = 
-			"create table exercises (_id integer primary key autoincrement, "
-			+ "name text not null, type text not null, sets integer, "
-			+ "time integer, time_type text, is_countdown boolean, distance real,"
-			+ "distance_type text, intervals integer, interval_sets integer, "
-			+ "comment text, deleted boolean not null);";
+			"create table exercises (id integer primary key autoincrement, " + 
+			"name text not null, type text not null, comment text, deleted boolean not null);";
+	
 	private static final String CREATE_SETS_TABLE = 
-			"create table sets (_id integer primary key autoincrement, "
-			+ "exercise_id integer not null, reps integer not null, "
-			+ "weight real not null);";
+			"create table sets (id integer primary key autoincrement, " + 
+			"exercise_id integer not null, reps integer, weight real);";
+	
+	private static final String CREATE_SET_RESULT_TABLE = 
+			"create table set_result (id integer primary key autoincrement, " + 
+			"workout_result_id integer, set_number integer, reps integer, weight real);";
+	
+	private static final String CREATE_DISTANCE_TABLE = 
+			"create table distance (id integer primary key autoincrement, " + 
+			"exercise_id integer not null, length real, units text);";
+	
+	private static final String CREATE_DISTANCE_RESULT_TABLE = 
+			"create table distance_result (id integer primary key autoincrement, " + 
+			"workout_result_id integer, length real, units text);";
+	
+	private static final String CREATE_TIME_TABLE = 
+			"create table time (id integer primary key autoincrement, " + 
+			"exercise_id integer not null, length integer, units text, is_count_up boolean, is_countdown boolean);";
+	
+	private static final String CREATE_TIME_RESULT_TABLE = 
+			"create table time_result (id integer primary key autoincrement, " + 
+			"workout_result_id integer, length integer, units text);";
 	
 	private static final String CREATE_INTERVALS_TABLE = 
-			"create table intervals (_id integer primary key autoincrement, "
-			+ "exercise_id integer not null, name text not null, "
-			+ "time integer not null, time_type integer not null);";
+			"create table intervals (id integer primary key autoincrement, " + 
+			"exercise_id integer not null, name text, length real, type text, units text);";
 	
-	private static final String CREATE_WORKOUT_RESULTS_TABLE = 
-			"create table workout_results (_id integer primary key autoincrement, "
-			+ "date text not null, workout_id integer not null, exercise_id "
-			+ "integer not null, sets integer, reps integer, weight real, "
-			+ "time integer, time_type boolean, distance real, interval "
-			+ "integer, comment text);";
+	private static final String CREATE_INTERVALS_RESULT_TABLE = 
+			"create table intervals_result (id integer primary key autoincrement, " + 
+			"workout_result_id integer, name text, length real, type text, units text);";
 	
-	/**TODO
-	 * ADD INTERVALS INTO THE RESULTS
-	 *
-	private static final String CREATE_WORKOUT_RESULTS_TABLE = 
-			"create table workout_results (_id integer primary key autoincrement, " +
-			"workout_id integer not null, exercise_id integer not null, date text not null, " + 
-			"set integer, weight real, reps integer, time integer, distance real,distance_units text, " +
-			"comment text);";
-	*/
+	private static final String CREATE_WORKOUT_RESULT_TABLE = 
+			"create table workout_result (id integer primary key autoincrement, " + 
+			"workout_id integer not null, exercise_id integer not null, " + 
+			"date text not null);";
+				
 	private static final String DATABASE_NAME = "FitLoggerData";
 	private static final String DATABASE_TABLE_WORKOUT = "workouts";
 	private static final String DATABASE_TABLE_EXERCISE = "exercises";
 	private static final String DATABASE_TABLE_SET = "sets";
+	private static final String DATABASE_TABLE_DISTANCE = "distance";
+	private static final String DATABASE_TABLE_TIME = "time";
 	private static final String DATABASE_TABLE_INTERVAL = "intervals";
 	private static final String DATABASE_TABLE_WORKOUT_RESULT = "workout_results";
+	private static final String DATABASE_TABLE_SET_RESULTS = "set_result";
+	private static final String DATABASE_TABLE_DISTANCE_RESULT = "distance_result";
+	private static final String DATABASE_TABLE_TIME_RESULT = "time_result";
+	private static final String DATABASE_TABLE_INTERVAL_RESULT = "intervals_result";
 	private static final int DATABASE_VERSION = 1;
 
 	private final Context mCtx;
@@ -84,7 +99,13 @@ public class DbAdapter {
 			db.execSQL(CREATE_EXERCISES_TABLE);
 			db.execSQL(CREATE_SETS_TABLE);
 			db.execSQL(CREATE_INTERVALS_TABLE);
-			db.execSQL(CREATE_WORKOUT_RESULTS_TABLE);
+			db.execSQL(CREATE_TIME_TABLE);
+			db.execSQL(CREATE_DISTANCE_TABLE);
+			db.execSQL(CREATE_WORKOUT_RESULT_TABLE);
+			db.execSQL(CREATE_SET_RESULT_TABLE);
+			db.execSQL(CREATE_INTERVALS_RESULT_TABLE);
+			db.execSQL(CREATE_TIME_RESULT_TABLE);
+			db.execSQL(CREATE_DISTANCE_RESULT_TABLE);
 			Log.d("Steve", "DB CREATES");
 		}
 
@@ -118,6 +139,7 @@ public class DbAdapter {
 		dbHelper.close();
 	}
 	
+	/** TODO Update to fit new database */
 	public void storeWorkoutResult(WorkoutResults workoutResult) {
 		open();
 		// Get Date
@@ -141,13 +163,17 @@ public class DbAdapter {
 		close();
 	}
 	
+	/**
+	 * Inserts row into the Workout table
+	 * @param workout
+	 */
 	public void createWorkout(Workout workout) {
 		open();
 		ContentValues initialValues = new ContentValues();
 		initialValues.put("name", workout.getName());
-		initialValues.put("workout_type",workout.getType());
+		initialValues.put("type",workout.getType());
 		// Initial Workout has blank exercise sequence
-		initialValues.put("exercise_Sequence", "");
+		initialValues.put("exercise_sequence", "");
 		initialValues.put("repeats", workout.getRepeatWeeks());
 		initialValues.put("repeats_sunday", workout.getRepeatSunday());
 		initialValues.put("repeats_monday", workout.getRepeatMonday());
@@ -162,9 +188,14 @@ public class DbAdapter {
 		close();
 	}
 	
+	/**
+	 * Returns the id for a workout by querying against the name
+	 * @param workoutName
+	 * @return
+	 */
 	public int getWorkoutIdFromName(String workoutName) {
 		open();
-		String query = "select _id from workouts where name = '" + workoutName + "'";
+		String query = "select id from workouts where name = '" + workoutName + "'";
 		Cursor cursor = db.rawQuery(query, null);
 		int workoutId = -1;
 		while (cursor.moveToNext()) {
@@ -175,13 +206,19 @@ public class DbAdapter {
 		return workoutId;
 	}
 	
+	/** 
+	 * Query the workout table for a workout by name
+	 * @param workoutName
+	 * @return
+	 */
 	public Workout getWorkoutFromName(String workoutName) {
 		open();
 		String query = "select * from workouts where name = '" + workoutName + "'";
 		Cursor cursor = db.rawQuery(query, null);
 		Workout workout = null;
 		while (cursor.moveToNext() ) {
-			String workoutType = cursor.getString(cursor.getColumnIndex("workout_type"));
+			int workoutId = cursor.getInt(cursor.getColumnIndex("id"));
+			String workoutType = cursor.getString(cursor.getColumnIndex("type"));
 			String exerciseSequence = cursor.getString(cursor.getColumnIndex("exercise_sequence"));
 			String repeats = cursor.getString(cursor.getColumnIndex("repeats"));
 			int rptSunday = cursor.getInt(cursor.getColumnIndex("repeats_sunday"));
@@ -193,7 +230,7 @@ public class DbAdapter {
 			int rptSaturday = cursor.getInt(cursor.getColumnIndex("repeats_sunday"));
 			Log.d("Su-" + rptSunday + " | Mo-" + rptMonday + " | Tu-" + rptTuesday + " | We-" + rptWednesday + " | Th-" + rptThursday, "");
 			Log.d("STEVE", "Su-" + rptSunday + " | Mo-" + rptMonday + " | Tu-" + rptTuesday + " | We-" + rptWednesday + " | Th-" + rptThursday);
-			workout = new Workout(workoutName, workoutType, exerciseSequence, repeats, rptSunday, rptMonday, rptTuesday, rptWednesday,
+			workout = new Workout(workoutId, workoutName, workoutType, exerciseSequence, repeats, rptSunday, rptMonday, rptTuesday, rptWednesday,
 								  rptThursday, rptFriday, rptSaturday);
 		}
 		cursor.close();
@@ -201,9 +238,14 @@ public class DbAdapter {
 		return workout;
 	}
 	
+	/**
+	 * Update the workout table with new information by querying for initial workout name
+	 * @param workout
+	 * @param initialWorkoutName
+	 */
 	public void updateWorkoutInformation(Workout workout, String initialWorkoutName) {
 		String query = "update workouts " + 
-					   "set name = '" + workout.getName() + "', workout_type = '" + workout.getType() + "', repeats = '" + workout.getRepeatWeeks() + "'," +
+					   "set name = '" + workout.getName() + "', type = '" + workout.getType() + "', repeats = '" + workout.getRepeatWeeks() + "'," +
 					   "repeats_sunday = " + workout.getRepeatSunday() + ", repeats_monday = " + workout.getRepeatMonday() + ", repeats_tuesday = " + workout.getRepeatTuesday() + "," +
 					   "repeats_wednesday = " + workout.getRepeatWednesday() + ", repeats_thursday = " + workout.getRepeatThursday() + ", repeats_friday = " + workout.getRepeatFriday() + 
 					   ", repeats_saturday = " + workout.getRepeatSaturday() + " where name = '" + initialWorkoutName + "'";
@@ -212,6 +254,10 @@ public class DbAdapter {
 		close();
 	}
 	
+	/**
+	 * Get List of all workouts that are created in the database
+	 * @return
+	 */
 	public Workout [] getAllWorkouts() { 
 		open();
 		ArrayList<Workout> workoutList = new ArrayList<Workout>();
@@ -219,9 +265,11 @@ public class DbAdapter {
 		//Workout(String workoutName, String workoutType,String workoutRepeatWeeks, int repeatSunday, int repeatMonday,
 		//		int repeatTuesday, int repeatWednesday, int repeatThursday,	int repeatFriday, int repeatSaturday)
 		while (cursor.moveToNext()) {
+			int workoutId = cursor.getInt(cursor.getColumnIndex("id"));
 			String workoutName = cursor.getString(cursor.getColumnIndex("name"));
-			String workoutType = cursor.getString(cursor.getColumnIndex("workout_type"));
+			String workoutType = cursor.getString(cursor.getColumnIndex("type"));
 			String workoutRepatWeeks = cursor.getString(cursor.getColumnIndex("repeats"));
+			String exerciseSequence = cursor.getString(cursor.getColumnIndex("exercise_sequence"));
 			int repeatSunday = cursor.getInt(cursor.getColumnIndex("repeats_sunday"));
 			int repeatMonday = cursor.getInt(cursor.getColumnIndex("repeats_monday"));
 			int repeatTuesday = cursor.getInt(cursor.getColumnIndex("repeats_tuesday"));
@@ -229,7 +277,7 @@ public class DbAdapter {
 			int repeatThursday = cursor.getInt(cursor.getColumnIndex("repeats_thursday"));
 			int repeatFriday = cursor.getInt(cursor.getColumnIndex("repeats_friday"));
 			int repeatSaturday = cursor.getInt(cursor.getColumnIndex("repeats_saturday"));
-			Workout workout = new Workout(workoutName, workoutType, workoutRepatWeeks, repeatSunday, repeatMonday, 
+			Workout workout = new Workout(workoutId, workoutName, workoutType, exerciseSequence, workoutRepatWeeks, repeatSunday, repeatMonday, 
 										  repeatTuesday, repeatWednesday, repeatThursday, repeatFriday, repeatSaturday);
 			workoutList.add(workout);
 		}
@@ -238,11 +286,15 @@ public class DbAdapter {
 		return workoutList.toArray(new Workout [0]);
 	}
 	
-	/* Does workout name exist */
+	/**
+	 * Does the workout exist.  Queries by name
+	 * @param workoutName
+	 * @return
+	 */
 	public boolean workoutNameExist(String workoutName) {
 		open();
 		boolean exists = false;
-		String query = "select _id from workouts where name = '" + workoutName + "'";
+		String query = "select id from workouts where name = '" + workoutName + "'";
 		Cursor cursor = db.rawQuery(query, null);
 		if (cursor.moveToNext()) {
 			exists = true;
@@ -253,7 +305,7 @@ public class DbAdapter {
 	}
 	
 	/** TODO
-	 * Enforce that all workout names must be unique
+	 * Return the exercise sequence belonging to the workout
 	 * @return
 	 */
 	public String getExerciseSequence(String workoutName) {
@@ -269,6 +321,11 @@ public class DbAdapter {
 		return exerciseSequence;
 	}
 	
+	/**
+	 * Update the exercise sequence for the workout
+	 * @param exerciseSequence
+	 * @param workoutName
+	 */
 	public void updateWorkoutExerciseSequence(String exerciseSequence, String workoutName) {
 		open();
 		String query = "update workouts set exercise_sequence = '" + exerciseSequence + "' where name = '" + workoutName + "'";
@@ -277,38 +334,107 @@ public class DbAdapter {
 		close();
 	}
 	
+	/**
+	 * Gets ArrayList of all exercises in the exercise database
+	 * @return
+	 */
+	public ArrayList<Exercise> getAllExercises() {
+		open();
+		ArrayList<Exercise> exerciseList = new ArrayList<Exercise>();
+		String query = "select id, name, type, comment, deleted from exercise";
+		Cursor cursor = db.rawQuery(query, null);
+		while (cursor.moveToNext()) {
+			Long id = cursor.getLong(cursor.getColumnIndex("id"));
+			String name = cursor.getString(cursor.getColumnIndex("name"));
+			String type = cursor.getString(cursor.getColumnIndex("type"));
+			String comment = cursor.getString(cursor.getColumnIndex("comment"));
+			int deleted = cursor.getInt(cursor.getColumnIndex("deleted"));
+			Exercise exercise = new Exercise(id, name, type, comment, deleted);
+			exerciseList.add(exercise);
+		}
+		close();
+		return exerciseList;	
+	}
+	
+	/**
+	 * Return Array List of exercises that are marked undeleted 
+	 * @return
+	 */
+	public ArrayList<Exercise> getAllUndeletedExercises() {
+		open();
+		ArrayList<Exercise> exerciseList = new ArrayList<Exercise>();
+		String query = "select id, name, type, comment, deleted from exercise where deleted = false";
+		Cursor cursor = db.rawQuery(query, null);
+		while (cursor.moveToNext()) {
+			Long id = cursor.getLong(cursor.getColumnIndex("id"));
+			String name = cursor.getString(cursor.getColumnIndex("name"));
+			String type = cursor.getString(cursor.getColumnIndex("type"));
+			String comment = cursor.getString(cursor.getColumnIndex("comment"));
+			int deleted = cursor.getInt(cursor.getColumnIndex("deleted"));
+			Exercise exercise = new Exercise(id, name, type, comment, deleted);
+			exerciseList.add(exercise);
+		}
+		close();
+		return exerciseList;
+	}
+	
+	/**
+	 * Return Array List of all exercises that are marked deleted in the database
+	 * @return
+	 */
+	public ArrayList<Exercise> getAllDeletedExercises() {
+		open();
+		ArrayList<Exercise> exerciseList = new ArrayList<Exercise>();
+		String query = "select id, name, type, comment, deleted from exercise where deleted = true";
+		Cursor cursor = db.rawQuery(query, null);
+		while (cursor.moveToNext()) {
+			Long id = cursor.getLong(cursor.getColumnIndex("id"));
+			String name = cursor.getString(cursor.getColumnIndex("name"));
+			String type = cursor.getString(cursor.getColumnIndex("type"));
+			String comment = cursor.getString(cursor.getColumnIndex("comment"));
+			int deleted = cursor.getInt(cursor.getColumnIndex("deleted"));
+			Exercise exercise = new Exercise(id, name, type, comment, deleted);
+			exerciseList.add(exercise);
+		}
+		close();
+		return exerciseList;
+	}
+	
+	/*
 	public Cursor getAllExercises() { 		
-		String columns [] = {"_id", "name", "type", "sets", "time", "is_countdown", "distance", "distance_type", "intervals", "interval_sets", "comment", "deleted"};
+		String columns [] = {"id", "name", "type", "sets", "time", "is_countdown", "distance", "distance_type", "intervals", "interval_sets", "comment", "deleted"};
 		Cursor cursor = db.query(DATABASE_TABLE_EXERCISE, columns, null, null, null, null, null);
 		if (cursor == null) { Log.d("Steve", "Cursor for exercises is null");}
 		return cursor;
 	}
 	
+	
 	public Cursor getAllUndeletedExercises() {
-		String columns [] = {"_id", "name", "type", "sets", "time", "is_countdown", "distance", "distance_type", "intervals", "interval_sets", "comment", "deleted"};
+		String columns [] = {"id", "name", "type", "sets", "time", "is_countdown", "distance", "distance_type", "intervals", "interval_sets", "comment", "deleted"};
 		Cursor cursor = db.query(DATABASE_TABLE_EXERCISE, columns, "deleted = 0", null, null, null, "name");
 		if (cursor == null) { Log.d("Steve", "Cursor for exercises is null");}
 		return cursor;
 	}
 
+	*/
+	
+	/**
+	 * Return Exercise from querying for the exercise id
+	 * @param exerciseId
+	 * @return
+	 */
 	public Exercise getExerciseFromId(Long exerciseId) {
 		open();
-		String query = "select * from exercises where _id = " + exerciseId;
+		String query = "select * from exercises where id = " + exerciseId;
 		Cursor cursor = db.rawQuery(query, null);
-		Exercise ex = new Exercise();;
+		Exercise ex = null;
 		while (cursor.moveToNext()) {
-			ex.setId(cursor.getLong(cursor.getColumnIndex("_id")));
-			ex.setName(cursor.getString(cursor.getColumnIndex("name")));
-			ex.setType(cursor.getString(cursor.getColumnIndex("type")));
-			ex.setSets(cursor.getInt(cursor.getColumnIndex("sets")));
-			ex.setIsCountdown(cursor.getInt(cursor.getColumnIndex("is_countdown")) == 1);
-			ex.setTime(cursor.getLong(cursor.getColumnIndex("time")));
-			ex.setTimeType(cursor.getString(cursor.getColumnIndex("time_type")));
-			ex.setDistance(cursor.getDouble(cursor.getColumnIndex("distance")));
-			ex.setDistanceType(cursor.getString(cursor.getColumnIndex("distance_type")));
-			ex.setIntervals(cursor.getInt(cursor.getColumnIndex("intervals")));
-			ex.setIntervalSets(cursor.getInt(cursor.getColumnIndex("interval_sets")));
-			ex.setComment(cursor.getString(cursor.getColumnIndex("comment")));			
+			Long id = cursor.getLong(cursor.getColumnIndex("id"));
+			String name = cursor.getString(cursor.getColumnIndex("name"));
+			String type = cursor.getString(cursor.getColumnIndex("type"));
+			String comment = cursor.getString(cursor.getColumnIndex("comment"));
+			int deleted = cursor.getInt(cursor.getColumnIndex("deleted"));
+			ex = new Exercise(id, name, type, comment, deleted);
 		}
 		cursor.close();
 		close();
@@ -317,28 +443,27 @@ public class DbAdapter {
 
 	}
 	
+	/**
+	 * Query for the exercise from the exercise name
+	 * @param name
+	 * @return
+	 */
 	public Exercise getExerciseFromName(String name) {
+		open();
 		String query = "select * from exercises where name = '" + name
 				+ "' and deleted = 0";
 		Cursor cursor = db.rawQuery(query, null);
 
-		Exercise ex = new Exercise();
+		Exercise ex = null;
 		while (cursor.moveToNext()) {
-			ex.setId(cursor.getLong(cursor.getColumnIndex("_id")));
-			ex.setName(cursor.getString(cursor.getColumnIndex("name")));
-			ex.setType(cursor.getString(cursor.getColumnIndex("type")));
-			ex.setSets(cursor.getInt(cursor.getColumnIndex("sets")));
-			ex.setIsCountdown(cursor.getInt(cursor.getColumnIndex("is_countdown")) == 1);
-			ex.setTime(cursor.getLong(cursor.getColumnIndex("time")));
-			ex.setTimeType(cursor.getString(cursor.getColumnIndex("time_type")));
-			ex.setDistance(cursor.getDouble(cursor.getColumnIndex("distance")));
-			ex.setDistanceType(cursor.getString(cursor.getColumnIndex("distance_type")));
-			ex.setIntervals(cursor.getInt(cursor.getColumnIndex("intervals")));
-			ex.setIntervalSets(cursor.getInt(cursor.getColumnIndex("interval_sets")));
-			ex.setComment(cursor.getString(cursor.getColumnIndex("comment")));
+			Long id = cursor.getLong(cursor.getColumnIndex("id"));
+			String type = cursor.getString(cursor.getColumnIndex("type"));
+			String comment = cursor.getString(cursor.getColumnIndex("comment"));
+			int deleted = cursor.getInt(cursor.getColumnIndex("deleted"));
+			ex = new Exercise(id, name, type, comment, deleted);
 		}
-		
 		cursor.close();
+		close();
 		return ex;
 	}
 
@@ -447,7 +572,7 @@ public class DbAdapter {
 	 */
 	public Set[] getSetsForExercise1(long exId) {
 		open();
-		String columns [] = {"_id", "exercise_id", "weight", "reps"};
+		String columns [] = {"id", "exercise_id", "weight", "reps"};
 		String selection = "exercise_id = ?";
 		String orderBy = "_id";
 		String [] selectionArgs = {Long.toString(exId)};
