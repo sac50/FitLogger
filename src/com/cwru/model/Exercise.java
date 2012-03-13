@@ -6,6 +6,12 @@ import android.os.Parcelable;
 
 
 public class Exercise implements Parcelable{
+	/** Constants for the type of exercise */
+	public static final int SET_BASED_EXERCISE = 0;
+	public static final int DISTANCE_BASED_EXERCISE = 1;
+	public static final int TIME_BASED_EXERCISE = 2;
+	public static final int INTERVAL_BASED_EXERCISE = 3;
+	
 	private Long id;
 	private String name;
 	private String type;
@@ -18,6 +24,7 @@ public class Exercise implements Parcelable{
 	private int intervals;
 	private int intervalSets;
 	private String comment;
+	private int mode;
 	
 	public Exercise() {
 		// Default Constructor
@@ -26,6 +33,11 @@ public class Exercise implements Parcelable{
 	public Exercise (Long id, String name) {
 		this.name = name;
 		this.id = id;
+	}
+	public Exercise (Long id, String name, int mode) {
+		this.name = name;
+		this.id = id;
+		this.mode = mode;
 	}
 	
 	@Override 
@@ -131,6 +143,12 @@ public class Exercise implements Parcelable{
 	}
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+	public void setMode(int mode) {
+		this.mode = mode;
+	}
+	public int getMode() {
+		return mode;
 	}
 	
 }

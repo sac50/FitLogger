@@ -166,9 +166,9 @@ public class DbAdapter {
 		open();
 		ContentValues initialValues = new ContentValues();
 		initialValues.put("name", workout.getName());
-		initialValues.put("workout_type",workout.getType());
+		initialValues.put("type",workout.getType());
 		// Initial Workout has blank exercise sequence
-		initialValues.put("exercise_Sequence", "");
+		initialValues.put("exercise_sequence", "");
 		initialValues.put("repeats", workout.getRepeatWeeks());
 		initialValues.put("repeats_sunday", workout.getRepeatSunday());
 		initialValues.put("repeats_monday", workout.getRepeatMonday());
@@ -263,7 +263,7 @@ public class DbAdapter {
 	public boolean workoutNameExist(String workoutName) {
 		open();
 		boolean exists = false;
-		String query = "select _id from workouts where name = '" + workoutName + "'";
+		String query = "select id from workouts where name = '" + workoutName + "'";
 		Cursor cursor = db.rawQuery(query, null);
 		if (cursor.moveToNext()) {
 			exists = true;
@@ -299,14 +299,14 @@ public class DbAdapter {
 	}
 	
 	public Cursor getAllExercises() { 		
-		String columns [] = {"_id", "name", "type", "sets", "time", "is_countdown", "distance", "distance_type", "intervals", "interval_sets", "comment", "deleted"};
+		String columns [] = {"id", "name", "type", "sets", "time", "is_countdown", "distance", "distance_type", "intervals", "interval_sets", "comment", "deleted"};
 		Cursor cursor = db.query(DATABASE_TABLE_EXERCISE, columns, null, null, null, null, null);
 		if (cursor == null) { Log.d("Steve", "Cursor for exercises is null");}
 		return cursor;
 	}
 	
 	public Cursor getAllUndeletedExercises() {
-		String columns [] = {"_id", "name", "type", "sets", "time", "is_countdown", "distance", "distance_type", "intervals", "interval_sets", "comment", "deleted"};
+		String columns [] = {"id", "name", "type", "sets", "time", "is_countdown", "distance", "distance_type", "intervals", "interval_sets", "comment", "deleted"};
 		Cursor cursor = db.query(DATABASE_TABLE_EXERCISE, columns, "deleted = 0", null, null, null, "name");
 		if (cursor == null) { Log.d("Steve", "Cursor for exercises is null");}
 		return cursor;
@@ -314,11 +314,11 @@ public class DbAdapter {
 
 	public Exercise getExerciseFromId(Long exerciseId) {
 		open();
-		String query = "select * from exercises where _id = " + exerciseId;
+		String query = "select * from exercises where id = " + exerciseId;
 		Cursor cursor = db.rawQuery(query, null);
 		Exercise ex = new Exercise();;
 		while (cursor.moveToNext()) {
-			ex.setId(cursor.getLong(cursor.getColumnIndex("_id")));
+			ex.setId(cursor.getLong(cursor.getColumnIndex("id")));
 			ex.setName(cursor.getString(cursor.getColumnIndex("name")));
 			ex.setType(cursor.getString(cursor.getColumnIndex("type")));
 			ex.setSets(cursor.getInt(cursor.getColumnIndex("sets")));
@@ -343,7 +343,7 @@ public class DbAdapter {
 
 		Exercise ex = new Exercise();
 		while (cursor.moveToNext()) {
-			ex.setId(cursor.getLong(cursor.getColumnIndex("_id")));
+			ex.setId(cursor.getLong(cursor.getColumnIndex("id")));
 			ex.setName(cursor.getString(cursor.getColumnIndex("name")));
 			ex.setType(cursor.getString(cursor.getColumnIndex("type")));
 			ex.setSets(cursor.getInt(cursor.getColumnIndex("sets")));
@@ -466,7 +466,7 @@ public class DbAdapter {
 	 */
 	public Set[] getSetsForExercise1(long exId) {
 		open();
-		String columns [] = {"_id", "exercise_id", "weight", "reps"};
+		String columns [] = {"id", "exercise_id", "weight", "reps"};
 		String selection = "exercise_id = ?";
 		String orderBy = "_id";
 		String [] selectionArgs = {Long.toString(exId)};
