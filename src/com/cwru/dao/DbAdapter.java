@@ -23,29 +23,59 @@ public class DbAdapter {
 	private DatabaseHelper dbHelper;
 	private SQLiteDatabase db;
 	private static final String TAG = "dbHelper";
-
-	private static final String CREATE_WORKOUTS_TABLE =
-			"create table workouts (_id integer primary key autoincrement, "
-			+ "name text not null, workout_type text not null, exercise_sequence "
-			+ "text not null, repeats text, repeats_sunday int, repeats_monday int," 
-			+ "repeats_tuesday int, repeats_wednesday int, repeats_thursday int, " 
-			+ "repeats_friday int, repeats_saturday int, comment text);";
+	
+	private static final String CREATE_WORKOUTS_TABLE = 
+			"create table workouts (id integer primary key autoincrement, " +
+			"name text not null, type text not null, exercise_sequence text not null, " + 
+			"repeats text, repeats_sunday boolean, repeats_monday boolean, repeats_tuesday boolean, " + 
+			"repeats_wednesday boolean, repeats_thursday boolean, repeats_friday boolean, repeats_saturday boolean, comment text);";
+	
 	private static final String CREATE_EXERCISES_TABLE = 
-			"create table exercises (_id integer primary key autoincrement, "
-			+ "name text not null, type text not null, sets integer, "
-			+ "time integer, time_type text, is_countdown boolean, distance real,"
-			+ "distance_type text, intervals integer, interval_sets integer, "
-			+ "comment text, deleted boolean not null);";
+			"create table exercises (id integer primary key autoincrement, " + 
+			"name text not null, type text not null, comment text, deleted boolean not null);";
+	
 	private static final String CREATE_SETS_TABLE = 
-			"create table sets (_id integer primary key autoincrement, "
-			+ "exercise_id integer not null, reps integer not null, "
-			+ "weight real not null);";
+			"create table sets (id integer primary key autoincrement, " + 
+			"exercise_id integer not null, reps integer, weight real);";
+	
+	private static final String CREATE_SET_RESULT_TABLE = 
+			"create table set_result (id integer primary key autoincrement, " + 
+			"workout_result_id integer, set_number integer, reps integer, weight real);";
+	
+	private static final String CREATE_DISTANCE_TABLE = 
+			"create table distance (id integer primary key autoincrement, " + 
+			"exercise_id integer not null, length real, units text);";
+	
+	private static final String CREATE_DISTANCE_RESULT_TABLE = 
+			"create table distance_result (id integer primary key autoincrement, " + 
+			"workout_result_id integer, length real, units text);";
+	
+	private static final String CREATE_TIME_TABLE = 
+			"create table time (id integer primary key autoincrement, " + 
+			"exercise_id integer not null, time_length integer, time_units text, is_count_up boolean, is_countdown boolean);";
+	
+	private static final String CREATE_TIME_RESULT_TABLE = 
+			"create table time_result (id integer primary key autoincrement, " + 
+			"workout_result_id integer, length integer, units text);";
 	
 	private static final String CREATE_INTERVALS_TABLE = 
-			"create table intervals (_id integer primary key autoincrement, "
-			+ "exercise_id integer not null, name text not null, "
-			+ "time integer not null, time_type integer not null);";
+			"create table intervals (id integer primary key autoincrement, " + 
+			"exercise_id integer not null, name text, length real, type text, units text);";
 	
+	private static final String CREATE_INTERVALS_RESULT_TABLE = 
+			"create table intervals_result (id integer primary key autoincrement, " + 
+			"workout_result_id integer, name text, length real, type text, units text);";
+	
+	private static final String CREATE_WORKOUT_RESULT_TABLE = 
+			"create table workout_result (id integer primary key autoincrement, " + 
+			"workout_id integer not null, exercise_id integer not null, " + 
+			"date text not null);";
+				
+			
+			
+			
+	/*
+
 	private static final String CREATE_WORKOUT_RESULTS_TABLE = 
 			"create table workout_results (_id integer primary key autoincrement, "
 			+ "date text not null, workout_id integer not null, exercise_id "
@@ -53,6 +83,7 @@ public class DbAdapter {
 			+ "time integer, time_type boolean, distance real, interval "
 			+ "integer, comment text);";
 	
+	*/
 	/**TODO
 	 * ADD INTERVALS INTO THE RESULTS
 	 *
@@ -66,8 +97,14 @@ public class DbAdapter {
 	private static final String DATABASE_TABLE_WORKOUT = "workouts";
 	private static final String DATABASE_TABLE_EXERCISE = "exercises";
 	private static final String DATABASE_TABLE_SET = "sets";
+	private static final String DATABASE_TABLE_DISTANCE = "distance";
+	private static final String DATABASE_TABLE_TIME = "time";
 	private static final String DATABASE_TABLE_INTERVAL = "intervals";
 	private static final String DATABASE_TABLE_WORKOUT_RESULT = "workout_results";
+	private static final String DATABASE_TABLE_SET_RESULTS = "set_result";
+	private static final String DATABASE_TABLE_DISTANCE_RESULT = "distance_result";
+	private static final String DATABASE_TABLE_TIME_RESULT = "time_result";
+	private static final String DATABASE_TABLE_INTERVAL_RESULT = "intervals_result";
 	private static final int DATABASE_VERSION = 1;
 
 	private final Context mCtx;
@@ -84,7 +121,13 @@ public class DbAdapter {
 			db.execSQL(CREATE_EXERCISES_TABLE);
 			db.execSQL(CREATE_SETS_TABLE);
 			db.execSQL(CREATE_INTERVALS_TABLE);
-			db.execSQL(CREATE_WORKOUT_RESULTS_TABLE);
+			db.execSQL(CREATE_TIME_TABLE);
+			db.execSQL(CREATE_DISTANCE_TABLE);
+			db.execSQL(CREATE_WORKOUT_RESULT_TABLE);
+			db.execSQL(CREATE_SET_RESULT_TABLE);
+			db.execSQL(CREATE_INTERVALS_RESULT_TABLE);
+			db.execSQL(CREATE_TIME_RESULT_TABLE);
+			db.execSQL(CREATE_DISTANCE_RESULT_TABLE);
 			Log.d("Steve", "DB CREATES");
 		}
 
