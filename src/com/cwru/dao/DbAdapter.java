@@ -433,7 +433,7 @@ public class DbAdapter {
 	 * @param exerciseId
 	 * @return
 	 */
-	public Exercise getExerciseFromId(Long exerciseId) {
+	public Exercise getExerciseFromId(int exerciseId) {
 		open();
 		String query = "select * from exercises where id = " + exerciseId;
 		Cursor cursor = db.rawQuery(query, null);
