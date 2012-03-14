@@ -39,8 +39,10 @@ public class EditExerciseActivity extends FragmentActivity {
 		
 		if (HomeScreen.isTablet) {
 			EditExerciseBankFragment exBank = new EditExerciseBankFragment();
+			EditExerciseFragment exExer = new EditExerciseFragment();
 			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-			transaction.add(R.id.flEditExerciseMainFrame, exBank);
+			transaction.add(R.id.flEditExerciseLeftFrame, exBank);
+			transaction.add(R.id.flEditExerciseRightFrame, exExer);
 			transaction.commit();
 			Log.d("STEVE", "TABLET NOT PHONE");
 		} else {
