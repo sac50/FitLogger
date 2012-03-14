@@ -5,6 +5,7 @@ import java.util.List;
 import com.cwru.R;
 import com.cwru.controller.HomeScreen;
 import com.cwru.dao.DbAdapter;
+import com.cwru.fragments.EditExerciseFragment;
 
 import android.app.Activity;
 import android.support.v4.app.FragmentTransaction;

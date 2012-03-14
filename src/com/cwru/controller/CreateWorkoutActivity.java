@@ -7,8 +7,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
 import com.cwru.R;
-import com.cwru.model.CreateWorkoutInformationFragment;
-import com.cwru.model.ExerciseBankFragment;
+import com.cwru.fragments.CreateWorkoutInformationFragment;
+import com.cwru.fragments.ExerciseBankFragment;
 
 public class CreateWorkoutActivity extends FragmentActivity {
 	

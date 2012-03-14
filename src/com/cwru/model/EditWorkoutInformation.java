@@ -31,6 +31,7 @@ import com.cwru.R;
 import com.cwru.controller.HomeScreen;
 import com.cwru.controller.WorkoutExerciseListing;
 import com.cwru.dao.DbAdapter;
+import com.cwru.fragments.WorkoutListingFragment;
 
 public class EditWorkoutInformation extends Fragment {
 	private EditText etWorkoutName;

@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
 import com.cwru.R;
-import com.cwru.model.WorkoutListingFragment;
+import com.cwru.fragments.WorkoutListingFragment;
 
 public class EditWorkoutActivity extends FragmentActivity  {
 

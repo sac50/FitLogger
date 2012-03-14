@@ -1,8 +1,8 @@
 package com.cwru.controller;
 
 import com.cwru.R;
-import com.cwru.model.EditExerciseBankFragment;
-import com.cwru.model.EditExerciseFragment;
+import com.cwru.fragments.EditExerciseBankFragment;
+import com.cwru.fragments.EditExerciseFragment;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;

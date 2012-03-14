@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.cwru.R;
 import com.cwru.controller.HomeScreen;
 import com.cwru.dao.DbAdapter;
+import com.cwru.fragments.ExerciseSequenceFragment;
 
 public class CheckBoxArrayAdapter extends ArrayAdapter<ExerciseBankRow> {
 	private final List<ExerciseBankRow> list;

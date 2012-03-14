@@ -12,13 +12,13 @@ import android.widget.TextView;
 
 import com.cwru.R;
 import com.cwru.dao.DbAdapter;
+import com.cwru.fragments.HistoryFragment;
+import com.cwru.fragments.NotesFragment;
+import com.cwru.fragments.WorkoutSetFragment;
+import com.cwru.fragments.WorkoutWorkflowCountDownTimerFragment;
+import com.cwru.fragments.WorkoutWorkflowCountUpTimerFragment;
+import com.cwru.fragments.WorkoutWorkflowDistanceFragment;
 import com.cwru.model.Exercise;
-import com.cwru.model.HistoryFragment;
-import com.cwru.model.NotesFragment;
-import com.cwru.model.WorkoutSetFragment;
-import com.cwru.model.WorkoutWorkflowCountDownTimerFragment;
-import com.cwru.model.WorkoutWorkflowCountUpTimerFragment;
-import com.cwru.model.WorkoutWorkflowDistanceFragment;
 
 /**
  * 
