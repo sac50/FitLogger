@@ -1,9 +1,9 @@
 package com.cwru.model;
 
+import java.util.ArrayList;
+
 import android.os.Parcel;
 import android.os.Parcelable;
-
-
 
 public class Exercise implements Parcelable{
 	/** Constants for the type of exercise */
@@ -15,7 +15,9 @@ public class Exercise implements Parcelable{
 	private Long id;
 	private String name;
 	private String type;
-	private int sets;
+	private ArrayList<Set> sets;
+	
+	//private int sets;
 	private Long time = 0L;
 	private String timeType;
 	private Boolean isCountdown = true;
@@ -23,6 +25,8 @@ public class Exercise implements Parcelable{
 	private String distanceType;
 	private int intervals;
 	private int intervalSets;
+	
+	
 	private String comment;
 	private int deleted;
 	private int mode;

@@ -20,6 +20,7 @@ import com.cwru.controller.HomeScreen;
 import com.cwru.dao.DbAdapter;
 
 public class WorkoutSetFragment extends Fragment {
+	
 	private DbAdapter mDbHelper;
 	private Exercise exercise;
 	private Set[] sets;
@@ -33,6 +34,8 @@ public class WorkoutSetFragment extends Fragment {
 	private EditText etReps;
 	private TableLayout tlRepResults;
 	private Button btnRecord;
+	
+	
 	
 	public WorkoutSetFragment(Exercise exercise, Context context, int workoutId) {
 		// Set Adapter

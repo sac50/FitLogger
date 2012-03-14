@@ -1,51 +1,31 @@
 package com.cwru.model;
 
 public class WorkoutResults {
-	int id;
-	int workout_id;
-	long exercise_id;
-	int setNumber;
-	int reps;
-	double weight;
-	int time;
-	boolean time_type;
-	double distance;
-	int interval;
-	String comment; // Is this needed??  Now moved to notes fragment
+	public static final int SET_BASED_EXERCISE = 0;
+	public static final int DISTANCE_BASED_EXERCISE = 1;
+	public static final int TIME_BASED_EXERCISE = 2;
+	public static final int INTERVAL_BASED_EXERCISE = 3;
 	
-	public WorkoutResults (int workout_id, int exercise_id) { 
-		this.workout_id = workout_id;
-		this.exercise_id = exercise_id;
-	}
+	private int id;
+	private int workoutId;
+	private int exerciseId;
+	private String date;
+	private int mode;
 	
-	public WorkoutResults (int workout_id, long exercise_id, int setNumber, int reps, double weight) {
-		this.workout_id = workout_id;
-		this.exercise_id = exercise_id;
-		this.setNumber = setNumber;
-		this.reps = reps;
-		this.weight = weight;
+	public WorkoutResults (int workoutId, int exerciseId) { 
+		this.workoutId = workoutId;
+		this.exerciseId = exerciseId;
 	}
+
 	
 	public int getId() { return id; }
-	public int getWorkoutId() { return workout_id; }
-	public long getExerciseId() { return exercise_id; }
-	public int getSetNumber() { return setNumber; }
-	public int getReps() { return reps; }
-	public double getWeight() { return weight; } 
-	public int getTime() { return time; }
-	public boolean getTimeType() { return time_type; }
-	public double getDistance() { return distance; }
-	public int getInterval() { return interval; }
-	public String getComment() { return comment; }
+	public int getWorkoutId() { return workoutId; }
+	public int getExerciseId() { return exerciseId; }
+	public String getDate() { return date; }
 	
-	public void setWorkoutId(int workoutId) { this.workout_id = workoutId; }
-	public void setExerciseId(long exerciseId) { this.exercise_id = exerciseId; }
-	public void setSetNumber(int setNumber) { this.setNumber = setNumber; }
-	public void setReps(int reps) { this.reps = reps; }
-	public void setWeight(double weight) { this.weight = weight; }
-	public void setTime(int time) { this.time = time; }
-	public void setTimeType(boolean timeType) { this.time_type = timeType; }
-	public void setDistance(double distance) { this.distance = distance; }
-	public void setInterval(int interval) { this.interval = interval; }
+	public void setWorkoutId(int workoutId) { this.workoutId = workoutId;  }
+	public void setExerciseId(int exerciseId) { this.exerciseId = exerciseId; }
+	public void setDate(String date) { this.date = date; }
+	public void setMode(int mode) { this.mode = mode; }
 	
 }
