@@ -13,7 +13,7 @@ public class ExerciseBankRow {
 	
 	public String getWorkoutName() { return workoutName; }
 	public String getExerciseName() { return exercise.getName(); }
-	public Long getExerciseId() { return exercise.getId(); }
+	public int getExerciseId() { return exercise.getId(); }
 	public boolean isSelected() { return selected; }
 	public void setSelected(boolean selected) { this.selected = selected; }
 

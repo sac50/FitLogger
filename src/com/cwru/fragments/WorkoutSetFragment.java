@@ -44,7 +44,7 @@ public class WorkoutSetFragment extends Fragment {
 		// Set Adapter
 		mDbHelper = new DbAdapter(context);
 		this.exercise = exercise;
-		sets = mDbHelper.getSetsForExercise1(exercise.getId());
+		sets = mDbHelper.getSetsForExercise(exercise.getId()).toArray(new Set [0]);
 		setCounter = 0;
 		this.workoutId = workoutId;
 		
@@ -96,7 +96,11 @@ public class WorkoutSetFragment extends Fragment {
 			double weight = Double.parseDouble(etWeight.getText().toString());
 			int reps = Integer.parseInt(etReps.getText().toString());
 			int setNum = setCounter;
-			long exerciseId = exercise.getId();
+			int exerciseId = exercise.getId();
+			/**
+			 * TODO WORKOUT RESULTS
+			 */
+			/*
 			WorkoutResults workoutResult = new WorkoutResults(workoutId, exerciseId, setNum, reps, weight);
 			mDbHelper.storeWorkoutResult(workoutResult);
 			// WorkoutResults (int workout_id, int exercise_id, int setNumber, int reps, double weight)
@@ -115,7 +119,7 @@ public class WorkoutSetFragment extends Fragment {
 			tr.addView(tvRepsRecord);
 
 			tlRepResults.addView(tr, new TableLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
-		
+			*/
 			/** TODO Database Access
 			 * 
 			 */

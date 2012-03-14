@@ -47,6 +47,7 @@ public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
 		this.context = context;
 		complete = false;
 		stop = true;
+		/*
 		String eType = exercise.getTimeType();
 		if (eType.equals("seconds")) {
 			seconds = exercise.getTime();
@@ -60,7 +61,7 @@ public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
 			minutes = exercise.getTime()*60;
 			seconds = 0;
 		}
-		
+		*/
 		time = minutes*60 + seconds;
 		time = time * 1000;
 		Log.d("STEVE", " TIME: " + time);

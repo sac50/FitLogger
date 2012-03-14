@@ -35,6 +35,17 @@ public class Exercise implements Parcelable{
 	public Exercise() {
 		// Empty Constructor
 	}
+	
+	/**
+	 * Constructor
+	 * @param id
+	 * @param name
+	 */
+	public Exercise(int id, String name) {
+		this.id = id; 
+		this.name = name;
+	}
+	
 	/**
 	 * Constructor
 	 * @param id

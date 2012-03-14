@@ -70,7 +70,7 @@ public class CheckBoxArrayAdapter extends ArrayAdapter<ExerciseBankRow> {
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				
 				ExerciseBankRow ebRow = (ExerciseBankRow) row.checkBox.getTag();
-				Long exerciseId = ebRow.getExerciseId();
+				int exerciseId = ebRow.getExerciseId();
 				String workoutName = ebRow.getWorkoutName();
 				String exerciseSequence = "";
 				Exercise exercise = new Exercise(exerciseId, ebRow.getExerciseName());

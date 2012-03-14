@@ -69,8 +69,7 @@ public class PerformWorkout extends FragmentActivity {
 		
 		Exercise exerciseToLaunch = exercisesForWorkout.get(exerciseCounter);
 		String type = exerciseToLaunch.getType();
-		int sets = exerciseToLaunch.getSets();
-		Log.d("STEVE", "SETS: " + sets);
+		//int sets = exerciseToLaunch.getSets();
 		Log.d("Steve", "Did Launch: " + type);
 		
 
@@ -78,6 +77,7 @@ public class PerformWorkout extends FragmentActivity {
 		 * Change this to get values from the resource file
 		 */
 		// Is a set based exercise
+		/*
 		if (exerciseToLaunch.getSets() != 0) {
 			Log.d("Steve", "-----------------------------------------------------");
 			WorkoutSetFragment workoutSet = new WorkoutSetFragment(exerciseToLaunch, this, workoutId);
@@ -142,7 +142,7 @@ public class PerformWorkout extends FragmentActivity {
 			transaction.commit();
 		} 
 		
-		
+		*/
 	}
 	
 	/**

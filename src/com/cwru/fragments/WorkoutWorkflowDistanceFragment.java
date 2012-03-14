@@ -51,17 +51,17 @@ public class WorkoutWorkflowDistanceFragment extends Fragment {
 		
 		/* Set Values */
 		tvExerciseName.setText(exercise.getName());
-		tvDistanceToDo.setText(exercise.getDistance() + " " + exercise.getDistanceType() + " to do");
+		//tvDistanceToDo.setText(exercise.getDistance() + " " + exercise.getDistanceType() + " to do");
 
 		
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
 	            this.getActivity(), R.array.exerciseDistances, android.R.layout.simple_spinner_item);
 	    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 	    
-	    int spinnerPosition = adapter.getPosition(exercise.getDistanceType());
+	   // int spinnerPosition = adapter.getPosition(exercise.getDistanceType());
 	    
 	    spnDistanceUnits.setAdapter(adapter);
-	    spnDistanceUnits.setSelection(spinnerPosition);
+	   // spnDistanceUnits.setSelection(spinnerPosition);
 	    
 	    
 		// if phone show notes and history button
