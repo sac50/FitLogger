@@ -61,12 +61,23 @@ public class EditExerciseFragment extends Fragment {
 		topView = (ScrollView) inflater.inflate(
 				R.layout.edit_exercise_editor, container, false);
 
-		setTextView(topView, R.id.tvEditExerciseName, ex.getName());
-		setTextView(topView, R.id.tvEditExerciseType, ex.getType());
-		setSubType(topView, R.id.tvEditExerciseSubType, ex);
+		if (ex != null) {
+			setTextView(topView, R.id.tvEditExerciseName, ex.getName());
+			setTextView(topView, R.id.tvEditExerciseType, ex.getType());
+			setSubType(topView, R.id.tvEditExerciseSubType, ex);
+			
+			Button doneButton = (Button) topView.findViewById(R.id.btnEditExerciseDone);
+			doneButton.setOnClickListener(doneButtonListener);
+		} else {
+			topView.setVisibility(8);
+		}
 		
-		Button doneButton = (Button) topView.findViewById(R.id.btnEditExerciseDone);
-		doneButton.setOnClickListener(doneButtonListener);
+//		setTextView(topView, R.id.tvEditExerciseName, ex.getName());
+//		setTextView(topView, R.id.tvEditExerciseType, ex.getType());
+//		setSubType(topView, R.id.tvEditExerciseSubType, ex);
+//		
+//		Button doneButton = (Button) topView.findViewById(R.id.btnEditExerciseDone);
+//		doneButton.setOnClickListener(doneButtonListener);
 
 		return topView;
 	}
