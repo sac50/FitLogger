@@ -21,7 +21,7 @@ public class EditExerciseActivity extends FragmentActivity {
 			EditExerciseFragment exExer = new EditExerciseFragment();
 			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 			transaction.add(R.id.flEditExerciseLeftFrame, exBank);
-			transaction.add(R.id.flEditExerciseRightFrame, null);
+			transaction.add(R.id.flEditExerciseRightFrame, exExer);
 			transaction.commit();
 			Log.d("STEVE", "TABLET NOT PHONE");
 		} else {

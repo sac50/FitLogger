@@ -447,7 +447,6 @@ public class CreateExerciseActivity extends FragmentActivity {
 				// used to signify if intervals or sets need to be created
 				int layoutMarker = -1;
 
-				mDbHelper.open();
 				if ("Distance".equals(subTypeSpinner.getSelectedItem()
 						.toString())) {
 					String exDistanceString = exDistanceText.getText()
@@ -611,8 +610,6 @@ public class CreateExerciseActivity extends FragmentActivity {
 							duration);
 					toast.setGravity(Gravity.CENTER, 0, 0);
 					toast.show();
-				} finally {
-					mDbHelper.close();
 				}
 			}
 		});

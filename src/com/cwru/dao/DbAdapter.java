@@ -52,7 +52,7 @@ public class DbAdapter {
 	
 	private static final String CREATE_TIME_TABLE = 
 			"create table time (id integer primary key autoincrement, " + 
-			"exercise_id integer not null, length integer, units text, is_count_up boolean, is_countdown boolean);";
+			"exercise_id integer not null, length integer, units text, is_countdown boolean);";
 	
 	private static final String CREATE_TIME_RESULT_TABLE = 
 			"create table time_result (id integer primary key autoincrement, " + 
@@ -341,7 +341,7 @@ public class DbAdapter {
 	public ArrayList<Exercise> getAllExercises() {
 		open();
 		ArrayList<Exercise> exerciseList = new ArrayList<Exercise>();
-		String query = "select id, name, type, comment, deleted from exercise";
+		String query = "select id, name, type, comment, deleted from exercises";
 		Cursor cursor = db.rawQuery(query, null);
 		while (cursor.moveToNext()) {
 			Long id = cursor.getLong(cursor.getColumnIndex("id"));
@@ -363,7 +363,7 @@ public class DbAdapter {
 	public ArrayList<Exercise> getAllUndeletedExercises() {
 		open();
 		ArrayList<Exercise> exerciseList = new ArrayList<Exercise>();
-		String query = "select id, name, type, comment, deleted from exercise where deleted = false";
+		String query = "select id, name, type, comment, deleted from exercises where deleted = 0";
 		Cursor cursor = db.rawQuery(query, null);
 		while (cursor.moveToNext()) {
 			Long id = cursor.getLong(cursor.getColumnIndex("id"));
@@ -385,7 +385,7 @@ public class DbAdapter {
 	public ArrayList<Exercise> getAllDeletedExercises() {
 		open();
 		ArrayList<Exercise> exerciseList = new ArrayList<Exercise>();
-		String query = "select id, name, type, comment, deleted from exercise where deleted = true";
+		String query = "select id, name, type, comment, deleted from exercises where deleted = 1";
 		Cursor cursor = db.rawQuery(query, null);
 		while (cursor.moveToNext()) {
 			Long id = cursor.getLong(cursor.getColumnIndex("id"));
@@ -438,7 +438,9 @@ public class DbAdapter {
 		}
 		cursor.close();
 		close();
+
 		return ex;
+
 	}
 	
 	/**
@@ -512,7 +514,7 @@ public class DbAdapter {
 			throw new IllegalArgumentException("Exercise name and type required.");
 		}
 		Exercise exists = getExerciseFromName(ex.getName());
-		if (exists.getId() != null && exists.getId() > 0L) {
+		if (exists != null && exists.getDeleted() == 0) {
 			throw new IllegalArgumentException("An exercise with this name already exists.");
 		}
 		ContentValues initialValues = new ContentValues();
@@ -543,8 +545,11 @@ public class DbAdapter {
 		initialValues.put("comment", ex.getComment() != null ? ex.getComment()
 				: null);
 		initialValues.put("deleted", 0);
-
-		return db.insert(DATABASE_TABLE_EXERCISE, null, initialValues);
+		
+		open();
+		Long id = db.insert(DATABASE_TABLE_EXERCISE, null, initialValues);
+		close();
+		return id;
 	}
 */	
 

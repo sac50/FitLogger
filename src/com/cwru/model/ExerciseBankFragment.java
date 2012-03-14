@@ -79,14 +79,10 @@ public class ExerciseBankFragment extends ListFragment {
 		List<ExerciseBankRow> list = new ArrayList<ExerciseBankRow>();
 		Hashtable<Long, Boolean> exercisesChecked = getCheckedExercises();
 		/* Query the DB to get the exercises available */
-		mDbHelper.open();
-		Cursor cursor = mDbHelper.getAllExercises();
-		while (cursor.moveToNext()) {
-			Log.d("Exercise name", cursor.getString(cursor.getColumnIndex("name")));
-			String exerciseName = cursor.getString(cursor.getColumnIndex("name"));
-			Long exerciseId = cursor.getLong(cursor.getColumnIndex("_id"));
-			Exercise exercise = new Exercise(exerciseId, exerciseName);
-			if (exercisesChecked.containsKey(exerciseId)) {
+//		mDbHelper.open();
+		List<Exercise> exercises = mDbHelper.getAllUndeletedExercises();
+		for (Exercise exercise : exercises) {
+			if (exercisesChecked.containsKey(exercise.getId())) {
 				Log.d("getExerciseBankList", "set selected TRUE");
 				list.add(get(exercise, workoutName, true));
 			} else {
@@ -94,7 +90,20 @@ public class ExerciseBankFragment extends ListFragment {
 				Log.d("getExerciseBankList", "set selected FALSE");
 			}
 		}
-		mDbHelper.close();
+//		while (cursor.moveToNext()) {
+//			Log.d("Exercise name", cursor.getString(cursor.getColumnIndex("name")));
+//			String exerciseName = cursor.getString(cursor.getColumnIndex("name"));
+//			Long exerciseId = cursor.getLong(cursor.getColumnIndex("_id"));
+//			Exercise exercise = new Exercise(exerciseId, exerciseName);
+//			if (exercisesChecked.containsKey(exerciseId)) {
+//				Log.d("getExerciseBankList", "set selected TRUE");
+//				list.add(get(exercise, workoutName, true));
+//			} else {
+//				list.add(get(exercise, workoutName, false));
+//				Log.d("getExerciseBankList", "set selected FALSE");
+//			}
+//		}
+//		mDbHelper.close();
 		return list;
 	}
 	

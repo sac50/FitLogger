@@ -27,23 +27,14 @@ public class EditExerciseBankFragment extends ListFragment {
 		if (container == null) {
 			return null;
 		}
+		mDbHelper = new DbAdapter(this.getActivity());
+		
 	    List<Exercise> exercises = new ArrayList<Exercise>();
 
 		View view = (LinearLayout) inflater.inflate(R.layout.exercise_bank, container, false);
-		// Set DB Object
-		mDbHelper = new DbAdapter(this.getActivity());
-		mDbHelper.open();
-		Cursor cursor = mDbHelper.getAllUndeletedExercises();
+		
+		exercises = mDbHelper.getAllUndeletedExercises();
 		Log.d("LOWELL", "Exercise bank fragment onCreateView");
-		while (cursor.moveToNext()) {
-			Log.d("Exercise name", cursor.getString(cursor.getColumnIndex("name")));
-			String exerciseName = cursor.getString(cursor.getColumnIndex("name"));
-			Long exerciseId = cursor.getLong(cursor.getColumnIndex("_id"));
-			Exercise exercise = new Exercise(exerciseId, exerciseName);
-			exercises.add(exercise);
-		}
-		cursor.close();
-		mDbHelper.close();
 		
 		ExerciseArrayAdapter adapter = new ExerciseArrayAdapter(this.getActivity(), exercises, this);
 		this.setListAdapter(adapter);
