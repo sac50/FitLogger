@@ -834,6 +834,11 @@ public class DbAdapter {
 		return setList;
 	}
 	
+	/**
+	 * Returns the list of interval objects that belong to the exercise id
+	 * @param exerciseId
+	 * @return
+	 */
 	public ArrayList<Interval> getIntervalsForExercise(int exerciseId) {
 		ArrayList<Interval> intervalList = new ArrayList<Interval>();
 		open();
@@ -853,6 +858,11 @@ public class DbAdapter {
 		return intervalList;
 	}
 	
+	/**
+	 * Returns the distance object that belongs to the exercise id
+	 * @param exerciseId
+	 * @return
+	 */
 	public Distance getDistanceForExercise(int exerciseId) {
 		Distance distance = null;
 		open();
@@ -869,6 +879,11 @@ public class DbAdapter {
 		return distance;
 	}
 	
+	/**
+	 * Returns the Time object that belongs to the exercise id.
+	 * @param exerciseId
+	 * @return
+	 */
 	public Time getTimeForExercise(int exerciseId) {
 		Time time = null;
 		open();
