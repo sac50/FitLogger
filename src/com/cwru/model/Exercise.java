@@ -49,6 +49,14 @@ public class Exercise implements Parcelable{
 		this.deleted = deleted;
 	}
 	
+	public int getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(int deleted) {
+		this.deleted = deleted;
+	}
+
 	@Override 
 	public boolean equals(Object that) {
 	    //check for self-comparison
