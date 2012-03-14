@@ -18,7 +18,7 @@ public class Exercise implements Parcelable{
 	public static final int TIME_BASED_EXERCISE = 2;
 	public static final int INTERVAL_BASED_EXERCISE = 3;
 	
-	private Long id;
+	private int id;
 	private String name;
 	private String type;
 	private String comment;
@@ -43,7 +43,7 @@ public class Exercise implements Parcelable{
 	 * @param sets
 	 * @param mode
 	 */
-	public Exercise (Long id, String name, String type, String comment, int mode) {
+	public Exercise (int id, String name, String type, String comment, int mode) {
 		this.id = id;
 		this.name = name; 
 		this.type = type;
@@ -80,7 +80,7 @@ public class Exercise implements Parcelable{
 		this.mode = mode;
 	}
 	
-	public Long getId() { return id; }
+	public int getId() { return id; }
 	public String getName() { return name; }
 	public String getType() { return type; }
 	public String getComment() { return comment; }
@@ -91,7 +91,7 @@ public class Exercise implements Parcelable{
 	public Time getTime() { return time; }
 	public int getMode() { return mode; }
 	
-	public void setId(Long id) { this.id = id; }
+	public void setId(int id) { this.id = id; }
 	public void setName(String name) { this.name = name; }
 	public void setType(String type) { this.type = type; }
 	public void setComment(String comment) { this.comment = comment; }

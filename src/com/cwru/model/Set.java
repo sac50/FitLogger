@@ -8,8 +8,8 @@ package com.cwru.model;
  *
  */
 public class Set {
-	private long id;
-	private long exerciseId;
+	private int id;
+	private int exerciseId;
 	private int reps;
 	private double weight;
 	
@@ -27,7 +27,7 @@ public class Set {
 	 * @param reps
 	 * @param weight
 	 */
-	public Set (long id, long exerciseId, int reps, double weight) {
+	public Set (int id, int exerciseId, int reps, double weight) {
 		this.id = id; 
 		this.exerciseId = exerciseId; 
 		this.reps = reps;
@@ -40,7 +40,7 @@ public class Set {
 	 * @param reps
 	 * @param weight
 	 */
-	public Set (long exerciseId, int reps, double weight) {
+	public Set (int exerciseId, int reps, double weight) {
 		this.exerciseId = exerciseId;
 		this.reps = reps;
 		this.weight = weight;
@@ -50,23 +50,23 @@ public class Set {
 	 * Getter for the id for the set in the Set table
 	 * @return
 	 */
-	public long getId() { return id; }
+	public int getId() { return id; }
 	/**
 	 * Setter for the id for the set in the Set table
 	 * @param id
 	 */
-	public void setId(long id) { this.id = id; }
+	public void setId(int id) { this.id = id; }
 	
 	/**
 	 * Getter for the exercise id that the set relates to
 	 * @return
 	 */
-	public long getExerciseId() { return exerciseId; }
+	public int getExerciseId() { return exerciseId; }
 	/**
 	 * Setter for the exercise id that the set relates to
 	 * @param exerciseId
 	 */
-	public void setExerciseId(long exerciseId) { this.exerciseId = exerciseId; }
+	public void setExerciseId(int exerciseId) { this.exerciseId = exerciseId; }
 	
 	/**
 	 * Getter for reps that belong to the set

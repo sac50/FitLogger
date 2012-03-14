@@ -209,7 +209,7 @@ public class DbAdapter {
 		Cursor cursor = db.rawQuery(query, null);
 		int workoutId = -1;
 		while (cursor.moveToNext()) {
-			workoutId = cursor.getInt(cursor.getColumnIndex("_id"));
+			workoutId = cursor.getInt(cursor.getColumnIndex("id"));
 		}
 		cursor.close();
 		close();
@@ -354,7 +354,7 @@ public class DbAdapter {
 		String query = "select id, name, type, comment, deleted from exercises";
 		Cursor cursor = db.rawQuery(query, null);
 		while (cursor.moveToNext()) {
-			Long id = cursor.getLong(cursor.getColumnIndex("id"));
+			int id = cursor.getInt(cursor.getColumnIndex("id"));
 			String name = cursor.getString(cursor.getColumnIndex("name"));
 			String type = cursor.getString(cursor.getColumnIndex("type"));
 			String comment = cursor.getString(cursor.getColumnIndex("comment"));
@@ -376,7 +376,7 @@ public class DbAdapter {
 		String query = "select id, name, type, comment, deleted from exercises where deleted = 0";
 		Cursor cursor = db.rawQuery(query, null);
 		while (cursor.moveToNext()) {
-			Long id = cursor.getLong(cursor.getColumnIndex("id"));
+			int id = cursor.getInt(cursor.getColumnIndex("id"));
 			String name = cursor.getString(cursor.getColumnIndex("name"));
 			String type = cursor.getString(cursor.getColumnIndex("type"));
 			String comment = cursor.getString(cursor.getColumnIndex("comment"));
@@ -398,7 +398,7 @@ public class DbAdapter {
 		String query = "select id, name, type, comment, deleted from exercises where deleted = 1";
 		Cursor cursor = db.rawQuery(query, null);
 		while (cursor.moveToNext()) {
-			Long id = cursor.getLong(cursor.getColumnIndex("id"));
+			int id = cursor.getInt(cursor.getColumnIndex("id"));
 			String name = cursor.getString(cursor.getColumnIndex("name"));
 			String type = cursor.getString(cursor.getColumnIndex("type"));
 			String comment = cursor.getString(cursor.getColumnIndex("comment"));
@@ -439,7 +439,7 @@ public class DbAdapter {
 		Cursor cursor = db.rawQuery(query, null);
 		Exercise ex = null;
 		while (cursor.moveToNext()) {
-			Long id = cursor.getLong(cursor.getColumnIndex("id"));
+			int id = cursor.getInt(cursor.getColumnIndex("id"));
 			String name = cursor.getString(cursor.getColumnIndex("name"));
 			String type = cursor.getString(cursor.getColumnIndex("type"));
 			String comment = cursor.getString(cursor.getColumnIndex("comment"));
@@ -466,7 +466,7 @@ public class DbAdapter {
 
 		Exercise ex = null;
 		while (cursor.moveToNext()) {
-			Long id = cursor.getLong(cursor.getColumnIndex("id"));
+			int id = cursor.getInt(cursor.getColumnIndex("id"));
 			String type = cursor.getString(cursor.getColumnIndex("type"));
 			String comment = cursor.getString(cursor.getColumnIndex("comment"));
 			int deleted = cursor.getInt(cursor.getColumnIndex("deleted"));
@@ -482,7 +482,7 @@ public class DbAdapter {
 	 * @param exercise
 	 * @return
 	 */
-	public Long createExercise(Exercise exercise) {
+	public int createExercise(Exercise exercise) {
 		open();
 		// Insert into exercise table
 		String query = "insert into exercises (name, type, comment, deleted) values " + 
@@ -492,16 +492,16 @@ public class DbAdapter {
 		// Get id of newly created exercise
 		query = "select id from exercises where name = '" + exercise.getName() + "'";
 		Cursor cursor = db.rawQuery(query, null);
-		long id = (long)-1;
+		int id = -1;
 		if (cursor.moveToLast()) { 
-			id = cursor.getLong(cursor.getColumnIndex("id"));
+			id = cursor.getInt(cursor.getColumnIndex("id"));
 			exercise.setId(id);
 		} else {
 			// if there is a problem in the insert query, cursor.moveToNext will return false.  
 			// Return -1 for error in insert
 			close();
 			cursor.close();
-			return (long) -1;
+			return -1;
 		}
 		// Insert exercise specifications according to the exercise mode, set/distance/type/interval
 		switch (exercise.getMode()) {
@@ -817,7 +817,7 @@ public class DbAdapter {
 	 * @param exerciseId
 	 * @return
 	 */
-	public ArrayList<Set> getSetsForExercise(long exerciseId) {
+	public ArrayList<Set> getSetsForExercise(int exerciseId) {
 		ArrayList<Set> setList = new ArrayList<Set>();
 		open();
 		String query = "select id, reps, weight from sets where exercise_id = " + exerciseId;
@@ -833,6 +833,60 @@ public class DbAdapter {
 		close();
 		return setList;
 	}
+	
+	public ArrayList<Interval> getIntervalsForExercise(int exerciseId) {
+		ArrayList<Interval> intervalList = new ArrayList<Interval>();
+		open();
+		String query = "select id, name, length, type, units from intervals where exercise_id = " + exerciseId;
+		Cursor cursor = db.rawQuery(query, null);
+		while (cursor.moveToNext()) {
+			int id = cursor.getInt(cursor.getColumnIndex("id"));
+			String name = cursor.getString(cursor.getColumnIndex("name"));
+			double length = cursor.getDouble(cursor.getColumnIndex("length"));
+			String type = cursor.getString(cursor.getColumnIndex("type"));
+			String units = cursor.getString(cursor.getColumnIndex("units"));
+			Interval interval = new Interval(id, exerciseId, name, length, type, units);
+			intervalList.add(interval);
+		}
+		cursor.close();
+		close();
+		return intervalList;
+	}
+	
+	public Distance getDistanceForExercise(int exerciseId) {
+		Distance distance = null;
+		open();
+		String query = "select id, length, units from distance where exercise_id = " + exerciseId;
+		Cursor cursor = db.rawQuery(query, null);
+		while (cursor.moveToNext()) {
+			int id = cursor.getInt(cursor.getColumnIndex("id"));
+			double length = cursor.getDouble(cursor.getColumnIndex("length"));
+			String units = cursor.getString(cursor.getColumnIndex("units"));
+			distance = new Distance(id, exerciseId, length, units);
+		}
+		cursor.close();
+		close();
+		return distance;
+	}
+	
+	public Time getTimeForExercise(int exerciseId) {
+		Time time = null;
+		open();
+		String query = "select id, length, units, is_count_up, is_countdown from time where exercise_id = " + exerciseId;
+		Cursor cursor = db.rawQuery(query, null);
+		while (cursor.moveToNext()) {
+			int id = cursor.getInt(cursor.getColumnIndex("id"));
+			int length = cursor.getInt(cursor.getColumnIndex("length"));
+			String units = cursor.getString(cursor.getColumnIndex("units"));
+			boolean isCountUp = cursor.getInt(cursor.getColumnIndex("is_count_up")) > 0;
+			boolean isCountdown = cursor.getInt(cursor.getColumnIndex("is_countdown")) > 0;
+			time = new Time(id, exerciseId, length, units, isCountUp, isCountdown);
+		}
+		cursor.close();
+		close();
+		return time;
+	}
+	
 	
 	/*
 	public Cursor getSetsForExercise(long exId) {
