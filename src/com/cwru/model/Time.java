@@ -25,12 +25,14 @@ public class Time {
 		this.isCountdown = isCountdown;
 	}
 	
+	public int getId() { return id; }
 	public int getExerciseId() { return exerciseId; }
 	public int getLength() { return length; }
 	public String getUnits() { return units; }
 	public boolean isCountUp() { return isCountUp; }
 	public boolean isCountdown() { return isCountdown; }
 	
+	public void setId(int id) { this.id = id; }
 	public void setExerciseId(int exerciseId) { this.exerciseId = exerciseId; }
 	public void setLength(int length) { this.length = length; }
 	public void setUnits(String units) { this.units = units; }

@@ -1,9 +1,9 @@
 package com.cwru.dao;
 
-import java.util.Date;
-import java.text.SimpleDateFormat;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -13,12 +13,20 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.cwru.model.Distance;
 import com.cwru.model.Exercise;
 import com.cwru.model.Interval;
 import com.cwru.model.Set;
+import com.cwru.model.Time;
 import com.cwru.model.Workout;
 import com.cwru.model.WorkoutResults;
 
+/**
+ * Handles all database transactions for the application.
+ * @author scrilley
+ * @author lkissling
+ *
+ */
 public class DbAdapter {
 	private DatabaseHelper dbHelper;
 	private SQLiteDatabase db;
@@ -148,6 +156,7 @@ public class DbAdapter {
 	    Date date = new Date();
 	    String dateString = dateFormat.format(date);
 		ContentValues values = new ContentValues();
+		/*
 		values.put("date", dateString);
 		values.put("workout_id", workoutResult.getWorkoutId());
 		values.put("exercise_id", workoutResult.getExerciseId());
@@ -160,6 +169,7 @@ public class DbAdapter {
 		values.put("interval", workoutResult.getInterval());
 		values.put("comment", workoutResult.getComment());
 		db.insert(DATABASE_TABLE_WORKOUT_RESULT, null, values);
+		*/
 		close();
 	}
 	
@@ -467,46 +477,117 @@ public class DbAdapter {
 		return ex;
 	}
 	
-//	public void createExercise(Exercise exercise) {
-//		open();
-//		// Insert into exercise table
-//		String query = "insert into exercises (name, type, comment, deleted) values " + 
-//					   "('" + exercise.getName() + "','" + exercise.getType() + 
-//					   "','" + exercise.getComment() + "',false + ";
-//		db.execSQL(query);
-//		// Insert exercise specifications according to the exercise type, set/distance/type/interval
-//		switch (exercise.getMode()) {
-//			case Exercise.SET_BASED_EXERCISE:
-//				createSet(exercise);
-//				break;
-//			case Exercise.DISTANCE_BASED_EXERCISE:
-//				createDistance(exercise);
-//				break;
-//			case Exercise.INTERVAL_BASED_EXERCISE:
-//				createInterval(exercise);
-//				break;				
-//			case Exercise.TIME_BASED_EXERCISE:
-//				createTime(exercise);
-//				break;
-//		}
-//	}
+	/** 
+	 * Query to create the input exercise in the database.  Function returns the id of the newly created exercise.
+	 * @param exercise
+	 * @return
+	 */
+	public Long createExercise(Exercise exercise) {
+		open();
+		// Insert into exercise table
+		String query = "insert into exercises (name, type, comment, deleted) values " + 
+					   "('" + exercise.getName() + "','" + exercise.getType() + 
+					   "','" + exercise.getComment() + "',false + ";
+		db.execSQL(query);
+		// Get id of newly created exercise
+		query = "select id from exercises where name = '" + exercise.getName() + "'";
+		Cursor cursor = db.rawQuery(query, null);
+		long id = (long)-1;
+		if (cursor.moveToLast()) { 
+			id = cursor.getLong(cursor.getColumnIndex("id"));
+			exercise.setId(id);
+		} else {
+			// if there is a problem in the insert query, cursor.moveToNext will return false.  
+			// Return -1 for error in insert
+			close();
+			cursor.close();
+			return (long) -1;
+		}
+		// Insert exercise specifications according to the exercise mode, set/distance/type/interval
+		switch (exercise.getMode()) {
+			case Exercise.SET_BASED_EXERCISE:
+				createSet(exercise);
+				break;
+			case Exercise.DISTANCE_BASED_EXERCISE:
+				createDistance(exercise);
+				break;
+			case Exercise.INTERVAL_BASED_EXERCISE:
+				createInterval(exercise);
+				break;				
+			case Exercise.TIME_BASED_EXERCISE:
+				createTime(exercise);
+				break;
+		}
+		
+		cursor.close();
+		close();
+		return id;
+	}
 	
+	/**
+	 * Exercise passed into this function has the set parameter defined. \n
+	 * Inserts row into the set table.
+	 * @param exercise
+	 */
 	private void createSet(Exercise exercise) {
-		
+		open();
+		ArrayList<Set> setList = exercise.getSets();
+		for (int i = 0; i < setList.size(); i++) {
+			Set set = setList.get(i);
+			String query = "insert into sets (exercise_id, reps, weight) values " + 
+						   "(" + exercise.getId() + "," + set.getReps() + "," + set.getWeight() + ")";
+			db.execSQL(query);
+		}
+		close();
 	}
 	
+	/**
+	 * Exercise passed into function has the distance parameter defined.  \n
+	 * Inserts row into the distance table.
+	 * @param exercise
+	 */
 	private void createDistance(Exercise exercise) {
-		
+		open();
+		Distance distance = exercise.getDistance();
+		String query = "insert into distance (exercise_id, length, units) values " + 
+					   "(" + exercise.getId()+ "," + distance.getLength() + ",'" + distance.getUnits() + "')";
+		db.execSQL(query);
+		close();
 	}
 	
+	/**
+	 * Exercise passed into function has the interval parameter defined. \n
+	 * Inserts row into the interval table.
+	 * @param exercise
+	 */
 	private void createInterval(Exercise exercise) {
+		open();
+		ArrayList<Interval> intervalList = exercise.getInterval();
+		for (int i = 0; i < intervalList.size(); i++) {
+			Interval interval = intervalList.get(i);
+			String query = "insert into interval (exercise_id, name, length, type, units) values " + 
+					   "(" + exercise.getId() + ",'" + interval.getName() + "'," + interval.getLength() + "," + 
+					   "'" + interval.getLength() + "','" + interval.getUnits() + "')";
+			db.execSQL(query);					   
+		}
 		
+		close();
 	}
 	
+	/**
+	 * Exercise passed into function has the time parameter defined. \n
+	 * Inserts row into the Time table
+	 * @param exercise
+	 */
 	private void createTime(Exercise exercise) {
-		
+		open();
+		Time time = exercise.getTime();
+		String query = "insert into time (exercise_id, length, units, is_count_up, is_countdown) values " +
+					   "(" + exercise.getId() + "," + time.getLength() + ",'" + time.getUnits() + "'," + time.isCountUp() + "," + time.isCountdown() + ")";
+		db.execSQL(query);
+		close();
 	}
-
+/*
 	public long createExercise(Exercise ex) throws IllegalArgumentException {
 		
 		if (ex.getName() == null || ex.getName().length() == 0
@@ -552,7 +633,106 @@ public class DbAdapter {
 		return id;
 	}
 
-
+*/
+	
+	/**
+	 * Update a row in the exercise table.  Also updates the corresponding exercise mode table (distance, interval, time, set).
+	 * @param exercise
+	 */
+	public void updateExercise(Exercise exercise) {
+		open();
+		// Update row in the exercise table
+		String query = "update exercises " + 
+					   "set name = '" + exercise.getName() + "', type = '" + exercise.getType() + "',comment='" + exercise.getComment() + "'," + exercise.getDeleted() + " " + 
+					   "where id = " + exercise.getId();
+		db.execSQL(query);
+		
+		// Update exercise specifications according to the exercise mode, set/distance/type/interval
+		switch (exercise.getMode()) {
+			case Exercise.SET_BASED_EXERCISE:
+				updateSet(exercise);
+				break;
+			case Exercise.DISTANCE_BASED_EXERCISE:
+				updateDistance(exercise);
+				break;
+			case Exercise.INTERVAL_BASED_EXERCISE:
+				updateInterval(exercise);
+				break;				
+			case Exercise.TIME_BASED_EXERCISE:
+				updateTime(exercise);
+				break;
+		}
+		close();
+	}
+	
+	/**
+	 * Updates the set rows in the set table that are related to the exercise being passed in. 
+	 * The set parameter of the exercise must have the id value assigned.
+	 * @param exercise
+	 */
+	public void updateSet(Exercise exercise) { 
+		open();
+		ArrayList<Set> setList = exercise.getSets();
+		for (int i = 0; i < setList.size(); i++) {
+			Set set = setList.get(i);
+			String query = "update sets " + 
+						   "set reps = " + set.getReps() + ", weight = " + set.getWeight() + " " + 
+						   "where id = " + set.getId();
+			db.execSQL(query);
+		}		
+		close();
+	}
+	
+	/** 
+	 * Update the distance row in the distance table that is related to the exercise being passed in.
+	 * The distance parameter of the exercise must have the id value assigned.
+	 * @param exercise
+	 */
+	public void updateDistance(Exercise exercise) {
+		open();
+		Distance distance = exercise.getDistance();
+		String query = "update distance " +
+					   "set length = " + distance.getLength() + ", units='" + distance.getUnits() + "' " +
+					   "where id = " + distance.getId();
+		db.execSQL(query);
+		close();
+	}
+	
+	/**
+	 * Update the interval rows in the interval table that are related to the exercise being passed in.
+	 * This interval parameter of the exercise must have the id value assigned for each interval.
+	 * @param exercise
+	 */
+	public void updateInterval(Exercise exercise) { 
+		open();
+		ArrayList<Interval> intervalList = exercise.getInterval();
+		for (int i = 0; i < intervalList.size(); i++) {
+			Interval interval = intervalList.get(i);
+			String query = "update intervals " + 
+						   "set name = '" + interval.getName() + "', length = " + interval.getLength() + " " + 
+						   "type = '" + interval.getType() + "', units = '" + interval.getType() + "' " +
+						   "where id = " + interval.getId();
+			db.execSQL(query);
+			close();						   
+		}
+	}
+	
+	/**
+	 * Update the time rows in the time table that are related to the exercise being passed in.
+	 * The time parameter of the exercise must have the id value assigned to the the time.
+	 * @param exercise
+	 */
+	public void updateTime(Exercise exercise) {
+		open();
+		Time time = exercise.getTime();
+		String query = "update time " + 
+					   "set length = " + time.getLength() + ", units = '" + time.getUnits() + "' " + 
+					   "where id = " + time.getId();
+		db.execSQL(query);
+		close();
+	}
+	
+	/*
 	public int updateExercise(Exercise ex) {
 		ContentValues newValues = new ContentValues();
 		newValues.put("_id", ex.getId());
@@ -587,18 +767,74 @@ public class DbAdapter {
 		String[] arguments = {ex.getId().toString()};
 		return db.update(DATABASE_TABLE_EXERCISE, newValues, "_id = ?", arguments);
 	}
-
+*/
+	/**
+	 * Performs soft delete on the exercise by marking it deleted.
+	 * @param exerciseId
+	 */
+	public void deleteExercise(long exerciseId) {
+		open();
+		String query = "update exercises set deleted=true where id = " + exerciseId;
+		db.execSQL(query);
+		close();
+	}
+	
+	/**
+	 * Performs a hard delete on an exercies by removing it from all exercise tables.
+	 * @param exerciseId
+	 */
+	public void trueDeleteExercise(long exerciseId) {
+		open();
+		String query = "delete from exercises where id = " + exerciseId;
+		db.execSQL(query);
+		query = "delete from sets where exerciseId = " + exerciseId;
+		db.execSQL(query);
+		query = "delete from distance where exerciseId = " + exerciseId;
+		db.execSQL(query);
+		query = "delete from time where exerciseId = " + exerciseId;
+		db.execSQL(query);
+		query = "delete from intervals where exerciseId = " + exerciseId;
+		db.execSQL(query);
+		close();
+	}
+	
+	/*
 	public boolean deleteExercise(long exID) {
 		ContentValues args = new ContentValues();
 		args.put("deleted", 1);
 
 		return db.update(DATABASE_TABLE_EXERCISE, args, "_id = " + exID, null) > 0;
 	}
-	
+	*/
+	/*
 	public boolean trueDeleteExercise(long exID) {
 		return db.delete(DATABASE_TABLE_EXERCISE, "_id = " + exID, null) > 0;
 	}
-
+	*/
+	
+	/**
+	 * Returns the list of set objects that belong to the input exercise id.
+	 * @param exerciseId
+	 * @return
+	 */
+	public ArrayList<Set> getSetsForExercise(long exerciseId) {
+		ArrayList<Set> setList = new ArrayList<Set>();
+		open();
+		String query = "select id, reps, weight from sets where exercise_id = " + exerciseId;
+		Cursor cursor = db.rawQuery(query, null);
+		while (cursor.moveToNext()) {
+			int id = cursor.getInt(cursor.getColumnIndex("id"));
+			int reps = cursor.getInt(cursor.getColumnIndex("reps"));
+			double weight = cursor.getDouble(cursor.getColumnIndex("weight"));
+			Set set = new Set(id, exerciseId, reps, weight);
+			setList.add(set);
+		}
+		cursor.close();
+		close();
+		return setList;
+	}
+	
+	/*
 	public Cursor getSetsForExercise(long exId) {
 		String columns[] = {"_id", "exercise_id", "weight", "reps"};
 		String selection = "exercise_id = ?";
@@ -608,12 +844,14 @@ public class DbAdapter {
 		if (cursor == null) { Log.d("Steve", "Cursor for sets is null");}
 		return cursor;
 	}
+	*/
 	
 	/** TODO
 	 * Refactor these two methods
 	 * @param exId
 	 * @return
 	 */
+	/*
 	public Set[] getSetsForExercise1(long exId) {
 		open();
 		String columns [] = {"id", "exercise_id", "weight", "reps"};
@@ -633,7 +871,9 @@ public class DbAdapter {
 		close();
 		return sets.toArray(new Set[0]);
 	}
+	*/
 	
+	/*
 	public long createSet(Set set) {
 		ContentValues initialValues = new ContentValues();
 		initialValues.put("exercise_id", set.getExerciseId());
@@ -689,5 +929,5 @@ public class DbAdapter {
 		
 		return db.update(DATABASE_TABLE_INTERVAL, args, "_id = " + interval.getId(), null) > 0;
 	}
-
+	*/
 }

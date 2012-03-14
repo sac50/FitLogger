@@ -5,6 +5,12 @@ import java.util.ArrayList;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+/**
+ * Exercise Class.  Represents an exercise object associated with the application.
+ * @author lkissling
+ * @author scrilley
+ *
+ */
 public class Exercise implements Parcelable{
 	/** Constants for the type of exercise */
 	public static final int SET_BASED_EXERCISE = 0;
@@ -15,8 +21,99 @@ public class Exercise implements Parcelable{
 	private Long id;
 	private String name;
 	private String type;
+	private String comment;
 	private ArrayList<Set> sets;
+	private Distance distance;
+	private ArrayList<Interval> intervals;
+	private Time time;
+	private boolean deleted;
+	private int mode;
 	
+	/**
+	 * Empty Constructor
+	 */
+	public Exercise() {
+		// Empty Constructor
+	}
+	/**
+	 * Constructor
+	 * @param id
+	 * @param name
+	 * @param type
+	 * @param sets
+	 * @param mode
+	 */
+	public Exercise (Long id, String name, String type, String comment, int mode) {
+		this.id = id;
+		this.name = name; 
+		this.type = type;
+		this.comment = comment;
+		this.mode = mode;
+	}
+	
+	/**
+	 * Constructor
+	 * @param name
+	 * @param type
+	 * @param mode
+	 */
+	public Exercise (String name, String type, String comment, int mode) {
+		this.name = name;
+		this.type = type;
+		this.comment = comment;
+		this.mode = mode;
+	}
+	
+	/**
+	 * Constructor
+	 * @param name
+	 * @param type
+	 * @param comment
+	 * @param deleted
+	 * @param mode
+	 */
+	public Exercise (String name, String type, String comment, boolean deleted, int mode) {
+		this.name = name;
+		this.type = type;
+		this.comment = comment;
+		this.deleted = deleted;
+		this.mode = mode;
+	}
+	
+	public Long getId() { return id; }
+	public String getName() { return name; }
+	public String getType() { return type; }
+	public String getComment() { return comment; }
+	public boolean getDeleted() { return deleted; }
+	public ArrayList<Set> getSets() { return sets; }
+	public Distance getDistance() { return distance; }
+	public ArrayList<Interval> getInterval() { return intervals; }
+	public Time getTime() { return time; }
+	public int getMode() { return mode; }
+	
+	public void setId(Long id) { this.id = id; }
+	public void setName(String name) { this.name = name; }
+	public void setType(String type) { this.type = type; }
+	public void setComment(String comment) { this.comment = comment; }
+	public void setDeleted(boolean deleted) { this.deleted = deleted; }
+	public void setSets(ArrayList<Set> sets) { this.sets = sets; }
+	public void setDistance(Distance distance) { this.distance = distance; }
+	public void setInterval(ArrayList<Interval> intervals) { this.intervals = intervals; }
+	public void setTime(Time time) { this.time = time; }
+	public void setMode(int mode) { this.mode = mode; }
+	
+	@Override
+	public int describeContents() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	/*
 	//private int sets;
 	private Long time = 0L;
 	private String timeType;
@@ -171,5 +268,5 @@ public class Exercise implements Parcelable{
 	public int getMode() {
 		return mode;
 	}
-	
+	*/
 }
