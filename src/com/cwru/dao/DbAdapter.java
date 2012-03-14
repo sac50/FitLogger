@@ -466,7 +466,47 @@ public class DbAdapter {
 		close();
 		return ex;
 	}
-
+	
+	public void createExercise(Exercise exercise) {
+		open();
+		// Insert into exercise table
+		String query = "insert into exercises (name, type, comment, deleted) values " + 
+					   "('" + exercise.getName() + "','" + exercise.getType() + 
+					   "','" + exercise.getComment() + "',false + ";
+		db.execSQL(query);
+		// Insert exercise specifications according to the exercise type, set/distance/type/interval
+		switch (exercise.getMode()) {
+			case Exercise.SET_BASED_EXERCISE:
+				createSet(exercise);
+				break;
+			case Exercise.DISTANCE_BASED_EXERCISE:
+				createDistance(exercise);
+				break;
+			case Exercise.INTERVAL_BASED_EXERCISE:
+				createInterval(exercise);
+				break;				
+			case Exercise.TIME_BASED_EXERCISE:
+				createTime(exercise);
+				break;
+		}
+	}
+	
+	private void createSet(Exercise exercise) {
+		
+	}
+	
+	private void createDistance(Exercise exercise) {
+		
+	}
+	
+	private void createInterval(Exercise exercise) {
+		
+	}
+	
+	private void createTime(Exercise exercise) {
+		
+	}
+/*
 	public long createExercise(Exercise ex) throws IllegalArgumentException {
 		
 		if (ex.getName() == null || ex.getName().length() == 0
@@ -511,7 +551,8 @@ public class DbAdapter {
 		close();
 		return id;
 	}
-	
+*/	
+
 	public int updateExercise(Exercise ex) {
 		ContentValues newValues = new ContentValues();
 		newValues.put("_id", ex.getId());
