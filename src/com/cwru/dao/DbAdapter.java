@@ -19,7 +19,7 @@ import com.cwru.model.Interval;
 import com.cwru.model.Set;
 import com.cwru.model.Time;
 import com.cwru.model.Workout;
-import com.cwru.model.WorkoutResults;
+import com.cwru.model.WorkoutResult;
 
 /**
  * Handles all database transactions for the application.
@@ -147,32 +147,6 @@ public class DbAdapter {
 		dbHelper.close();
 	}
 	
-	/** TODO Update to fit new database */
-	public void storeWorkoutResult(WorkoutResults workoutResult) {
-		open();
-		// Get Date
-		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		//get current date time with Date()
-	    Date date = new Date();
-	    String dateString = dateFormat.format(date);
-		ContentValues values = new ContentValues();
-		/*
-		values.put("date", dateString);
-		values.put("workout_id", workoutResult.getWorkoutId());
-		values.put("exercise_id", workoutResult.getExerciseId());
-		values.put("sets", workoutResult.getSetNumber());
-		values.put("reps", workoutResult.getReps());
-		values.put("weight", workoutResult.getWeight());
-		values.put("time", workoutResult.getTime());
-		values.put("time_type", workoutResult.getTimeType());
-		values.put("distance", workoutResult.getDistance());
-		values.put("interval", workoutResult.getInterval());
-		values.put("comment", workoutResult.getComment());
-		db.insert(DATABASE_TABLE_WORKOUT_RESULT, null, values);
-		*/
-		close();
-	}
-	
 	/**
 	 * Inserts row into the Workout table
 	 * @param workout
@@ -272,8 +246,6 @@ public class DbAdapter {
 		open();
 		ArrayList<Workout> workoutList = new ArrayList<Workout>();
 		Cursor cursor = db.rawQuery("select * from workouts", new String [0]);
-		//Workout(String workoutName, String workoutType,String workoutRepeatWeeks, int repeatSunday, int repeatMonday,
-		//		int repeatTuesday, int repeatWednesday, int repeatThursday,	int repeatFriday, int repeatSaturday)
 		while (cursor.moveToNext()) {
 			int workoutId = cursor.getInt(cursor.getColumnIndex("id"));
 			String workoutName = cursor.getString(cursor.getColumnIndex("name"));
@@ -409,24 +381,6 @@ public class DbAdapter {
 		close();
 		return exerciseList;
 	}
-	
-	/*
-	public Cursor getAllExercises() { 		
-		String columns [] = {"id", "name", "type", "sets", "time", "is_countdown", "distance", "distance_type", "intervals", "interval_sets", "comment", "deleted"};
-		Cursor cursor = db.query(DATABASE_TABLE_EXERCISE, columns, null, null, null, null, null);
-		if (cursor == null) { Log.d("Steve", "Cursor for exercises is null");}
-		return cursor;
-	}
-	
-	
-	public Cursor getAllUndeletedExercises() {
-		String columns [] = {"id", "name", "type", "sets", "time", "is_countdown", "distance", "distance_type", "intervals", "interval_sets", "comment", "deleted"};
-		Cursor cursor = db.query(DATABASE_TABLE_EXERCISE, columns, "deleted = 0", null, null, null, "name");
-		if (cursor == null) { Log.d("Steve", "Cursor for exercises is null");}
-		return cursor;
-	}
-
-	*/
 	
 	/**
 	 * Return Exercise from querying for the exercise id
@@ -587,54 +541,7 @@ public class DbAdapter {
 		db.execSQL(query);
 		close();
 	}
-/*
-	public long createExercise(Exercise ex) throws IllegalArgumentException {
-		
-		if (ex.getName() == null || ex.getName().length() == 0
-				|| ex.getType() == null || ex.getType().length() == 0) {
-			throw new IllegalArgumentException("Exercise name and type required.");
-		}
-		Exercise exists = getExerciseFromName(ex.getName());
-		if (exists != null && exists.getDeleted() == 0) {
-			throw new IllegalArgumentException("An exercise with this name already exists.");
-		}
-		ContentValues initialValues = new ContentValues();
-		initialValues.put("name", ex.getName());
-		initialValues.put("type", ex.getType());
 
-		if (ex.getSets() > 0) {
-			initialValues.put("sets", ex.getSets());
-		}
-
-		initialValues.put("is_countdown", ex.getIsCountdown());
-		
-		if (ex.getIsCountdown() && ex.getTime() > 0) {
-			initialValues.put("time", ex.getTime());
-			initialValues.put("time_type", ex.getTimeType());
-		}
-
-		if (ex.getDistance() > 0) {
-			initialValues.put("distance", ex.getDistance());
-			initialValues.put("distance_type", ex.getDistanceType());
-		}
-		
-		if (ex.getIntervals() > 0) {
-			initialValues.put("intervals", ex.getIntervals());
-			initialValues.put("interval_sets", ex.getIntervalSets());
-		}
-
-		initialValues.put("comment", ex.getComment() != null ? ex.getComment()
-				: null);
-		initialValues.put("deleted", 0);
-		
-		open();
-		Long id = db.insert(DATABASE_TABLE_EXERCISE, null, initialValues);
-		close();
-		return id;
-	}
-
-*/
-	
 	/**
 	 * Update a row in the exercise table.  Also updates the corresponding exercise mode table (distance, interval, time, set).
 	 * @param exercise
@@ -732,42 +639,6 @@ public class DbAdapter {
 		close();
 	}
 	
-	/*
-	public int updateExercise(Exercise ex) {
-		ContentValues newValues = new ContentValues();
-		newValues.put("_id", ex.getId());
-		newValues.put("name", ex.getName());
-		newValues.put("type", ex.getType());
-
-		if (ex.getSets() > 0) {
-			newValues.put("sets", ex.getSets());
-		}
-
-		newValues.put("is_countdown", ex.getIsCountdown());
-		
-		if (ex.getIsCountdown() && ex.getTime() > 0) {
-			newValues.put("time", ex.getTime());
-			newValues.put("time_type", ex.getTimeType());
-		}
-
-		if (ex.getDistance() > 0) {
-			newValues.put("distance", ex.getDistance());
-			newValues.put("distance_type", ex.getDistanceType());
-		}
-		
-		if (ex.getIntervals() > 0) {
-			newValues.put("intervals", ex.getIntervals());
-			newValues.put("interval_sets", ex.getIntervalSets());
-		}
-
-		newValues.put("comment", ex.getComment() != null ? ex.getComment()
-				: null);
-		newValues.put("deleted", 0);
-		
-		String[] arguments = {ex.getId().toString()};
-		return db.update(DATABASE_TABLE_EXERCISE, newValues, "_id = ?", arguments);
-	}
-*/
 	/**
 	 * Performs soft delete on the exercise by marking it deleted.
 	 * @param exerciseId
@@ -797,20 +668,6 @@ public class DbAdapter {
 		db.execSQL(query);
 		close();
 	}
-	
-	/*
-	public boolean deleteExercise(long exID) {
-		ContentValues args = new ContentValues();
-		args.put("deleted", 1);
-
-		return db.update(DATABASE_TABLE_EXERCISE, args, "_id = " + exID, null) > 0;
-	}
-	*/
-	/*
-	public boolean trueDeleteExercise(long exID) {
-		return db.delete(DATABASE_TABLE_EXERCISE, "_id = " + exID, null) > 0;
-	}
-	*/
 	
 	/**
 	 * Returns the list of set objects that belong to the input exercise id.
@@ -952,101 +809,17 @@ public class DbAdapter {
 		return -1; // Error, exercise id not found
 	}
 	
-	
-	/*
-	public Cursor getSetsForExercise(long exId) {
-		String columns[] = {"_id", "exercise_id", "weight", "reps"};
-		String selection = "exercise_id = ?";
-		String orderBy = "_id";
-		String[] selectionArgs = {Long.toString(exId)};
-		Cursor cursor = db.query(DATABASE_TABLE_SET, columns, selection, selectionArgs, null, null, orderBy);
-		if (cursor == null) { Log.d("Steve", "Cursor for sets is null");}
-		return cursor;
-	}
-	*/
-	
-	/** TODO
-	 * Refactor these two methods
-	 * @param exId
-	 * @return
-	 */
-	/*
-	public Set[] getSetsForExercise1(long exId) {
+	/** TODO Update to fit new database */
+	public void storeWorkoutResult(WorkoutResult workoutResult) {
 		open();
-		String columns [] = {"id", "exercise_id", "weight", "reps"};
-		String selection = "exercise_id = ?";
-		String orderBy = "_id";
-		String [] selectionArgs = {Long.toString(exId)};
-		Cursor cursor = db.query(DATABASE_TABLE_SET, columns, selection, selectionArgs, null, null, orderBy);
-		ArrayList<Set> sets = new ArrayList<Set> ();
-		while (cursor.moveToNext()) {
-			long id = cursor.getLong(cursor.getColumnIndex("_id"));
-			long exerciseId = cursor.getLong(cursor.getColumnIndex("exercise_id"));
-			double weight = cursor.getInt(cursor.getColumnIndex("weight"));
-			int reps = cursor.getInt(cursor.getColumnIndex("reps"));
-			Set set = new Set(id,exerciseId, reps, weight);
-			sets.add(set);
-		}
+		// Get Date
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		//get current date time with Date()
+	    Date date = new Date();
+	    String dateString = dateFormat.format(date);
+		ContentValues values = new ContentValues();
+
 		close();
-		return sets.toArray(new Set[0]);
-	}
-	*/
-	
-	/*
-	public long createSet(Set set) {
-		ContentValues initialValues = new ContentValues();
-		initialValues.put("exercise_id", set.getExerciseId());
-		initialValues.put("reps", set.getReps());
-		initialValues.put("weight", set.getWeight());
-
-		return db.insert(DATABASE_TABLE_SET, null, initialValues);
-	}
-
-	public boolean deleteSet(long setID) {
-		return db.delete(DATABASE_TABLE_SET, "_id = " + setID, null) > 0;
-	}
-
-	public boolean updateSet(Set set) {
-		ContentValues args = new ContentValues();
-		args.put("exercise_id", set.getExerciseId());
-		args.put("reps", set.getReps());
-		args.put("weight", set.getWeight());
-
-		return db.update(DATABASE_TABLE_SET, args, "_id = " + set.getId(), null) > 0;
 	}
 	
-	public Cursor getIntervalsForExercise(long exId) {
-		String columns[] = {"_id", "exercise_id", "name", "time", "time_type"};
-		String selection = "exercise_id = ?";
-		String selectionArgs[] = {Long.toString(exId)};
-		String orderBy = "_id";
-		Cursor cursor = db.query(DATABASE_TABLE_INTERVAL, columns, selection, selectionArgs, null, null, orderBy);
-		if (cursor == null) { Log.d("Steve", "Cursor for intervals is null");}
-		return cursor;
-	}
-	
-	public long createInterval(Interval interval) {
-		ContentValues initialValues = new ContentValues();
-		initialValues.put("exercise_id", interval.getExerciseId());
-		initialValues.put("name", interval.getName());
-		initialValues.put("time", interval.getTime());
-		initialValues.put("time_type", interval.getTimeType());
-		
-		return db.insert(DATABASE_TABLE_INTERVAL, null, initialValues);
-	}
-	
-	public boolean deleteInterval(long intervalID) {
-		return db.delete(DATABASE_TABLE_INTERVAL, "_id = " + intervalID, null) > 0;
-	}
-	
-	public boolean updateInterval(Interval interval) {
-		ContentValues args = new ContentValues();
-		args.put("exercise_id", interval.getExerciseId());
-		args.put("name", interval.getName());
-		args.put("time", interval.getTime());
-		args.put("time_type", interval.getTimeType());
-		
-		return db.update(DATABASE_TABLE_INTERVAL, args, "_id = " + interval.getId(), null) > 0;
-	}
-	*/
 }

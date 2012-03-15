@@ -20,7 +20,7 @@ import com.cwru.controller.HomeScreen;
 import com.cwru.dao.DbAdapter;
 import com.cwru.model.Exercise;
 import com.cwru.model.Set;
-import com.cwru.model.WorkoutResults;
+import com.cwru.model.WorkoutResult;
 
 public class WorkoutSetFragment extends Fragment {
 	

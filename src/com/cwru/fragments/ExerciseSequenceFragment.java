@@ -57,7 +57,7 @@ public class ExerciseSequenceFragment extends ListFragment {
 		String exerciseSequence = mDbHelper.getExerciseSequence(workoutName);
 		StringTokenizer st = new StringTokenizer(exerciseSequence,",");
 		while (st.hasMoreTokens()) {
-			Long exerciseId =  Long.parseLong(st.nextToken());
+			int exerciseId =  Integer.parseInt(st.nextToken());
 			Exercise exercise = mDbHelper.getExerciseFromId(exerciseId);
 			exerciseList.add(exercise);
 		}

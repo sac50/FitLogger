@@ -1,6 +1,6 @@
 package com.cwru.model;
 
-public class WorkoutResults {
+public class WorkoutResult {
 	public static final int SET_BASED_EXERCISE = 0;
 	public static final int DISTANCE_BASED_EXERCISE = 1;
 	public static final int TIME_BASED_EXERCISE = 2;
@@ -12,7 +12,7 @@ public class WorkoutResults {
 	private String date;
 	private int mode;
 	
-	public WorkoutResults (int workoutId, int exerciseId) { 
+	public WorkoutResult (int workoutId, int exerciseId) { 
 		this.workoutId = workoutId;
 		this.exerciseId = exerciseId;
 	}

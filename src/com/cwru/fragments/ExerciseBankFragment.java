@@ -80,7 +80,7 @@ public class ExerciseBankFragment extends ListFragment {
 	
 	private List<ExerciseBankRow> getExerciseBankList() {
 		List<ExerciseBankRow> list = new ArrayList<ExerciseBankRow>();
-		Hashtable<Long, Boolean> exercisesChecked = getCheckedExercises();
+		Hashtable<Integer, Boolean> exercisesChecked = getCheckedExercises();
 		/* Query the DB to get the exercises available */
 //		mDbHelper.open();
 		List<Exercise> exercises = mDbHelper.getAllUndeletedExercises();
@@ -114,12 +114,12 @@ public class ExerciseBankFragment extends ListFragment {
 	 * Hash table to get exercises that belong to workout
 	 * in the get exercise method we check for collisions to see if exercise should be marked checked on load
 	 */
-	private Hashtable<Long, Boolean> getCheckedExercises() {
-		Hashtable<Long, Boolean> exercises = new Hashtable<Long, Boolean> ();
+	private Hashtable<Integer, Boolean> getCheckedExercises() {
+		Hashtable<Integer, Boolean> exercises = new Hashtable<Integer, Boolean> ();
 		String exerciseSequence = mDbHelper.getExerciseSequence(workoutName);
 		StringTokenizer st = new StringTokenizer(exerciseSequence,",");
 		while (st.hasMoreTokens()) {
-			Long exerciseId =  Long.parseLong(st.nextToken());
+			int exerciseId =  Integer.parseInt(st.nextToken());
 			Exercise exercise = mDbHelper.getExerciseFromId(exerciseId);
 			exercises.put(exerciseId, true);
 		}
