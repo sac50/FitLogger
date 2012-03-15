@@ -902,6 +902,56 @@ public class DbAdapter {
 		return time;
 	}
 	
+	/**
+	 * Returns the exercise type for the exercise, (Distance, Set, Interval, Time).  
+	 * Returns -1 when exercise is not found.
+	 * @param exerciseId
+	 * @return
+	 */
+	public int getExerciseMode(int exerciseId) {
+		open();
+		int mode = -1;
+		/* Query all exercise type tables */
+		/* Set Table */
+		String query = "select id from sets where exercise_id = " + exerciseId;
+		Cursor cursor = db.rawQuery(query, null);
+		if (cursor.moveToLast()) {
+			mode = Exercise.SET_BASED_EXERCISE;
+			cursor.close();
+			close();
+			return mode;
+		}
+		/* Time Table */ 
+		query = "select id from time where exercise_id = " + exerciseId;
+		cursor = db.rawQuery(query, null);
+		if (cursor.moveToLast()) {
+			mode = Exercise.TIME_BASED_EXERCISE;
+			cursor.close();
+			close();
+			return mode;
+		}
+		/* Interval Table */
+		query = "select id from intervals where exercise_id = " + exerciseId;
+		cursor = db.rawQuery(query, null);
+		if (cursor.moveToLast()) {
+			mode = Exercise.INTERVAL_BASED_EXERCISE;
+			cursor.close();
+			close();
+			return mode;
+		}
+		/* Distance Table */
+		query = "select id from interval where exercise_id = " + exerciseId;
+		cursor = db.rawQuery(query, null);
+		if (cursor.moveToLast()) {
+			mode = Exercise.DISTANCE_BASED_EXERCISE;
+			cursor.close();
+			close();
+			return mode;
+		}
+		
+		return -1; // Error, exercise id not found
+	}
+	
 	
 	/*
 	public Cursor getSetsForExercise(long exId) {
