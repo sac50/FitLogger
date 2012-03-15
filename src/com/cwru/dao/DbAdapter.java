@@ -60,7 +60,7 @@ public class DbAdapter {
 	
 	private static final String CREATE_TIME_TABLE = 
 			"create table time (id integer primary key autoincrement, " + 
-			"exercise_id integer not null, length integer, units text, is_countdown boolean);";
+			"exercise_id integer not null, length integer, units text, is_count_up boolean, is_countdown boolean);";
 	
 	private static final String CREATE_TIME_RESULT_TABLE = 
 			"create table time_result (id integer primary key autoincrement, " + 
