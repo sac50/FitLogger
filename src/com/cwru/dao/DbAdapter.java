@@ -66,9 +66,13 @@ public class DbAdapter {
 			"create table time_result (id integer primary key autoincrement, " + 
 			"workout_result_id integer, length integer, units text);";
 	
+	private static final String CREATE_INTERVAL_SET_TABLE = 
+			"create table interval_set (id integer primary key autoincrement, " + 
+			"interval_id integer not null, name text, length real, type text, units text);";
+	
 	private static final String CREATE_INTERVALS_TABLE = 
-			"create table intervals (id integer primary key autoincrement, " + 
-			"exercise_id integer not null, name text, length real, type text, units text);";
+			"create table intervals ( id integer primary key autoincrement, " + 
+			"exercise_id integer, num_repeats integer);";
 	
 	private static final String CREATE_INTERVALS_RESULT_TABLE = 
 			"create table intervals_result (id integer primary key autoincrement, " + 
@@ -86,6 +90,7 @@ public class DbAdapter {
 	private static final String DATABASE_TABLE_DISTANCE = "distance";
 	private static final String DATABASE_TABLE_TIME = "time";
 	private static final String DATABASE_TABLE_INTERVAL = "intervals";
+	private static final String DATABASE_TABLE_INTERVAL_SET = "interval_set";
 	private static final String DATABASE_TABLE_WORKOUT_RESULT = "workout_results";
 	private static final String DATABASE_TABLE_SET_RESULTS = "set_result";
 	private static final String DATABASE_TABLE_DISTANCE_RESULT = "distance_result";
@@ -107,6 +112,7 @@ public class DbAdapter {
 			db.execSQL(CREATE_EXERCISES_TABLE);
 			db.execSQL(CREATE_SETS_TABLE);
 			db.execSQL(CREATE_INTERVALS_TABLE);
+			db.execSQL(CREATE_INTERVAL_SET_TABLE);
 			db.execSQL(CREATE_TIME_TABLE);
 			db.execSQL(CREATE_DISTANCE_TABLE);
 			db.execSQL(CREATE_WORKOUT_RESULT_TABLE);
