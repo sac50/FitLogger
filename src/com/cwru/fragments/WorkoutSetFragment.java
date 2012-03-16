@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
@@ -20,6 +19,7 @@ import com.cwru.controller.HomeScreen;
 import com.cwru.dao.DbAdapter;
 import com.cwru.model.Exercise;
 import com.cwru.model.Set;
+import com.cwru.model.SetResult;
 import com.cwru.model.WorkoutResult;
 
 public class WorkoutSetFragment extends Fragment {
@@ -30,6 +30,7 @@ public class WorkoutSetFragment extends Fragment {
 	private int setCounter;
 	private Context context;
 	private int workoutId;
+	private int workoutResultId = -2;
 	
 	private TextView tvExerciseName;
 	private TextView tvSetsToDo;
@@ -91,24 +92,26 @@ public class WorkoutSetFragment extends Fragment {
 	View.OnClickListener recordSetListener = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
+			if (workoutResultId < 0) {
+				WorkoutResult workoutResult = new WorkoutResult(workoutId, exercise.getId());
+				workoutResultId = mDbHelper.storeWorkoutResult(workoutResult);
+			}
+			
 			// increment setCounter
 			setCounter++;
 			double weight = Double.parseDouble(etWeight.getText().toString());
 			int reps = Integer.parseInt(etReps.getText().toString());
 			int setNum = setCounter;
-			int exerciseId = exercise.getId();
-			/**
-			 * TODO WORKOUT RESULTS
-			 */
-			/*
-			WorkoutResults workoutResult = new WorkoutResults(workoutId, exerciseId, setNum, reps, weight);
-			mDbHelper.storeWorkoutResult(workoutResult);
+			
+			SetResult setResult = new SetResult(workoutResultId, setNum, reps, weight);
+			mDbHelper.storeSetResult(setResult);
 			// WorkoutResults (int workout_id, int exercise_id, int setNumber, int reps, double weight)
 			// If more sets, populate with pre determined value
 			if (setCounter < sets.length) { 
 				etWeight.setText(sets[setCounter].getWeight() + "");
 				etReps.setText(sets[setCounter].getReps() + "");
 			}
+			// Adds set to on screen log
 			TableRow tr = new TableRow(WorkoutSetFragment.this.getActivity());
 			tr.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 			TextView tvWeightRecord = new TextView(WorkoutSetFragment.this.getActivity());
@@ -119,13 +122,6 @@ public class WorkoutSetFragment extends Fragment {
 			tr.addView(tvRepsRecord);
 
 			tlRepResults.addView(tr, new TableLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
-			*/
-			/** TODO Database Access
-			 * 
-			 */
-			
-			
-			
 		}
 	};
 }

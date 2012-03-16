@@ -17,6 +17,7 @@ import com.cwru.model.Distance;
 import com.cwru.model.Exercise;
 import com.cwru.model.Interval;
 import com.cwru.model.Set;
+import com.cwru.model.SetResult;
 import com.cwru.model.Time;
 import com.cwru.model.Workout;
 import com.cwru.model.WorkoutResult;
@@ -815,16 +816,40 @@ public class DbAdapter {
 		return -1; // Error, exercise id not found
 	}
 	
-	/** TODO Update to fit new database */
-	public void storeWorkoutResult(WorkoutResult workoutResult) {
+	/**
+	 * Inserts a row into the Workout Result Table.  The date for the result is generated here, not in the calling class
+	 * @param workoutResult
+	 * @return
+	 */
+	public int storeWorkoutResult(WorkoutResult workoutResult) {
+		int workoutResultId = -1;
 		open();
 		// Get Date
 		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		//get current date time with Date()
 	    Date date = new Date();
 	    String dateString = dateFormat.format(date);
-		ContentValues values = new ContentValues();
 
+	    String query = "insert into workout_result (workout_id, exercise_id, date) values (" + 
+	    			   workoutResult.getWorkoutId() + "," + workoutResult.getExerciseId() + ",'" + dateString + "')";
+	    db.execSQL(query);
+	    // Get the workout_result_id so that the data can be recorded in appropriate table
+	    query = "select id from workout_result where workout_id = " + workoutResult.getWorkoutId() + " and exercise_id = " + 
+	    		workoutResult.getExerciseId() + " and date ='" + dateString + "'";
+	    Cursor cursor = db.rawQuery(query, null);
+	    if (cursor.moveToLast()) {
+	    	workoutResultId = cursor.getInt(cursor.getColumnIndex("id"));
+	    }
+	    cursor.close();
+		close();
+		return workoutResultId;
+	}
+	
+	public void storeSetResult(SetResult setResult) {
+		open();
+		String query = "insert into set_result (workout_result_id, set_number, reps, weight) values (" + 
+					   setResult.getWorkoutResultId() + "," + setResult.getSetNumber() + "," + setResult.getReps() + "," + setResult.getWeight() + ")";
+		db.execSQL(query);
 		close();
 	}
 	

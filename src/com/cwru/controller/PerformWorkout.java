@@ -71,7 +71,20 @@ public class PerformWorkout extends FragmentActivity {
 		String type = exerciseToLaunch.getType();
 		//int sets = exerciseToLaunch.getSets();
 		Log.d("Steve", "Did Launch: " + type);
-		
+		switch (exerciseToLaunch.getMode()) {
+		case Exercise.SET_BASED_EXERCISE:
+			launchSetExercise(exerciseToLaunch);
+			break;
+		case Exercise.DISTANCE_BASED_EXERCISE:
+			launchDistanceExercise(exerciseToLaunch);
+			break;
+		case Exercise.INTERVAL_BASED_EXERCISE:
+			launchIntervalExercise(exerciseToLaunch);
+			break;
+		case Exercise.TIME_BASED_EXERCISE:
+			launchTimeExercise(exerciseToLaunch);
+			break;			
+	}
 
 		/** TODO 
 		 * Change this to get values from the resource file
@@ -110,7 +123,29 @@ public class PerformWorkout extends FragmentActivity {
 			}
 			transaction.commit();
 		}
-		// Countdown time
+
+		*/
+	}
+	
+	private void launchSetExercise(Exercise exercise) {
+		WorkoutSetFragment workoutSet = new WorkoutSetFragment(exercise, this, workoutId);
+		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+		if (HomeScreen.isTablet) {
+			NotesFragment notes = new NotesFragment();
+			HistoryFragment history = new HistoryFragment();
+			transaction.replace(R.id.flPerformWorkoutLeftFrame, workoutSet);
+			transaction.replace(R.id.flPerformWorkoutRightTopFrame, notes);
+			transaction.replace(R.id.flPerformWorkoutRightBottomFrame, history);
+		}
+		else {
+			transaction.replace(R.id.flPerformWorkoutMainFrame, workoutSet);
+		}
+		transaction.commit();
+	}
+	
+	private void launchTimeExercise(Exercise exercise) {
+		/*
+		 * 		// Countdown time
 		else if (exerciseToLaunch.getIsCountdown()) {
 			WorkoutWorkflowCountDownTimerFragment workoutTimer = new WorkoutWorkflowCountDownTimerFragment(exerciseToLaunch, this, workoutId);
 			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -142,7 +177,27 @@ public class PerformWorkout extends FragmentActivity {
 			transaction.commit();
 		} 
 		
-		*/
+		 */
+	}
+	
+	private void launchDistanceExercise(Exercise exercise) {
+		WorkoutWorkflowDistanceFragment distance = new WorkoutWorkflowDistanceFragment(exercise, this);
+		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+		if (HomeScreen.isTablet) {
+			NotesFragment notes = new NotesFragment();
+			HistoryFragment history = new HistoryFragment();
+			transaction.replace(R.id.flPerformWorkoutLeftFrame, distance);
+			transaction.replace(R.id.flPerformWorkoutRightTopFrame, notes);
+			transaction.replace(R.id.flPerformWorkoutRightBottomFrame, history);
+		}
+		else {
+			transaction.replace(R.id.flPerformWorkoutMainFrame, distance);
+		}
+		transaction.commit();
+	}
+	
+	private void launchIntervalExercise(Exercise exercise) {
+		
 	}
 	
 	/**
