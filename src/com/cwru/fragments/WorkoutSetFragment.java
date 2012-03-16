@@ -122,6 +122,13 @@ public class WorkoutSetFragment extends Fragment {
 			tr.addView(tvRepsRecord);
 
 			tlRepResults.addView(tr, new TableLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+			
+			// Decrease sets to do by 1.  if sets to do 0; 
+			int setsToDo = sets.length - setCounter;
+			if (setsToDo < 0) {
+				setsToDo = 0;
+			}
+			tvSetsToDo.setText(setsToDo + " Sets to Do");
 		}
 	};
 }
