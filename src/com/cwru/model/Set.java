@@ -35,13 +35,23 @@ public class Set {
 	}
 	
 	/**
-	 * Set Constructor to assign values but not the id of the set row in the database
+	 * Set Constructor to assign values but not for set or exercise id in the database
 	 * @param exerciseId
 	 * @param reps
 	 * @param weight
 	 */
 	public Set (int exerciseId, int reps, double weight) {
 		this.exerciseId = exerciseId;
+		this.reps = reps;
+		this.weight = weight;
+	}
+	
+	/**
+	 * Set Constructor to assign values but not for set or exercise id in the database
+	 * @param reps
+	 * @param weight
+	 */
+	public Set (int reps, double weight) {
 		this.reps = reps;
 		this.weight = weight;
 	}

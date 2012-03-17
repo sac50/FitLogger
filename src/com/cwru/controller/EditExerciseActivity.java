@@ -43,13 +43,13 @@ public class EditExerciseActivity extends FragmentActivity {
 			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 			transaction.add(R.id.flEditExerciseLeftFrame, exBank);
 			transaction.add(R.id.flEditExerciseRightFrame, exExer);
-			transaction.commit();
+			transaction.commitAllowingStateLoss();
 			Log.d("STEVE", "TABLET NOT PHONE");
 		} else {
 			EditExerciseBankFragment exBank = new EditExerciseBankFragment();
 			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 			transaction.add(R.id.flEditExerciseMainFrame, exBank);
-			transaction.commit();
+			transaction.commitAllowingStateLoss();
 			Log.d("Fragment Commited", "FrAGMENT");
 		}
 	}

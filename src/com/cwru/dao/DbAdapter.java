@@ -60,7 +60,7 @@ public class DbAdapter {
 	
 	private static final String CREATE_TIME_TABLE = 
 			"create table time (id integer primary key autoincrement, " + 
-			"exercise_id integer not null, length integer, units text, is_count_up boolean, is_countdown boolean);";
+			"exercise_id integer not null, length integer, units text);";
 	
 	private static final String CREATE_TIME_RESULT_TABLE = 
 			"create table time_result (id integer primary key autoincrement, " + 
@@ -436,16 +436,31 @@ public class DbAdapter {
 	 * @param exercise
 	 * @return
 	 */
-	public int createExercise(Exercise exercise) {
+	public int createExercise(Exercise exercise) throws IllegalArgumentException {
 		open();
+		
+		//check if an exercise with this name already exists in table.
+		String query = "select id from exercises where name = '" + exercise.getName() + "'";
+		Cursor  cursor= db.rawQuery(query, null);
+		if (cursor.moveToNext()) {
+			cursor.close();
+			throw new IllegalArgumentException("An exercise with this name already exists.");
+		} else {
+			cursor.close();
+		}
+		
 		// Insert into exercise table
-		String query = "insert into exercises (name, type, comment, deleted) values " + 
-					   "('" + exercise.getName() + "','" + exercise.getType() + 
-					   "','" + exercise.getComment() + "',false + ";
-		db.execSQL(query);
-		// Get id of newly created exercise
-		query = "select id from exercises where name = '" + exercise.getName() + "'";
-		Cursor cursor = db.rawQuery(query, null);
+		ContentValues initialValues = new ContentValues();
+		initialValues.put("name", exercise.getName());
+		initialValues.put("type", exercise.getType());
+		initialValues.put("deleted", 0);
+		db.insert(DATABASE_TABLE_EXERCISE, null, initialValues);
+//		String query = "insert into exercises (name, type, comment, deleted) values " + 
+//					   "('" + exercise.getName() + "','" + exercise.getType() + 
+//					   "','" + exercise.getComment() + "',0";
+//		db.execSQL(query);
+		
+		cursor = db.rawQuery(query, null);
 		int id = -1;
 		if (cursor.moveToLast()) { 
 			id = cursor.getInt(cursor.getColumnIndex("id"));
@@ -467,8 +482,10 @@ public class DbAdapter {
 				break;
 			case Exercise.INTERVAL_BASED_EXERCISE:
 				createInterval(exercise);
-				break;				
-			case Exercise.TIME_BASED_EXERCISE:
+				break;	
+			case Exercise.COUNTUP_BASED_EXERCISE:
+				break;
+			case Exercise.COUNTDOWN_BASED_EXERCISE:
 				createTime(exercise);
 				break;
 		}
@@ -519,7 +536,7 @@ public class DbAdapter {
 		ArrayList<Interval> intervalList = exercise.getInterval();
 		for (int i = 0; i < intervalList.size(); i++) {
 			Interval interval = intervalList.get(i);
-			String query = "insert into interval (exercise_id, name, length, type, units) values " + 
+			String query = "insert into intervals (exercise_id, name, length, type, units) values " + 
 					   "(" + exercise.getId() + ",'" + interval.getName() + "'," + interval.getLength() + "," + 
 					   "'" + interval.getLength() + "','" + interval.getUnits() + "')";
 			db.execSQL(query);					   
@@ -536,8 +553,8 @@ public class DbAdapter {
 	private void createTime(Exercise exercise) {
 		open();
 		Time time = exercise.getTime();
-		String query = "insert into time (exercise_id, length, units, is_count_up, is_countdown) values " +
-					   "(" + exercise.getId() + "," + time.getLength() + ",'" + time.getUnits() + "'," + time.isCountUp() + "," + time.isCountdown() + ")";
+		String query = "insert into time (exercise_id, length, units) values " +
+					   "(" + exercise.getId() + "," + time.getLength() + ",'" + time.getUnits() + "')";
 		db.execSQL(query);
 		close();
 	}
@@ -550,14 +567,14 @@ public class DbAdapter {
 		open();
 		// Update row in the exercise table
 		String query = "update exercises " + 
-					   "set name = '" + exercise.getName() + "', type = '" + exercise.getType() + "',comment='" + exercise.getComment() + "'," + exercise.getDeleted() + " " + 
+					   "set name = '" + exercise.getName() + "', type = '" + exercise.getType() + "',comment='" + exercise.getComment() + "' " + 
 					   "where id = " + exercise.getId();
 		db.execSQL(query);
 		
 		// Update exercise specifications according to the exercise mode, set/distance/type/interval
 		switch (exercise.getMode()) {
 			case Exercise.SET_BASED_EXERCISE:
-				updateSet(exercise);
+				updateSets(exercise);
 				break;
 			case Exercise.DISTANCE_BASED_EXERCISE:
 				updateDistance(exercise);
@@ -565,7 +582,9 @@ public class DbAdapter {
 			case Exercise.INTERVAL_BASED_EXERCISE:
 				updateInterval(exercise);
 				break;				
-			case Exercise.TIME_BASED_EXERCISE:
+			case Exercise.COUNTUP_BASED_EXERCISE:
+				break;
+			case Exercise.COUNTDOWN_BASED_EXERCISE:
 				updateTime(exercise);
 				break;
 		}
@@ -577,14 +596,20 @@ public class DbAdapter {
 	 * The set parameter of the exercise must have the id value assigned.
 	 * @param exercise
 	 */
-	public void updateSet(Exercise exercise) { 
+	public void updateSets(Exercise exercise) { 
 		open();
 		ArrayList<Set> setList = exercise.getSets();
+		String query;
 		for (int i = 0; i < setList.size(); i++) {
 			Set set = setList.get(i);
-			String query = "update sets " + 
-						   "set reps = " + set.getReps() + ", weight = " + set.getWeight() + " " + 
-						   "where id = " + set.getId();
+			if (set.getId() > 0) {
+				query = "update sets " + 
+							   "set reps = " + set.getReps() + ", weight = " + set.getWeight() + " " + 
+							   "where id = " + set.getId();
+			} else {
+				query = "insert into sets (exercise_id, reps, weight) values " + 
+						   "(" + exercise.getId() + "," + set.getReps() + "," + set.getWeight() + ")";
+			}
 			db.execSQL(query);
 		}		
 		close();
@@ -669,6 +694,20 @@ public class DbAdapter {
 		close();
 	}
 	
+	public void deleteSet(int setId) {
+		open();
+		String query = "delete from sets where id = " + setId;
+		db.execSQL(query);
+		close();
+	}
+	
+	public void deleteInterval(int intervalId) {
+		open();
+		String query = "delete from intervals where id = " + intervalId;
+		db.execSQL(query);
+		close();
+	}
+	
 	/**
 	 * Returns the list of set objects that belong to the input exercise id.
 	 * @param exerciseId
@@ -744,15 +783,13 @@ public class DbAdapter {
 	public Time getTimeForExercise(int exerciseId) {
 		Time time = null;
 		open();
-		String query = "select id, length, units, is_count_up, is_countdown from time where exercise_id = " + exerciseId;
+		String query = "select id, length, units from time where exercise_id = " + exerciseId;
 		Cursor cursor = db.rawQuery(query, null);
 		while (cursor.moveToNext()) {
 			int id = cursor.getInt(cursor.getColumnIndex("id"));
 			int length = cursor.getInt(cursor.getColumnIndex("length"));
 			String units = cursor.getString(cursor.getColumnIndex("units"));
-			boolean isCountUp = cursor.getInt(cursor.getColumnIndex("is_count_up")) > 0;
-			boolean isCountdown = cursor.getInt(cursor.getColumnIndex("is_countdown")) > 0;
-			time = new Time(id, exerciseId, length, units, isCountUp, isCountdown);
+			time = new Time(id, exerciseId, length, units);
 		}
 		cursor.close();
 		close();
@@ -782,7 +819,7 @@ public class DbAdapter {
 		query = "select id from time where exercise_id = " + exerciseId;
 		cursor = db.rawQuery(query, null);
 		if (cursor.moveToLast()) {
-			mode = Exercise.TIME_BASED_EXERCISE;
+			mode = Exercise.COUNTDOWN_BASED_EXERCISE;
 			cursor.close();
 			close();
 			return mode;
@@ -797,7 +834,7 @@ public class DbAdapter {
 			return mode;
 		}
 		/* Distance Table */
-		query = "select id from interval where exercise_id = " + exerciseId;
+		query = "select id from distance where exercise_id = " + exerciseId;
 		cursor = db.rawQuery(query, null);
 		if (cursor.moveToLast()) {
 			mode = Exercise.DISTANCE_BASED_EXERCISE;
@@ -806,7 +843,9 @@ public class DbAdapter {
 			return mode;
 		}
 		
-		return -1; // Error, exercise id not found
+		return Exercise.COUNTUP_BASED_EXERCISE;
+		
+//		return -1; // Error, exercise id not found
 	}
 	
 	/** TODO Update to fit new database */

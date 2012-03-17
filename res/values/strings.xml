@@ -63,8 +63,19 @@
        		<item>hours</item>
     </string-array>
     
+    <string name="unit">Unit</string>
+    <string-array name="units">
+        	<item>seconds</item>
+        	<item>minutes</item>
+        	<item>hours</item>
+        	<item>m.</item>
+        	<item>yd.</item>
+        	<item>mile</item>
+        	<item>Km.</item>
+    </string-array>
+    
     <string name="exerciseIntervalName">Name</string>
-    <string name="exerciseIntervalTime">Time</string>
+    <string name="exerciseIntervalLength">Length</string>
     <string name="exerciseIntervals">Intervals</string>
     <string name="exerciseIntervalSets">Interval Sets</string>
     <string name="one">1</string>

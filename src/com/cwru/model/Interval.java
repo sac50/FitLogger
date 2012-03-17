@@ -48,6 +48,26 @@ public class Interval {
 	}
 	
 	/**
+	 * Constructor taking in all parameters except the id of the interval assigned by the database
+	 * @param name
+	 * @param length
+	 * @param type
+	 * @param units
+	 */
+	public Interval( String name, double length, String type, String units) {
+		this.exerciseId = exerciseId;
+		this.name = name;
+		this.length = length;
+		this.type = type;
+		this.units = units;
+	}
+	
+	/**
+	 * Empty constructor
+	 */
+	public Interval() { };
+	
+	/**
 	 * Getter for the id assigned to the interval assigned by the database
 	 * @return
 	 */

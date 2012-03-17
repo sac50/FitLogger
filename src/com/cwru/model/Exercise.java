@@ -15,8 +15,9 @@ public class Exercise implements Parcelable{
 	/** Constants for the type of exercise */
 	public static final int SET_BASED_EXERCISE = 0;
 	public static final int DISTANCE_BASED_EXERCISE = 1;
-	public static final int TIME_BASED_EXERCISE = 2;
-	public static final int INTERVAL_BASED_EXERCISE = 3;
+	public static final int COUNTUP_BASED_EXERCISE = 2;
+	public static final int COUNTDOWN_BASED_EXERCISE = 3;
+	public static final int INTERVAL_BASED_EXERCISE = 4;
 	
 	private int id;
 	private String name;
