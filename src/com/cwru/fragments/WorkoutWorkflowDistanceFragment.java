@@ -3,10 +3,13 @@ package com.cwru.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,11 +22,23 @@ import android.widget.TextView;
 import com.cwru.R;
 import com.cwru.controller.HomeScreen;
 import com.cwru.dao.DbAdapter;
+import com.cwru.model.Distance;
+import com.cwru.model.DistanceResult;
 import com.cwru.model.Exercise;
+import com.cwru.model.WorkoutResult;
+import com.cwru.utils.MeasurementConversions;
 
+/** TODO
+ * SET THE DISTANCE TO DO TO CHANGE ON UNITS CHANGE, SO WRITE A CONVERSION
+ * @author scrilley
+ *
+ */
 public class WorkoutWorkflowDistanceFragment extends Fragment {
 	private DbAdapter mDbHelper;
 	private Exercise exercise;
+	private Distance distance;
+	private int workoutId;
+	private String currentUnits;  // Used to know what were the previous units on spinner unit selection change
 	
 	private TextView tvExerciseName;
 	private TextView tvDistanceToDo;
@@ -31,9 +46,12 @@ public class WorkoutWorkflowDistanceFragment extends Fragment {
 	private Spinner spnDistanceUnits; 
 	private Button btnRecord;
 	
-	public WorkoutWorkflowDistanceFragment (Exercise exercise, Context context) {
+	public WorkoutWorkflowDistanceFragment (Exercise exercise, Context context, int workoutId) {
 		this.exercise = exercise;
 		mDbHelper = new DbAdapter(context);
+		distance = mDbHelper.getDistanceForExercise(exercise.getId());
+		currentUnits = distance.getUnits();
+		this.workoutId = workoutId;
 	}
 		
 	@Override
@@ -51,19 +69,41 @@ public class WorkoutWorkflowDistanceFragment extends Fragment {
 		
 		/* Set Values */
 		tvExerciseName.setText(exercise.getName());
-		//tvDistanceToDo.setText(exercise.getDistance() + " " + exercise.getDistanceType() + " to do");
-
+		tvDistanceToDo.setText(distance.getLength() + " " + distance.getUnits() + " to do");
 		
+		/* Set the user input to be the default value for easy access */
+		etDistanceEntry.setText(distance.getLength() + "");
+		/* Generate drop down values for distance units options */
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
 	            this.getActivity(), R.array.exerciseDistances, android.R.layout.simple_spinner_item);
-	    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-	    
-	   // int spinnerPosition = adapter.getPosition(exercise.getDistanceType());
-	    
+	    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);	    
 	    spnDistanceUnits.setAdapter(adapter);
-	   // spnDistanceUnits.setSelection(spinnerPosition);
+	    /* Set default unit option to predefined user option */
+	    spnDistanceUnits.setSelection(adapter.getPosition(distance.getUnits()));	    
 	    
-	    
+	    /* Selection listener to change the units of to do after spinner changes */
+	    spnDistanceUnits.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> arg0, View selectedItemView,
+					int position, long id) {
+				// TODO Auto-generated method stub
+				String text = (String) spnDistanceUnits.getItemAtPosition(position);
+				Log.d("Steve", "Spinner Selected Text: " + text);
+				double distanceToDoConverted = distanceToDoConversion(text);
+				tvDistanceToDo.setText(distanceToDoConverted + " " + text);
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+	    	
+	    });
+	    	    
+	    /* Set Record Button Listener */
+	    btnRecord.setOnClickListener(recordDistanceListener);
 		// if phone show notes and history button
 		if (!HomeScreen.isTablet) {
 			TableLayout tl = (TableLayout) view.findViewById(R.id.tlWorkoutWorkflowDistanceHistoryNoteRow);
@@ -80,5 +120,66 @@ public class WorkoutWorkflowDistanceFragment extends Fragment {
 		}
 		
 		return view;
+	}
+	
+	View.OnClickListener recordDistanceListener = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			/* Generate Workout Result Row in Database */
+			WorkoutResult workoutResult = new WorkoutResult(exercise.getId(), workoutId);
+			int workoutResultId = mDbHelper.storeWorkoutResult(workoutResult);
+			/* Generate Distance Result Row in Database */
+			double length = Double.parseDouble(etDistanceEntry.getText().toString());
+			String units = (String) spnDistanceUnits.getSelectedItem();
+			DistanceResult distanceResult = new DistanceResult(workoutResultId, length, units);
+			mDbHelper.storeDistanceResult(distanceResult);			
+		}
+	};
+	
+	/**
+	 * Returns the converted length upon unit change from the distance units spinner
+	 * @param units
+	 * @return
+	 */
+	private double distanceToDoConversion(String units) {
+		double length = distance.getLength();
+		/**
+		 * TODO REFACTOR THIS TO INCLUDE THE VALUES FROM THE RESOURCE FILE, MAKES HARD TO CHANGE UNITS IF ITS HARDCODED
+		 */
+		if (currentUnits.equals("mile") ) {
+			if (units.equals("Km.")) {
+				return MeasurementConversions.milesToKm(length);
+			} else if (units.equals("m.")) {
+				return MeasurementConversions.milesToM(length);
+			} else if (units.equals("yd.")) {
+				return MeasurementConversions.milesToYd(length);
+			}
+		} else if (currentUnits.equals("Km.")) {
+			if (units.equals("mile")) {
+				return MeasurementConversions.kmToMile(length);
+			} else if (units.equals("m.")) {
+				return MeasurementConversions.kmToM(length);
+			} else if (units.equals("yd.")) {
+				return MeasurementConversions.kmToYd(length);
+			}
+		} else if (currentUnits.equals("m.")) {
+			if (units.equals("mile")) {
+				return MeasurementConversions.mToMile(length);
+			} else if (units.equals("Km.")) {
+				return MeasurementConversions.mToKm(length);
+			} else if (units.equals("yd.")) {
+				return MeasurementConversions.mToYd(length);
+			}
+		} else if (currentUnits.equals("yd.")) {
+			if (units.equals("mile")) {
+				return MeasurementConversions.ydToMile(length);
+			} else if (units.equals("Km.")) {
+				return MeasurementConversions.ydToKm(length);
+			} else if (units.equals("m.")) {
+				return MeasurementConversions.ydToM(length);
+			}
+		}
+		
+		return length;  //  Value is the same units as the default option as defined by user
 	}
 }

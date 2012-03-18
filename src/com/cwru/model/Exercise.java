@@ -47,29 +47,17 @@ public class Exercise implements Parcelable{
 	}
 	
 	/**
-	 * Constructor
+	 * 
 	 * @param id
 	 * @param name
 	 * @param type
-	 * @param sets
+	 * @param comment
+	 * @param deleted
 	 * @param mode
 	 */
-	public Exercise (int id, String name, String type, String comment, int mode) {
+	public Exercise (int id, String name, String type, String comment, boolean deleted, int mode) {
 		this.id = id;
 		this.name = name; 
-		this.type = type;
-		this.comment = comment;
-		this.mode = mode;
-	}
-	
-	/**
-	 * Constructor
-	 * @param name
-	 * @param type
-	 * @param mode
-	 */
-	public Exercise (String name, String type, String comment, int mode) {
-		this.name = name;
 		this.type = type;
 		this.comment = comment;
 		this.mode = mode;

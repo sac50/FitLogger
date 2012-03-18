@@ -70,18 +70,21 @@ public class PerformWorkout extends FragmentActivity {
 		Exercise exerciseToLaunch = exercisesForWorkout.get(exerciseCounter);
 		String type = exerciseToLaunch.getType();
 		//int sets = exerciseToLaunch.getSets();
-		Log.d("Steve", "Did Launch: " + type);
 		switch (exerciseToLaunch.getMode()) {
 		case Exercise.SET_BASED_EXERCISE:
+			Log.d("Steve", "Launched Set Based");
 			launchSetExercise(exerciseToLaunch);
 			break;
 		case Exercise.DISTANCE_BASED_EXERCISE:
+			Log.d("Steve", "Launched Distance Based");
 			launchDistanceExercise(exerciseToLaunch);
 			break;
 		case Exercise.INTERVAL_BASED_EXERCISE:
+			Log.d("Steve", "Launched Interval Based");
 			launchIntervalExercise(exerciseToLaunch);
 			break;
 		case Exercise.TIME_BASED_EXERCISE:
+			Log.d("Steve", "Launched Time Based");
 			launchTimeExercise(exerciseToLaunch);
 			break;			
 	}
@@ -181,7 +184,7 @@ public class PerformWorkout extends FragmentActivity {
 	}
 	
 	private void launchDistanceExercise(Exercise exercise) {
-		WorkoutWorkflowDistanceFragment distance = new WorkoutWorkflowDistanceFragment(exercise, this);
+		WorkoutWorkflowDistanceFragment distance = new WorkoutWorkflowDistanceFragment(exercise, this, workoutId);
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		if (HomeScreen.isTablet) {
 			NotesFragment notes = new NotesFragment();

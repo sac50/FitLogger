@@ -14,6 +14,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.cwru.model.Distance;
+import com.cwru.model.DistanceResult;
 import com.cwru.model.Exercise;
 import com.cwru.model.Interval;
 import com.cwru.model.Set;
@@ -337,8 +338,9 @@ public class DbAdapter {
 			String name = cursor.getString(cursor.getColumnIndex("name"));
 			String type = cursor.getString(cursor.getColumnIndex("type"));
 			String comment = cursor.getString(cursor.getColumnIndex("comment"));
-			int deleted = cursor.getInt(cursor.getColumnIndex("deleted"));
-			Exercise exercise = new Exercise(id, name, type, comment, deleted);
+			boolean deleted = cursor.getInt(cursor.getColumnIndex("deleted")) > 0;
+			int mode = getExerciseMode(id);
+			Exercise exercise = new Exercise(id, name, type, comment, deleted, mode);
 			exerciseList.add(exercise);
 		}
 		close();
@@ -352,17 +354,19 @@ public class DbAdapter {
 	public ArrayList<Exercise> getAllUndeletedExercises() {
 		open();
 		ArrayList<Exercise> exerciseList = new ArrayList<Exercise>();
-		String query = "select id, name, type, comment, deleted from exercises where deleted = 0";
+		String query = "select id, name, type, comment, deleted from exercises where deleted = 'false'";
 		Cursor cursor = db.rawQuery(query, null);
 		while (cursor.moveToNext()) {
 			int id = cursor.getInt(cursor.getColumnIndex("id"));
 			String name = cursor.getString(cursor.getColumnIndex("name"));
 			String type = cursor.getString(cursor.getColumnIndex("type"));
 			String comment = cursor.getString(cursor.getColumnIndex("comment"));
-			int deleted = cursor.getInt(cursor.getColumnIndex("deleted"));
-			Exercise exercise = new Exercise(id, name, type, comment, deleted);
+			boolean deleted = cursor.getInt(cursor.getColumnIndex("deleted")) > 0;
+			int mode = getExerciseMode(id);
+			Exercise exercise = new Exercise(id, name, type, comment, deleted, mode);
 			exerciseList.add(exercise);
 		}
+		cursor.close();
 		close();
 		return exerciseList;
 	}
@@ -381,8 +385,9 @@ public class DbAdapter {
 			String name = cursor.getString(cursor.getColumnIndex("name"));
 			String type = cursor.getString(cursor.getColumnIndex("type"));
 			String comment = cursor.getString(cursor.getColumnIndex("comment"));
-			int deleted = cursor.getInt(cursor.getColumnIndex("deleted"));
-			Exercise exercise = new Exercise(id, name, type, comment, deleted);
+			boolean deleted = cursor.getInt(cursor.getColumnIndex("deleted")) > 0;
+			int mode = getExerciseMode(id);
+			Exercise exercise = new Exercise(id, name, type, comment, deleted, mode);
 			exerciseList.add(exercise);
 		}
 		close();
@@ -404,8 +409,13 @@ public class DbAdapter {
 			String name = cursor.getString(cursor.getColumnIndex("name"));
 			String type = cursor.getString(cursor.getColumnIndex("type"));
 			String comment = cursor.getString(cursor.getColumnIndex("comment"));
-			int deleted = cursor.getInt(cursor.getColumnIndex("deleted"));
-			ex = new Exercise(id, name, type, comment, deleted);
+			boolean deleted = cursor.getInt(cursor.getColumnIndex("deleted")) > 0;
+			int mode = this.getExerciseMode(id);
+			ex = new Exercise(id, name, type, comment, deleted, mode);
+			/**
+			 * TODO May not be necessary
+			 * Query mode table to get distance, set array, interval array or time
+			 */
 		}
 		cursor.close();
 		close();
@@ -430,8 +440,9 @@ public class DbAdapter {
 			int id = cursor.getInt(cursor.getColumnIndex("id"));
 			String type = cursor.getString(cursor.getColumnIndex("type"));
 			String comment = cursor.getString(cursor.getColumnIndex("comment"));
-			int deleted = cursor.getInt(cursor.getColumnIndex("deleted"));
-			ex = new Exercise(id, name, type, comment, deleted);
+			boolean deleted = cursor.getInt(cursor.getColumnIndex("deleted")) > 0;
+			int mode = getExerciseMode(id);
+			ex = new Exercise(id, name, type, comment, deleted, mode);
 		}
 		cursor.close();
 		close();
@@ -767,6 +778,9 @@ public class DbAdapter {
 	}
 	
 	/**
+	 * TODO CHANGE TABLE NAMES TO USE THE CONSTANTS DEFINED AT TOP
+	 */
+	/**
 	 * Returns the exercise type for the exercise, (Distance, Set, Interval, Time).  
 	 * Returns -1 when exercise is not found.
 	 * @param exerciseId
@@ -804,7 +818,7 @@ public class DbAdapter {
 			return mode;
 		}
 		/* Distance Table */
-		query = "select id from interval where exercise_id = " + exerciseId;
+		query = "select id from distance where exercise_id = " + exerciseId;
 		cursor = db.rawQuery(query, null);
 		if (cursor.moveToLast()) {
 			mode = Exercise.DISTANCE_BASED_EXERCISE;
@@ -845,10 +859,26 @@ public class DbAdapter {
 		return workoutResultId;
 	}
 	
+	/**
+	 * Inserts a row into the Set Result Table.  It stores the workout data for an exercise that is set based by a user.
+	 * @param setResult
+	 */
 	public void storeSetResult(SetResult setResult) {
 		open();
 		String query = "insert into set_result (workout_result_id, set_number, reps, weight) values (" + 
 					   setResult.getWorkoutResultId() + "," + setResult.getSetNumber() + "," + setResult.getReps() + "," + setResult.getWeight() + ")";
+		db.execSQL(query);
+		close();
+	}
+	
+	/**
+	 * Inserts a row into the Distance Result Table.  It stores the user workout date for an exercise that is distance based.
+	 * @param distanceResult
+	 */
+	public void storeDistanceResult(DistanceResult distanceResult) {
+		open();
+		String query = "insert into distance_result (workout_result_id, length, units) values (" +
+					   distanceResult.getWorkoutResultId() + "," + distanceResult.getLength() + ",'" + distanceResult.getUnits() + "')";
 		db.execSQL(query);
 		close();
 	}
