@@ -8,6 +8,7 @@ import com.cwru.dao.DbAdapter;
 import com.cwru.model.Distance;
 import com.cwru.model.Exercise;
 import com.cwru.model.Interval;
+import com.cwru.model.IntervalSet;
 import com.cwru.model.Set;
 import com.cwru.model.Time;
 import com.cwru.utils.AutoFillListener;
@@ -250,7 +251,7 @@ public class CreateExerciseActivity extends FragmentActivity {
 
 												Spinner intervalSpinner = (Spinner) inflatedLayout
 														.findViewById(R.id.spnCreateExerciseIntervalUnit);
-												initSpinner(R.array.timeTypes,
+												initSpinner(R.array.units,
 														intervalSpinner);
 											}
 										}
@@ -494,7 +495,8 @@ public class CreateExerciseActivity extends FragmentActivity {
 						}
 						
 					case Exercise.INTERVAL_BASED_EXERCISE:
-						ArrayList<Interval> intervals = new ArrayList<Interval>();
+						Interval interval = new Interval();
+						ArrayList<IntervalSet> intervalSets = new ArrayList<IntervalSet>();
 						
 						for (LinearLayout inflatedInterval: inflatedLayouts) {
 							EditText nameText = (EditText) inflatedInterval.findViewById(R.id.etCreateExerciseIntervalName);
@@ -514,15 +516,17 @@ public class CreateExerciseActivity extends FragmentActivity {
 								toast.show();
 								return;
 							} else if ("seconds".equals(unit) || "minutes".equals(unit) || "hours".equals(unit)) {
-								Interval interval = new Interval(name, Double.parseDouble(length), "time", unit);
-								intervals.add(interval);
+								IntervalSet intervalSet = new IntervalSet(name, Double.parseDouble(length), "time", unit);
+								intervalSets.add(intervalSet);
 							} else {
-								Interval interval = new Interval(name, Double.parseDouble(length), "time", unit);
-								intervals.add(interval);
+								IntervalSet intervalSet = new IntervalSet(name, Double.parseDouble(length), "time", unit);
+								intervalSets.add(intervalSet);
 							}
 						}
 						
-						ex.setInterval(intervals);
+						interval.setNumRepeats(Integer.parseInt(tvIntervalSets.getText().toString()));
+						interval.setIntervalSets(intervalSets);
+						ex.setInterval(interval);
 						break;
 					
 					case Exercise.SET_BASED_EXERCISE:

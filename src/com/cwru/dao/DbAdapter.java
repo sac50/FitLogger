@@ -15,6 +15,7 @@ import android.util.Log;
 
 import com.cwru.model.Distance;
 import com.cwru.model.Exercise;
+import com.cwru.model.IntervalSet;
 import com.cwru.model.Interval;
 import com.cwru.model.Set;
 import com.cwru.model.Time;
@@ -66,8 +67,8 @@ public class DbAdapter {
 			"create table time_result (id integer primary key autoincrement, " + 
 			"workout_result_id integer, length integer, units text);";
 	
-	private static final String CREATE_INTERVAL_SET_TABLE = 
-			"create table interval_set (id integer primary key autoincrement, " + 
+	private static final String CREATE_INTERVAL_SETS_TABLE = 
+			"create table interval_sets (id integer primary key autoincrement, " + 
 			"interval_id integer not null, name text, length real, type text, units text);";
 	
 	private static final String CREATE_INTERVALS_TABLE = 
@@ -90,7 +91,7 @@ public class DbAdapter {
 	private static final String DATABASE_TABLE_DISTANCE = "distance";
 	private static final String DATABASE_TABLE_TIME = "time";
 	private static final String DATABASE_TABLE_INTERVAL = "intervals";
-	private static final String DATABASE_TABLE_INTERVAL_SET = "interval_set";
+	private static final String DATABASE_TABLE_INTERVAL_SET = "interval_sets";
 	private static final String DATABASE_TABLE_WORKOUT_RESULT = "workout_results";
 	private static final String DATABASE_TABLE_SET_RESULTS = "set_result";
 	private static final String DATABASE_TABLE_DISTANCE_RESULT = "distance_result";
@@ -112,7 +113,7 @@ public class DbAdapter {
 			db.execSQL(CREATE_EXERCISES_TABLE);
 			db.execSQL(CREATE_SETS_TABLE);
 			db.execSQL(CREATE_INTERVALS_TABLE);
-			db.execSQL(CREATE_INTERVAL_SET_TABLE);
+			db.execSQL(CREATE_INTERVAL_SETS_TABLE);
 			db.execSQL(CREATE_TIME_TABLE);
 			db.execSQL(CREATE_DISTANCE_TABLE);
 			db.execSQL(CREATE_WORKOUT_RESULT_TABLE);
@@ -539,15 +540,25 @@ public class DbAdapter {
 	 */
 	private void createInterval(Exercise exercise) {
 		open();
-		ArrayList<Interval> intervalList = exercise.getInterval();
-		for (int i = 0; i < intervalList.size(); i++) {
-			Interval interval = intervalList.get(i);
-			String query = "insert into intervals (exercise_id, name, length, type, units) values " + 
-					   "(" + exercise.getId() + ",'" + interval.getName() + "'," + interval.getLength() + "," + 
-					   "'" + interval.getLength() + "','" + interval.getUnits() + "')";
-			db.execSQL(query);					   
+		Interval interval = exercise.getInterval();
+		ContentValues initialValues = new ContentValues();
+		initialValues.put("exercise_id", exercise.getId());
+		initialValues.put("num_repeats", interval.getNumRepeats());
+		interval.setId((int) db.insert(DATABASE_TABLE_INTERVAL, null, initialValues));
+		close();
+		createIntervalSets(interval);
+	}
+	
+	private void createIntervalSets(Interval interval) {
+		open();
+		ArrayList<IntervalSet> intervalSets = interval.getIntervalSets();
+		for (int i = 0; i < intervalSets.size(); i++) {
+			IntervalSet intervalSet = intervalSets.get(i);
+			String query = "insert into interval_sets (interval_id, name, length, type, units) values " +
+						"(" + interval.getId() + ",'" + intervalSet.getName() + "'," + intervalSet.getLength() + "," +
+						"'" + intervalSet.getType() + "','" + intervalSet.getUnits() + "')";
+			db.execSQL(query);
 		}
-		
 		close();
 	}
 	
@@ -635,7 +646,9 @@ public class DbAdapter {
 		db.execSQL(query);
 		close();
 	}
-	
+	/**
+	 * TODO: finish this method
+	 */
 	/**
 	 * Update the interval rows in the interval table that are related to the exercise being passed in.
 	 * This interval parameter of the exercise must have the id value assigned for each interval.
@@ -643,16 +656,27 @@ public class DbAdapter {
 	 */
 	public void updateInterval(Exercise exercise) { 
 		open();
-		ArrayList<Interval> intervalList = exercise.getInterval();
+		Interval interval = exercise.getInterval();
+		String query = "update intervals " +
+					"set num_repeats = " + interval.getNumRepeats() + " " +
+					"where id = " + interval.getId();
+		db.execSQL(query);
+		ArrayList<IntervalSet> intervalList = interval.getIntervalSets();
 		for (int i = 0; i < intervalList.size(); i++) {
-			Interval interval = intervalList.get(i);
-			String query = "update intervals " + 
-						   "set name = '" + interval.getName() + "', length = " + interval.getLength() + " " + 
-						   "type = '" + interval.getType() + "', units = '" + interval.getType() + "' " +
-						   "where id = " + interval.getId();
-			db.execSQL(query);
-			close();						   
+			IntervalSet intervalSet = intervalList.get(i);
+			if (intervalSet.getId() > 0) {
+				query = "update interval_sets " + 
+								"set name = '" + intervalSet.getName() + "', length = " + intervalSet.getLength() + ", " + 
+								"type = '" + intervalSet.getType() + "', units = '" + intervalSet.getUnits() + "' " +
+								"where id = " + intervalSet.getId();
+			} else {
+				query = "insert into interval_sets (interval_id, name, length, type, units) values " + 
+								"(" + interval.getId() + ", '" + intervalSet.getName() + "', " + intervalSet.getLength() +
+								", '" + intervalSet.getType() + "', '" + intervalSet.getUnits() + "')";
+			}
+			db.execSQL(query);						   
 		}
+		close();
 	}
 	
 	/**
@@ -707,9 +731,9 @@ public class DbAdapter {
 		close();
 	}
 	
-	public void deleteInterval(int intervalId) {
+	public void deleteIntervalSet(int intervalSetId) {
 		open();
-		String query = "delete from intervals where id = " + intervalId;
+		String query = "delete from intervals where id = " + intervalSetId;
 		db.execSQL(query);
 		close();
 	}
@@ -737,27 +761,37 @@ public class DbAdapter {
 	}
 	
 	/**
-	 * Returns the list of interval objects that belong to the exercise id
+	 * Returns the interval object that belongs to the exercise id
 	 * @param exerciseId
 	 * @return
 	 */
-	public ArrayList<Interval> getIntervalsForExercise(int exerciseId) {
-		ArrayList<Interval> intervalList = new ArrayList<Interval>();
+	public Interval getIntervalForExercise(int exerciseId) {
+		Interval interval = new Interval();
+		ArrayList<IntervalSet> intervalSets = new ArrayList<IntervalSet>();
 		open();
-		String query = "select id, name, length, type, units from intervals where exercise_id = " + exerciseId;
+		String query = "select * from intervals where exercise_id = " + exerciseId;
 		Cursor cursor = db.rawQuery(query, null);
+		while (cursor.moveToNext()) {
+			interval.setId(cursor.getInt(cursor.getColumnIndex("id")));
+			interval.setNumRepeats(cursor.getInt(cursor.getColumnIndex("num_repeats")));
+		}
+		cursor.close();
+		
+		query = "select id, name, length, type, units from interval_sets where interval_id = " + interval.getId();
+		cursor = db.rawQuery(query, null);
 		while (cursor.moveToNext()) {
 			int id = cursor.getInt(cursor.getColumnIndex("id"));
 			String name = cursor.getString(cursor.getColumnIndex("name"));
 			double length = cursor.getDouble(cursor.getColumnIndex("length"));
 			String type = cursor.getString(cursor.getColumnIndex("type"));
 			String units = cursor.getString(cursor.getColumnIndex("units"));
-			Interval interval = new Interval(id, exerciseId, name, length, type, units);
-			intervalList.add(interval);
+			IntervalSet intervalSet = new IntervalSet(id, interval.getId(), name, length, type, units);
+			intervalSets.add(intervalSet);
 		}
 		cursor.close();
 		close();
-		return intervalList;
+		interval.setIntervalSets(intervalSets);
+		return interval;
 	}
 	
 	/**

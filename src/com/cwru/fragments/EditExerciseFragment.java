@@ -28,6 +28,7 @@ import com.cwru.dao.DbAdapter;
 import com.cwru.model.Distance;
 import com.cwru.model.Exercise;
 import com.cwru.model.Interval;
+import com.cwru.model.IntervalSet;
 import com.cwru.model.Set;
 import com.cwru.model.Time;
 import com.cwru.utils.AutoFillListener;
@@ -39,6 +40,7 @@ public class EditExerciseFragment extends Fragment {
 	private LinearLayout setView;
 	private Exercise ex;
 	private Distance distance;
+	private Interval interval;
 	private Time time;
 	private List<LinearLayout> inflatedLayouts;
 	private List<Integer> ids = new ArrayList<Integer>();
@@ -122,13 +124,14 @@ public class EditExerciseFragment extends Fragment {
 				str = "Intervals";
 				
 				view = (LinearLayout) parent.findViewById(R.id.llEditExerciseIntervals);
-				view.setVisibility(0);
-				populateIntervals((LinearLayout) view);
-				defineIntervalButtons();
-				
 				setView = (LinearLayout) parent.findViewById(R.id.llEditExerciseIntervalSets);
+				
+				view.setVisibility(0);
 				setView.setVisibility(0);
-				populateIntervalSets();
+				
+				populateIntervals((LinearLayout) view);
+				
+				defineIntervalButtons();
 				defineIntervalSetButtons();
 				
 				break;
@@ -207,32 +210,30 @@ public class EditExerciseFragment extends Fragment {
 		EditText length;
 		Spinner unit;
 		
-		ArrayList<Interval> intervals = mDbHelper.getIntervalsForExercise(ex.getId());
-		for (Interval interval : intervals) {
+		interval = mDbHelper.getIntervalForExercise(ex.getId());
+		for (IntervalSet intervalSet : interval.getIntervalSets()) {
 			inflatedLayout = (LinearLayout) View.inflate(view.getContext(),
 					R.layout.create_exercise_interval_builder, null);
 			
 			name = (EditText) inflatedLayout.findViewById(R.id.etCreateExerciseIntervalName);
-			name.setText(interval.getName());
+			name.setText(intervalSet.getName());
 			
 			length = (EditText) inflatedLayout.findViewById(R.id.etCreateExerciseIntervalLength);
-			length.setText(Double.toString(interval.getLength()));
+			length.setText(Double.toString(intervalSet.getLength()));
 			
 			unit = (Spinner) inflatedLayout.findViewById(R.id.spnCreateExerciseIntervalUnit);
-			initSpinner(R.array.timeTypes, unit);
+			initSpinner(R.array.units, unit);
 			ArrayAdapter<String> adapter = (ArrayAdapter<String>) unit.getAdapter();
-			int position = adapter.getPosition(interval.getUnits());
+			int position = adapter.getPosition(intervalSet.getUnits());
 			unit.setSelection(position);
 			
 			inflatedLayouts.add(inflatedLayout);
 			view.addView(inflatedLayout);
-			ids.add(interval.getId());
+			ids.add(intervalSet.getId());
 		}
-	}
-	
-	private void populateIntervalSets() {
+		
 		TextView setNum = (TextView) setView.findViewById(R.id.tvEditExerciseIntervalSetNum);
-//		setNum.setText(Integer.toString(ex.getIntervalSets()));
+		setNum.setText(Integer.toString(interval.getNumRepeats()));
 	}
 	
 	private void defineIntervalButtons() {
@@ -251,7 +252,7 @@ public class EditExerciseFragment extends Fragment {
 					view.addView(inflatedLayout);
 					
 					Spinner timeType = (Spinner) inflatedLayout.findViewById(R.id.spnCreateExerciseIntervalUnit);
-					initSpinner(R.array.timeTypes, timeType);
+					initSpinner(R.array.units, timeType);
 				}
 			}
 		});
@@ -476,35 +477,35 @@ public class EditExerciseFragment extends Fragment {
 					}
 					
 				case Exercise.INTERVAL_BASED_EXERCISE:
-					ArrayList<Interval> intervals = new ArrayList<Interval>();
+					ArrayList<IntervalSet> intervalSets = new ArrayList<IntervalSet>();
 					
-					TextView setNumText = (TextView) setView.findViewById(R.id.tvEditExerciseIntervalSetNum);
-					
+					TextView numRepeatsText = (TextView) setView.findViewById(R.id.tvEditExerciseIntervalSetNum);
+					interval.setNumRepeats(Integer.parseInt(numRepeatsText.getText().toString()));
 					
 					for (int i = 0; i < inflatedLayouts.size(); i++) {
 						LinearLayout inflatedLayout = inflatedLayouts.get(i);
-						Interval interval = new Interval();
+						IntervalSet intervalSet = new IntervalSet();
 						
 						EditText nameText = (EditText) inflatedLayout.findViewById(R.id.etCreateExerciseIntervalName);
-						interval.setName(nameText.getText().toString());
+						intervalSet.setName(nameText.getText().toString());
 						
 						EditText intervalTimeText = (EditText) inflatedLayout.findViewById(R.id.etCreateExerciseIntervalLength);
-						interval.setLength(Double.parseDouble(intervalTimeText.getText().toString().length() > 0 ?
+						intervalSet.setLength(Double.parseDouble(intervalTimeText.getText().toString().length() > 0 ?
 								intervalTimeText.getText().toString() : "0"));
 						
 						Spinner intervalUnit = (Spinner) inflatedLayout.findViewById(R.id.spnCreateExerciseIntervalUnit);
-						interval.setUnits(intervalUnit.getSelectedItem().toString());
+						intervalSet.setUnits(intervalUnit.getSelectedItem().toString());
 						
-						interval.setExerciseId(ex.getId());
+						intervalSet.setIntervalId(interval.getId());
 						
 						if (i < ids.size()) {
-							interval.setId(ids.get(i));
+							intervalSet.setId(ids.get(i));
 						}
-						if (interval.getName() != null && interval.getName().length() > 0
-								&& interval.getLength() > 0) {
-							intervals.add(interval);
+						if (intervalSet.getName() != null && intervalSet.getName().length() > 0
+								&& intervalSet.getLength() > 0) {
+							intervalSets.add(intervalSet);
 						} else {
-							intervals.clear();
+							intervalSets.clear();
 							
 							text = "Please specify a name and time.";
 							Toast toast = Toast.makeText(context, text, duration);
@@ -514,12 +515,13 @@ public class EditExerciseFragment extends Fragment {
 						}
 					}
 					
-					while (intervals.size() < ids.size()) {
-						mDbHelper.deleteInterval(ids.get(ids.size() - 1));
+					while (intervalSets.size() < ids.size()) {
+						mDbHelper.deleteIntervalSet(ids.get(ids.size() - 1));
 						ids.remove(ids.size() - 1);
 					}
 					
-					ex.setInterval(intervals);
+					interval.setIntervalSets(intervalSets);
+					ex.setInterval(interval);
 					break;
 					
 				case Exercise.SET_BASED_EXERCISE:
