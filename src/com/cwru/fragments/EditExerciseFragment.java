@@ -25,9 +25,12 @@ import android.widget.Toast;
 
 import com.cwru.R;
 import com.cwru.dao.DbAdapter;
+import com.cwru.model.Distance;
 import com.cwru.model.Exercise;
 import com.cwru.model.Interval;
+import com.cwru.model.IntervalSet;
 import com.cwru.model.Set;
+import com.cwru.model.Time;
 import com.cwru.utils.AutoFillListener;
 
 public class EditExerciseFragment extends Fragment {
@@ -36,8 +39,11 @@ public class EditExerciseFragment extends Fragment {
 	private LinearLayout view;
 	private LinearLayout setView;
 	private Exercise ex;
+	private Distance distance;
+	private Interval interval;
+	private Time time;
 	private List<LinearLayout> inflatedLayouts;
-	private List<Long> ids = new ArrayList<Long>();
+	private List<Integer> ids = new ArrayList<Integer>();
 	private AutoFillListener autoFillListener = new AutoFillListener();
 /*
 	public EditExerciseFragment() {
@@ -64,6 +70,8 @@ public class EditExerciseFragment extends Fragment {
 				R.layout.edit_exercise_editor, container, false);
 
 		if (ex != null) {
+			ex.setMode(mDbHelper.getExerciseMode(ex.getId()));
+			
 			setTextView(topView, R.id.tvEditExerciseName, ex.getName());
 			setTextView(topView, R.id.tvEditExerciseType, ex.getType());
 			setSubType(topView, R.id.tvEditExerciseSubType, ex);
@@ -92,57 +100,74 @@ public class EditExerciseFragment extends Fragment {
 	private void setSubType(View parent, int id, Exercise ex) {
 		String str = "";
 		
-		if (ex.getDistance() > 0) {
-			str = "Distance";
-			view = (LinearLayout) parent.findViewById(R.id.llEditExerciseDistance);
-			view.setVisibility(0);
-			populateDistance();
-		} else if (ex.getTime() > 0 && ex.getIsCountdown() == true) {
-			str = "Countdown Timer";
-			view = (LinearLayout) parent.findViewById(R.id.llEditExerciseCountdown);
-			view.setVisibility(0);
-			populateCountdown();
-		} else if (!ex.getIsCountdown()) {
-			str = "Countup Timer";
-		} else if (ex.getIntervals() > 0) {
-			str = "Intervals";
+		switch (ex.getMode()) {
+		
+			case Exercise.DISTANCE_BASED_EXERCISE:
+				str = "Distance";
+				view = (LinearLayout) parent.findViewById(R.id.llEditExerciseDistance);
+				view.setVisibility(0);
+				populateDistance();
+				break;
 			
-			view = (LinearLayout) parent.findViewById(R.id.llEditExerciseIntervals);
-			view.setVisibility(0);
-			populateIntervals((LinearLayout) view);
-			defineIntervalButtons();
+			case Exercise.COUNTDOWN_BASED_EXERCISE:
+				str = "Countdown Timer";
+				view = (LinearLayout) parent.findViewById(R.id.llEditExerciseCountdown);
+				view.setVisibility(0);
+				populateCountdown();
+				break;
 			
-			setView = (LinearLayout) parent.findViewById(R.id.llEditExerciseIntervalSets);
-			setView.setVisibility(0);
-			populateIntervalSets();
-			defineIntervalSetButtons();
-		} else {
-			str = "Sets";
-			view = (LinearLayout) parent.findViewById(R.id.llEditExerciseSets);
-			view.setVisibility(0);
-			populateSets((LinearLayout) view);
-			defineSetButtons();
+			case Exercise.COUNTUP_BASED_EXERCISE:
+				str = "Countup Timer";
+				break;
+			
+			case Exercise.INTERVAL_BASED_EXERCISE:
+				str = "Intervals";
+				
+				view = (LinearLayout) parent.findViewById(R.id.llEditExerciseIntervals);
+				setView = (LinearLayout) parent.findViewById(R.id.llEditExerciseIntervalSets);
+				
+				view.setVisibility(0);
+				setView.setVisibility(0);
+				
+				populateIntervals((LinearLayout) view);
+				
+				defineIntervalButtons();
+				defineIntervalSetButtons();
+				
+				break;
+				
+			case Exercise.SET_BASED_EXERCISE:
+				str = "Sets";
+				view = (LinearLayout) parent.findViewById(R.id.llEditExerciseSets);
+				view.setVisibility(0);
+				populateSets((LinearLayout) view);
+				defineSetButtons();
+				break;
+				
+			default:
+				return;
 		}
 
 		setTextView(parent, R.id.tvEditExerciseSubType, str);
 	}
 
 	private void populateDistance() {
+		distance = mDbHelper.getDistanceForExercise(ex.getId());
 		EditText exDistanceText = (EditText) view.findViewById(R.id.etEditExerciseDistance);
-		exDistanceText.setText(ex.getDistance().toString());
+		exDistanceText.setText(String.valueOf(distance.getLength()));
 
 		Spinner distanceSpinner = (Spinner) view.findViewById(R.id.spnEditExerciseDistance);
 		initSpinner(R.array.exerciseDistances, distanceSpinner);
 		
 		ArrayAdapter<String> adapter = (ArrayAdapter<String>) distanceSpinner.getAdapter();
-		int position = adapter.getPosition(ex.getDistanceType());
+		int position = adapter.getPosition(distance.getUnits());
 		distanceSpinner.setSelection(position);
 		
 		distanceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> parent,
 					View view, int pos, long id) {
-				ex.setDistanceType(parent.getItemAtPosition(pos).toString());
+				distance.setUnits(parent.getItemAtPosition(pos).toString());
 			}
 
 			@Override
@@ -153,14 +178,15 @@ public class EditExerciseFragment extends Fragment {
 	}
 	
 	private void populateCountdown() {
+		time = mDbHelper.getTimeForExercise(ex.getId());
 		EditText exCountdownText = (EditText) view.findViewById(R.id.etEditExerciseCountdown);
-		exCountdownText.setText(ex.getTime().toString());
+		exCountdownText.setText(String.valueOf(time.getLength()));
 
 		Spinner countdownSpinner = (Spinner) view.findViewById(R.id.spnEditExerciseCountdown);
 		initSpinner(R.array.timeTypes, countdownSpinner);
 		
 		ArrayAdapter<String> adapter = (ArrayAdapter<String>) countdownSpinner.getAdapter();
-		int position = adapter.getPosition(ex.getTimeType());
+		int position = adapter.getPosition(time.getUnits());
 		countdownSpinner.setSelection(position);
 		
 		countdownSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -168,7 +194,7 @@ public class EditExerciseFragment extends Fragment {
 			@Override
 			public void onItemSelected(AdapterView<?> parent,
 					View view, int pos, long id) {
-				ex.setTimeType(parent.getItemAtPosition(pos).toString());				
+				time.setUnits(parent.getItemAtPosition(pos).toString());				
 			}		
 			@Override
 			public void onNothingSelected(AdapterView parent) {
@@ -181,38 +207,33 @@ public class EditExerciseFragment extends Fragment {
 		inflatedLayouts = new ArrayList<LinearLayout>();
 		LinearLayout inflatedLayout;
 		EditText name;
-		EditText time;
-		Spinner timeType;
+		EditText length;
+		Spinner unit;
 		
-		mDbHelper.open();
-		Cursor cursor = mDbHelper.getIntervalsForExercise(ex.getId());
-		while(cursor.moveToNext()) {
+		interval = mDbHelper.getIntervalForExercise(ex.getId());
+		for (IntervalSet intervalSet : interval.getIntervalSets()) {
 			inflatedLayout = (LinearLayout) View.inflate(view.getContext(),
 					R.layout.create_exercise_interval_builder, null);
 			
 			name = (EditText) inflatedLayout.findViewById(R.id.etCreateExerciseIntervalName);
-			name.setText(cursor.getString(cursor.getColumnIndex("name")));
+			name.setText(intervalSet.getName());
 			
-			time = (EditText) inflatedLayout.findViewById(R.id.etCreateExerciseIntervalTime);
-			time.setText(Integer.toString(cursor.getInt(cursor.getColumnIndex("time"))));
+			length = (EditText) inflatedLayout.findViewById(R.id.etCreateExerciseIntervalLength);
+			length.setText(Double.toString(intervalSet.getLength()));
 			
-			timeType = (Spinner) inflatedLayout.findViewById(R.id.spnCreateExerciseIntervalTimeType);
-			initSpinner(R.array.timeTypes, timeType);
-			ArrayAdapter<String> adapter = (ArrayAdapter<String>) timeType.getAdapter();
-			int position = adapter.getPosition(cursor.getString(cursor.getColumnIndex("time_type")));
-			timeType.setSelection(position);
+			unit = (Spinner) inflatedLayout.findViewById(R.id.spnCreateExerciseIntervalUnit);
+			initSpinner(R.array.units, unit);
+			ArrayAdapter<String> adapter = (ArrayAdapter<String>) unit.getAdapter();
+			int position = adapter.getPosition(intervalSet.getUnits());
+			unit.setSelection(position);
 			
 			inflatedLayouts.add(inflatedLayout);
 			view.addView(inflatedLayout);
-			ids.add(cursor.getLong(cursor.getColumnIndex("_id")));
+			ids.add(intervalSet.getId());
 		}
-		cursor.close();
-		mDbHelper.close();
-	}
-	
-	private void populateIntervalSets() {
+		
 		TextView setNum = (TextView) setView.findViewById(R.id.tvEditExerciseIntervalSetNum);
-		setNum.setText(Integer.toString(ex.getIntervalSets()));
+		setNum.setText(Integer.toString(interval.getNumRepeats()));
 	}
 	
 	private void defineIntervalButtons() {
@@ -230,8 +251,8 @@ public class EditExerciseFragment extends Fragment {
 					inflatedLayouts.add(inflatedLayout);
 					view.addView(inflatedLayout);
 					
-					Spinner timeType = (Spinner) inflatedLayout.findViewById(R.id.spnCreateExerciseIntervalTimeType);
-					initSpinner(R.array.timeTypes, timeType);
+					Spinner timeType = (Spinner) inflatedLayout.findViewById(R.id.spnCreateExerciseIntervalUnit);
+					initSpinner(R.array.units, timeType);
 				}
 			}
 		});
@@ -289,27 +310,24 @@ public class EditExerciseFragment extends Fragment {
 		TextView setNumText;
 		EditText repsText;
 		
-		mDbHelper.open();
-		Cursor cursor = mDbHelper.getSetsForExercise(ex.getId());
-		while (cursor.moveToNext()) {
+		ArrayList<Set> sets = mDbHelper.getSetsForExercise(ex.getId());
+		for (Set set : sets) {
 			inflatedLayout = (LinearLayout) View.inflate(view.getContext(),
 					R.layout.create_exercise_set_builder, null);
 			
 			weightText = (EditText) inflatedLayout.findViewById(R.id.etCreateExerciseWeight);
-			weightText.setText(Double.toString(cursor.getDouble(cursor.getColumnIndex("weight"))));
+			weightText.setText(Double.toString(set.getWeight()));
 			
 			setNumText = (TextView) inflatedLayout.findViewById(R.id.tvCreateExerciseSetNum);
 			setNumText.setText("Set " + (inflatedLayouts.size() + 1));
 			
 			repsText = (EditText) inflatedLayout.findViewById(R.id.etCreateExerciseReps);
-			repsText.setText(Integer.toString(cursor.getInt(cursor.getColumnIndex("reps"))));
+			repsText.setText(Integer.toString(set.getReps()));
 			
 			inflatedLayouts.add(inflatedLayout);
 			view.addView(inflatedLayout);
-			ids.add(cursor.getLong(cursor.getColumnIndex("_id")));
+			ids.add(set.getId());
 		}
-		cursor.close();
-		mDbHelper.close();
 		
 		weightText = (EditText) inflatedLayouts.get(0).findViewById(R.id.etCreateExerciseWeight);
 		autoFillListener.weightAutoFillListener(weightText, inflatedLayouts);		
@@ -412,14 +430,20 @@ public class EditExerciseFragment extends Fragment {
 			CharSequence text;
 			int duration = Toast.LENGTH_SHORT;
 
-			try {
-				mDbHelper.open();
-				if (ex.getDistance() > 0) {
-					EditText distText = (EditText) view.findViewById(R.id.etEditExerciseDistance);
-					if (distText.getText().toString().length() > 0) {
-						ex.setDistance(Double.parseDouble(distText.getText().toString()));
-						Spinner distType = (Spinner) view.findViewById(R.id.spnEditExerciseDistance);
-						ex.setDistanceType(distType.getSelectedItem().toString());
+			switch (ex.getMode()) {
+				
+				case Exercise.DISTANCE_BASED_EXERCISE:
+					
+					EditText lengthText = (EditText) view.findViewById(R.id.etEditExerciseDistance);
+					Spinner unitSpinner = (Spinner) view.findViewById(R.id.spnEditExerciseDistance);
+					
+					String length = lengthText.getText().toString();
+					String unit = unitSpinner.getSelectedItem().toString();
+					if (length.length() > 0) {
+						distance.setLength(Double.parseDouble(length));
+						distance.setUnits(unit);
+						ex.setDistance(distance);
+						break;
 					} else {
 						// user needs to submit more info
 						text = "Please specify a distance.";
@@ -428,12 +452,22 @@ public class EditExerciseFragment extends Fragment {
 						toast.show();
 						return;
 					}
-				} else if (ex.getIsCountdown() && ex.getTime() > 0) {
+					
+				case Exercise.COUNTUP_BASED_EXERCISE:
+					break;
+				
+				case Exercise.COUNTDOWN_BASED_EXERCISE:
 					EditText timeText = (EditText) view.findViewById(R.id.etEditExerciseCountdown);
-					if (timeText.getText().toString().length() > 0) {
-						ex.setTime(Long.parseLong(timeText.getText().toString()));
-						Spinner timeType = (Spinner) view.findViewById(R.id.spnEditExerciseCountdown);
-						ex.setTimeType(timeType.getSelectedItem().toString());
+					Spinner timeType = (Spinner) view.findViewById(R.id.spnEditExerciseCountdown);
+					
+					String timeString = timeText.getText().toString();
+					String timeUnit = timeType.getSelectedItem().toString();
+					
+					if (timeString.length() > 0) {
+						time.setLength(Integer.parseInt(timeString));
+						time.setUnits(timeUnit);
+						ex.setTime(time);
+						break;
 					} else {
 						// user needs to submit more info
 						text = "Please specify a time.";
@@ -442,39 +476,37 @@ public class EditExerciseFragment extends Fragment {
 						toast.show();
 						return;
 					}
-				} else if (!ex.getIsCountdown()) {
 					
-				} else if (ex.getIntervals() > 0) {
-					ex.setIntervals(inflatedLayouts.size());
-					List<Interval> intervals = new ArrayList<Interval>();
+				case Exercise.INTERVAL_BASED_EXERCISE:
+					ArrayList<IntervalSet> intervalSets = new ArrayList<IntervalSet>();
 					
-					TextView setNumText = (TextView) setView.findViewById(R.id.tvEditExerciseIntervalSetNum);
-					ex.setIntervalSets(Integer.parseInt(setNumText.getText().toString()));
+					TextView numRepeatsText = (TextView) setView.findViewById(R.id.tvEditExerciseIntervalSetNum);
+					interval.setNumRepeats(Integer.parseInt(numRepeatsText.getText().toString()));
 					
 					for (int i = 0; i < inflatedLayouts.size(); i++) {
 						LinearLayout inflatedLayout = inflatedLayouts.get(i);
-						Interval interval = new Interval();
+						IntervalSet intervalSet = new IntervalSet();
 						
 						EditText nameText = (EditText) inflatedLayout.findViewById(R.id.etCreateExerciseIntervalName);
-						interval.setName(nameText.getText().toString());
+						intervalSet.setName(nameText.getText().toString());
 						
-						EditText timeText = (EditText) inflatedLayout.findViewById(R.id.etCreateExerciseIntervalTime);
-						interval.setTime(Long.parseLong(timeText.getText().toString().length() > 0 ?
-								timeText.getText().toString() : "0"));
+						EditText intervalTimeText = (EditText) inflatedLayout.findViewById(R.id.etCreateExerciseIntervalLength);
+						intervalSet.setLength(Double.parseDouble(intervalTimeText.getText().toString().length() > 0 ?
+								intervalTimeText.getText().toString() : "0"));
 						
-						Spinner timeType = (Spinner) inflatedLayout.findViewById(R.id.spnCreateExerciseIntervalTimeType);
-						interval.setTimeType(timeType.getSelectedItem().toString());
+						Spinner intervalUnit = (Spinner) inflatedLayout.findViewById(R.id.spnCreateExerciseIntervalUnit);
+						intervalSet.setUnits(intervalUnit.getSelectedItem().toString());
 						
-						interval.setExerciseId(ex.getId());
+						intervalSet.setIntervalId(interval.getId());
 						
 						if (i < ids.size()) {
-							interval.setId(ids.get(i));
+							intervalSet.setId(ids.get(i));
 						}
-						if (interval.getName() != null && interval.getName().length() > 0
-								&& interval.getTime() > 0) {
-							intervals.add(interval);
+						if (intervalSet.getName() != null && intervalSet.getName().length() > 0
+								&& intervalSet.getLength() > 0) {
+							intervalSets.add(intervalSet);
 						} else {
-							intervals.clear();
+							intervalSets.clear();
 							
 							text = "Please specify a name and time.";
 							Toast toast = Toast.makeText(context, text, duration);
@@ -484,21 +516,17 @@ public class EditExerciseFragment extends Fragment {
 						}
 					}
 					
-					while (intervals.size() < ids.size()) {
-						mDbHelper.deleteInterval(ids.get(ids.size() - 1));
+					while (intervalSets.size() < ids.size()) {
+						mDbHelper.deleteIntervalSet(ids.get(ids.size() - 1));
 						ids.remove(ids.size() - 1);
 					}
 					
-					for (Interval interval : intervals) {
-						if (interval.getId() > 0) {
-							mDbHelper.updateInterval(interval);
-						} else {
-							mDbHelper.createInterval(interval);
-						}
-					}
-				} else {
-					ex.setSets(inflatedLayouts.size());
-					List<Set> sets = new ArrayList<Set>();
+					interval.setIntervalSets(intervalSets);
+					ex.setInterval(interval);
+					break;
+					
+				case Exercise.SET_BASED_EXERCISE:
+					ArrayList<Set> sets = new ArrayList<Set>();
 					
 					for (int i = 0; i < inflatedLayouts.size(); i++) {
 						LinearLayout inflatedLayout = inflatedLayouts.get(i);
@@ -534,33 +562,16 @@ public class EditExerciseFragment extends Fragment {
 						mDbHelper.deleteSet(ids.get(ids.size() - 1));
 						ids.remove(ids.size() - 1);
 					}
-					
-					for (Set set : sets) {
-						if (set.getId() > 0) {
-							mDbHelper.updateSet(set);
-						} else {
-							mDbHelper.createSet(set);
-						}
-					}
-				}
-				
-				boolean success = mDbHelper.updateExercise(ex) == 1;
-				if (!success) {
-					text = "Failed to update exercise.";
-					Toast toast = Toast.makeText(context, text, duration);
-					toast.setGravity(Gravity.CENTER, 0, 0);
-					toast.show();
-					return;
-				} else {
-					text = "Exercise has been updated.";
-					Toast toast = Toast.makeText(context, text, duration);
-					toast.setGravity(Gravity.CENTER, 0, 0);
-					toast.show();
-					return;
-				}
-			} finally {
-				mDbHelper.close();
+					ex.setSets(sets);
+					break;
 			}
+				
+			mDbHelper.updateExercise(ex);
+
+			text = "Exercise has been updated.";
+			Toast toast = Toast.makeText(context, text, duration);
+			toast.setGravity(Gravity.CENTER, 0, 0);
+			toast.show();
 		}
 	};
 	*/

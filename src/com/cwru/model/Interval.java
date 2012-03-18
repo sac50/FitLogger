@@ -1,111 +1,97 @@
 package com.cwru.model;
 
-/**
- * Class to represent the Interval object as represented by the database
- * @author scrilley
- *
- */
+import java.util.ArrayList;
+
 public class Interval {
 	private int id;
 	private int exerciseId;
-	private String name;
-	private double length;
-	private String type;
-	private String units;
+	private int numRepeats;
+	private ArrayList<IntervalSet> intervalSets;
 	
 	/**
 	 * Constructor taking in all parameters
+	 * 
 	 * @param id
 	 * @param exerciseId
-	 * @param name
-	 * @param length
-	 * @param type
-	 * @param units
+	 * @param numRepeats
+	 * @param intervals
 	 */
-	public Interval(int id, int exerciseId, String name, double length, String type, String units) {
+	public Interval(int id, int exerciseId, int numRepeats, ArrayList<IntervalSet> intervalSets) {
 		this.id = id;
 		this.exerciseId = exerciseId;
-		this.name = name;
-		this.length = length;
-		this.type = type;
-		this.units = units;
+		this.numRepeats = numRepeats;
+		this.intervalSets = intervalSets;
 	}
 	
 	/**
-	 * Constructor taking in all parameters except the id of the interval assigned by the database
+	 * Constructor taking all parameters except id
+	 * 
 	 * @param exerciseId
-	 * @param name
-	 * @param length
-	 * @param type
-	 * @param units
+	 * @param numRepeats
+	 * @param intervals
 	 */
-	public Interval(int exerciseId, String name, double length, String type, String units) {
+	public Interval(int exerciseId, int numRepeats, ArrayList<IntervalSet> intervalSets) {
 		this.exerciseId = exerciseId;
-		this.name = name;
-		this.length = length;
-		this.type = type;
-		this.units = units;
+		this.numRepeats = numRepeats;
+		this.intervalSets = intervalSets;
 	}
 	
 	/**
-	 * Getter for the id assigned to the interval assigned by the database
-	 * @return
+	 * Empty constructor
 	 */
-	public int getId() { return id; }
-	/**
-	 * Getter for the exercise id that the interval relates to
-	 * @return
-	 */
-	public int getExerciseId() { return exerciseId; }
-	/**
-	 * Getter for the name of the interval that is provided by the user
-	 * @return
-	 */
-	public String getName() { return name; }
-	/**
-	 * Getter for the length of the interval.  This length can either be a length in terms of distance or time
-	 * @return
-	 */
-	public double getLength() { return length; }
-	/**
-	 * Getter for the type of interval that is associated with the interval.  This is either distance or time.
-	 * @return
-	 */
-	public String getType() { return type; }
-	/**
-	 * Getter for the units that the length correspond to
-	 * @return
-	 */
-	public String getUnits() { return units; }
+	public Interval() {
+		
+	}
 	
 	/**
-	 * Setter for the id that is provided by the database for the interval
-	 * @param id
+	 * @return the id
 	 */
-	public void setId(int id) { this.id = id; }
+	public int getId() {
+		return id;
+	}
 	/**
-	 * Setter for the exercise id that the interval relates to
-	 * @param exerciseId
+	 * @param id the id to set
 	 */
-	public void setExerciseId(int exerciseId) { this.exerciseId = exerciseId; }
+	public void setId(int id) {
+		this.id = id;
+	}
 	/**
-	 * Setter for the name provided by the user for the interval
-	 * @param name
+	 * @return the exerciseId
 	 */
-	public void setName(String name) { this.name = name; }
+	public int getExerciseId() {
+		return exerciseId;
+	}
 	/**
-	 * Setter for the length of the interval.  This length can either be a length in terms of distance or time
-	 * @param length
+	 * @param exerciseId the exerciseId to set
 	 */
-	public void setLength(double length) { this.length = length; }
+	public void setExerciseId(int exerciseId) {
+		this.exerciseId = exerciseId;
+	}
 	/**
-	 * Setter for the type of interval.  This can be either time or distance
-	 * @param type
+	 * @return the numRepeats
 	 */
-	public void setType(String type) { this.type = type; }
+	public int getNumRepeats() {
+		return numRepeats;
+	}
 	/**
-	 * Setter for the units of the interval.  These units correspond to the type of interval and the length.  
-	 * @param units
+	 * @param numRepeats the numRepeats to set
 	 */
-	public void setUnits(String units) { this.units = units; }
+	public void setNumRepeats(int numRepeats) {
+		this.numRepeats = numRepeats;
+	}
+	/**
+	 * 
+	 * @return intervalSets
+	 */
+	public ArrayList<IntervalSet> getIntervalSets() {
+		return intervalSets;
+	}
+	/**
+	 * 
+	 * @param intervalSets
+	 */
+	public void setIntervalSets(ArrayList<IntervalSet> intervalSets) {
+		this.intervalSets = intervalSets;
+	}
+	
 }

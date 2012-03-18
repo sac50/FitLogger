@@ -15,8 +15,9 @@ public class Exercise implements Parcelable{
 	/** Constants for the type of exercise */
 	public static final int SET_BASED_EXERCISE = 0;
 	public static final int DISTANCE_BASED_EXERCISE = 1;
-	public static final int TIME_BASED_EXERCISE = 2;
-	public static final int INTERVAL_BASED_EXERCISE = 3;
+	public static final int COUNTUP_BASED_EXERCISE = 2;
+	public static final int COUNTDOWN_BASED_EXERCISE = 3;
+	public static final int INTERVAL_BASED_EXERCISE = 4;
 	
 	private int id;
 	private String name;
@@ -24,7 +25,8 @@ public class Exercise implements Parcelable{
 	private String comment;
 	private ArrayList<Set> sets;
 	private Distance distance;
-	private ArrayList<Interval> intervals;
+	private ArrayList<IntervalSet> intervals;
+	private Interval interval;
 	private Time time;
 	private boolean deleted;
 	private int mode;
@@ -86,7 +88,8 @@ public class Exercise implements Parcelable{
 	public boolean getDeleted() { return deleted; }
 	public ArrayList<Set> getSets() { return sets; }
 	public Distance getDistance() { return distance; }
-	public ArrayList<Interval> getInterval() { return intervals; }
+//	public ArrayList<IntervalSet> getInterval() { return intervals; }
+	public Interval getInterval() { return interval; }
 	public Time getTime() { return time; }
 	public int getMode() { return mode; }
 	
@@ -97,7 +100,8 @@ public class Exercise implements Parcelable{
 	public void setDeleted(boolean deleted) { this.deleted = deleted; }
 	public void setSets(ArrayList<Set> sets) { this.sets = sets; }
 	public void setDistance(Distance distance) { this.distance = distance; }
-	public void setInterval(ArrayList<Interval> intervals) { this.intervals = intervals; }
+//	public void setInterval(ArrayList<IntervalSet> intervals) { this.intervals = intervals; }
+	public void setInterval(Interval interval) { this.interval = interval; }
 	public void setTime(Time time) { this.time = time; }
 	public void setMode(int mode) { this.mode = mode; }
 	

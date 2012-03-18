@@ -14,18 +14,18 @@
         android:hint="@string/exerciseIntervalName" />
 
     <EditText
-        android:id="@+id/etCreateExerciseIntervalTime"
+        android:id="@+id/etCreateExerciseIntervalLength"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:maxLength="4"
-        android:hint="@string/exerciseIntervalTime"
+        android:maxLength="6"
+        android:hint="@string/exerciseIntervalLength"
         android:inputType="number" />
 
     <Spinner
-        android:id="@+id/spnCreateExerciseIntervalTimeType"
+        android:id="@+id/spnCreateExerciseIntervalUnit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:prompt="@string/timeType" />
+        android:prompt="@string/unit" />
 
 </LinearLayout>

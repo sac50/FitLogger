@@ -5,9 +5,12 @@ import java.util.List;
 
 import com.cwru.R;
 import com.cwru.dao.DbAdapter;
+import com.cwru.model.Distance;
 import com.cwru.model.Exercise;
 import com.cwru.model.Interval;
+import com.cwru.model.IntervalSet;
 import com.cwru.model.Set;
+import com.cwru.model.Time;
 import com.cwru.utils.AutoFillListener;
 
 import android.content.Context;
@@ -37,12 +40,11 @@ public class CreateExerciseActivity extends FragmentActivity {
 	String exCountdownType;
 	String exIntervalTimeType;
 	TextView tvIntervalSets;
-	Interval intervalVar;
 	List<LinearLayout> inflatedLayouts = new ArrayList<LinearLayout>();
 	List<Set> setList;
-	Set setVar;
 	Long exId;
 	Spinner subTypeSpinner;
+	Exercise ex = new Exercise();
 
 	/*
 	public void onCreate(Bundle savedInstanceState) {
@@ -113,6 +115,8 @@ public class CreateExerciseActivity extends FragmentActivity {
 
 							// display the proper layout
 							distanceLayout.setVisibility(0);
+							
+							ex.setMode(Exercise.DISTANCE_BASED_EXERCISE);
 
 							exDistanceText = (EditText) findViewById(R.id.etCreateExerciseDistance);
 
@@ -152,6 +156,8 @@ public class CreateExerciseActivity extends FragmentActivity {
 
 							// display the proper layout
 							countdownLayout.setVisibility(0);
+							
+							ex.setMode(Exercise.COUNTDOWN_BASED_EXERCISE);
 
 							exCountdownText = (EditText) findViewById(R.id.etCreateExerciseCountdown);
 
@@ -188,6 +194,8 @@ public class CreateExerciseActivity extends FragmentActivity {
 							setLayout.setVisibility(8);
 							clearLayouts(inflatedLayouts, intervalLayout,
 									setLayout);
+							
+							ex.setMode(Exercise.COUNTUP_BASED_EXERCISE);
 						}
 
 						else if ("Intervals".equals(parent.getItemAtPosition(
@@ -203,6 +211,8 @@ public class CreateExerciseActivity extends FragmentActivity {
 							// display the proper layouts
 							intervalLayout.setVisibility(0);
 							intervalSetLayout.setVisibility(0);
+							
+							ex.setMode(Exercise.INTERVAL_BASED_EXERCISE);
 
 							// when first displaying layout, display two
 							// intervals
@@ -217,8 +227,8 @@ public class CreateExerciseActivity extends FragmentActivity {
 								intervalLayout.addView(inflatedLayout);
 
 								Spinner intervalSpinner = (Spinner) inflatedLayout
-										.findViewById(R.id.spnCreateExerciseIntervalTimeType);
-								initSpinner(R.array.timeTypes, intervalSpinner);
+										.findViewById(R.id.spnCreateExerciseIntervalUnit);
+								initSpinner(R.array.units, intervalSpinner);
 							}
 
 							Button addInterval = (Button) findViewById(R.id.btnCreateExerciseAddInterval);
@@ -241,8 +251,8 @@ public class CreateExerciseActivity extends FragmentActivity {
 														.addView(inflatedLayout);
 
 												Spinner intervalSpinner = (Spinner) inflatedLayout
-														.findViewById(R.id.spnCreateExerciseIntervalTimeType);
-												initSpinner(R.array.timeTypes,
+														.findViewById(R.id.spnCreateExerciseIntervalUnit);
+												initSpinner(R.array.units,
 														intervalSpinner);
 											}
 										}
@@ -267,8 +277,8 @@ public class CreateExerciseActivity extends FragmentActivity {
 										}
 									});
 
-							Spinner intervalTimeSpinner = (Spinner) findViewById(R.id.spnCreateExerciseIntervalTimeType);
-							initSpinner(R.array.timeTypes, intervalTimeSpinner);
+							Spinner intervalTimeSpinner = (Spinner) findViewById(R.id.spnCreateExerciseIntervalUnit);
+							initSpinner(R.array.units, intervalTimeSpinner);
 							intervalTimeSpinner
 									.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
@@ -345,6 +355,8 @@ public class CreateExerciseActivity extends FragmentActivity {
 							setLayout.setVisibility(0);
 							clearLayouts(inflatedLayouts, intervalLayout,
 									setLayout);
+							
+							ex.setMode(Exercise.SET_BASED_EXERCISE);
 
 							// initialize the layout with three sets
 							for (int i = 0; i < 3; i++) {
@@ -434,184 +446,263 @@ public class CreateExerciseActivity extends FragmentActivity {
 
 			@Override
 			public void onClick(View arg0) {
-				Exercise ex = new Exercise();
 				ex.setName(mNameText.getText().toString());
 				ex.setType(exType);
-				intervalVar = new Interval();
-				setVar = new Set();
 
 				// simple params for a Toast display
 				Context context = getApplicationContext();
 				CharSequence text;
 				int duration = Toast.LENGTH_SHORT;
-
-				// used to signify if intervals or sets need to be created
-				int layoutMarker = -1;
-
-				if ("Distance".equals(subTypeSpinner.getSelectedItem()
-						.toString())) {
-					String exDistanceString = exDistanceText.getText()
-							.toString();
-					if (exDistanceString.length() > 0) {
-						ex.setDistance(Double.parseDouble(exDistanceString));
-					} else {
-						// user needs to submit more info
-						text = "Please specify a distance.";
-						Toast toast = Toast.makeText(context, text, duration);
-						toast.setGravity(Gravity.CENTER, 0, 0);
-						toast.show();
-						return;
-					}
-					ex.setDistanceType(exDistanceType);
-				} else if ("Countdown Timer".equals(subTypeSpinner
-						.getSelectedItem().toString())) {
-					String exCountdownString = exCountdownText.getText()
-							.toString();
-					if (exCountdownString.length() > 0) {
-						ex.setTime(Long.parseLong(exCountdownString));
-						ex.setIsCountdown(true);
-					} else {
-						// user needs to submit more info
-						text = "Please specify a time.";
-						Toast toast = Toast.makeText(context, text, duration);
-						toast.setGravity(Gravity.CENTER, 0, 0);
-						toast.show();
-						return;
-					}
-					ex.setTimeType(exCountdownType);
-				} else if ("Countup Timer".equals(subTypeSpinner
-						.getSelectedItem().toString())) {
-					ex.setIsCountdown(false);
-				} else if ("Intervals".equals(subTypeSpinner.getSelectedItem()
-						.toString())) {
-					// indicate that intervals need to be stored
-					layoutMarker = 0;
-					ex.setIntervals(inflatedLayouts.size());
-					ex.setIntervalSets(Integer.parseInt(tvIntervalSets.getText()
-							.toString()));
-				} else {
-					// indicate that sets need to be stored
-					layoutMarker = 1;
-					ex.setSets(inflatedLayouts.size());
+				
+				if (ex.getName().length() == 0) {
+					text = "Please specify an exercise name";
+					Toast toast = Toast.makeText(context, text, duration);
+					toast.setGravity(Gravity.CENTER, 0, 0);
+					toast.show();
+					return;
 				}
-				// store the exercise data in the db
-				try {
-					exId = mDbHelper.createExercise(ex);
-					// if intervals need to be stored
-					if (layoutMarker == 0) {
-						// list holds the new IDs for deletion from DB if
-						// something goes wrong
-						List<Long> intervalIds = new ArrayList<Long>();
-
-						// for each interval
-						for (LinearLayout inflatedLayout : inflatedLayouts) {
-							EditText nameText = (EditText) inflatedLayout
-									.findViewById(R.id.etCreateExerciseIntervalName);
-							EditText timeText = (EditText) inflatedLayout
-									.findViewById(R.id.etCreateExerciseIntervalTime);
-							Spinner timeTypeSpinner = (Spinner) inflatedLayout
-									.findViewById(R.id.spnCreateExerciseIntervalTimeType);
+				
+				switch (ex.getMode()) {
+				
+					case Exercise.DISTANCE_BASED_EXERCISE:
+						String exDistanceString = exDistanceText.getText().toString();
+						if (exDistanceString.length() > 0) {
+							Distance distance = new Distance(Double.parseDouble(exDistanceString), exDistanceType);
+							ex.setDistance(distance);
+							break;
+						} else {
+							text = "Please specify a distance.";
+							Toast toast = Toast.makeText(context, text, duration);
+							toast.setGravity(Gravity.CENTER, 0, 0);
+							toast.show();
+							return;
+						}
+						
+					case Exercise.COUNTUP_BASED_EXERCISE:
+						break;
+						
+					case Exercise.COUNTDOWN_BASED_EXERCISE:
+						String exCountdownString = exCountdownText.getText().toString();
+						if (exCountdownString.length() > 0) {
+							Time time = new Time(Integer.parseInt(exCountdownString), exCountdownType);
+							ex.setTime(time);
+							break;
+						} else {
+							text = "Please specify a time.";
+							Toast toast = Toast.makeText(context, text, duration);
+							toast.setGravity(Gravity.CENTER, 0, 0);
+							toast.show();
+							return;
+						}
+						
+					case Exercise.INTERVAL_BASED_EXERCISE:
+						Interval interval = new Interval();
+						ArrayList<IntervalSet> intervalSets = new ArrayList<IntervalSet>();
+						
+						for (LinearLayout inflatedInterval: inflatedLayouts) {
+							EditText nameText = (EditText) inflatedInterval.findViewById(R.id.etCreateExerciseIntervalName);
+							EditText lengthText = (EditText) inflatedInterval.findViewById(R.id.etCreateExerciseIntervalLength);
+							Spinner unitSpinner = (Spinner) inflatedInterval.findViewById(R.id.spnCreateExerciseIntervalUnit);
 
 							String name = nameText.getText().toString();
-							String time = (timeText.getText().toString());
-
-							// if the user has specified both name and time,
-							// store the interval
-							if (name != null && name.length() > 0
-									&& time != null && time.length() > 0) {
-								intervalVar.setExerciseId(exId);
-								intervalVar.setName(name);
-								intervalVar.setTime(Long.parseLong(time));
-								intervalVar.setTimeType(timeTypeSpinner
-										.getSelectedItem().toString());
-
-								intervalIds.add(mDbHelper
-										.createInterval(intervalVar));
-								// else the user needs to specify more info,
-								// previous insertions in DB must be rolled
-								// back
-							} else {
-								// delete newly inserted exercise from DB
-								mDbHelper.trueDeleteExercise(exId);
-								// delete any intervals that may have
-								// already been inserted to DB
-								for (long intervalId : intervalIds) {
-									mDbHelper.deleteInterval(intervalId);
-								}
-
-								// display to user that more info required
-								text = "Interval names and times required.";
+							String length = (lengthText.getText().toString());
+							String unit = unitSpinner.getSelectedItem().toString();
+							
+							if (name == null || name.length() <= 0
+									|| length == null || length.length() <= 0) {
+								text = "Interval names and lengths required.";
 								Toast toast = Toast.makeText(context, text,
 										duration);
 								toast.setGravity(Gravity.CENTER, 0, 0);
 								toast.show();
-
-								// end the button press sequence
 								return;
+							} else if ("seconds".equals(unit) || "minutes".equals(unit) || "hours".equals(unit)) {
+								IntervalSet intervalSet = new IntervalSet(name, Double.parseDouble(length), "time", unit);
+								intervalSets.add(intervalSet);
+							} else {
+								IntervalSet intervalSet = new IntervalSet(name, Double.parseDouble(length), "time", unit);
+								intervalSets.add(intervalSet);
 							}
-
 						}
-						// if sets need to be stored
-					} else if (layoutMarker == 1) {
-						// list holds the new IDs for deletion from DB if
-						// something goes wrong
-						List<Long> setIds = new ArrayList<Long>();
-
-						// for each set
+						
+						interval.setNumRepeats(Integer.parseInt(tvIntervalSets.getText().toString()));
+						interval.setIntervalSets(intervalSets);
+						ex.setInterval(interval);
+						break;
+					
+					case Exercise.SET_BASED_EXERCISE:
+						ArrayList<Set> sets = new ArrayList<Set>();
+						
 						for (LinearLayout inflatedSet : inflatedLayouts) {
-							EditText repsText = (EditText) inflatedSet
-									.findViewById(R.id.etCreateExerciseReps);
-							EditText weightText = (EditText) inflatedSet
-									.findViewById(R.id.etCreateExerciseWeight);
+							EditText repsText = (EditText) inflatedSet.findViewById(R.id.etCreateExerciseReps);
+							EditText weightText = (EditText) inflatedSet.findViewById(R.id.etCreateExerciseWeight);
 
 							String reps = repsText.getText().toString();
 							String weight = weightText.getText().toString();
-
-							// if user has specified both weight and reps,
-							// store the set
-							if (reps != null && reps.length() > 0
-									&& weight != null && weight.length() > 0) {
-								setVar.setExerciseId(exId);
-								setVar.setReps(Integer.parseInt(reps));
-								setVar.setWeight(Double.parseDouble(weight));
-								setIds.add(mDbHelper.createSet(setVar));
-								// else the user needs to specify more info,
-								// previous insertions in DB must be rolled
-								// back
-							} else {
-								// delete newly inserted exercise from DB
-								mDbHelper.trueDeleteExercise(exId);
-								// delete any sets that may have already
-								// been inserted to the DB
-								for (long setId : setIds) {
-									mDbHelper.deleteSet(setId);
-								}
-
-								// display to user that more info is
-								// required
-								text = "Set weight and reps required.";
+							
+							if (reps == null || reps.length() == 0
+									|| weight == null || weight.length() == 0) {
+								text = "Set reps and weight required.";
 								Toast toast = Toast.makeText(context, text,
 										duration);
 								toast.setGravity(Gravity.CENTER, 0, 0);
 								toast.show();
-
-								// end the button press sequence
 								return;
+							} else {
+								Set set = new Set(Integer.parseInt(reps), Double.parseDouble(weight));
+								sets.add(set);
 							}
 						}
-					}
-
-					// display that the exercise was created
+						
+						ex.setSets(sets);
+						break;
+					
+					default:
+						return;
+				}
+				
+				try {
+					mDbHelper.createExercise(ex);
 					text = "Exercise Created";
 					Toast toast = Toast.makeText(context, text, duration);
 					toast.setGravity(Gravity.CENTER, 0, 0);
 					toast.show();
 				} catch (IllegalArgumentException e) {
-					Toast toast = Toast.makeText(context, e.getMessage(),
-							duration);
+					Toast toast = Toast.makeText(context, e.getMessage(), duration);
 					toast.setGravity(Gravity.CENTER, 0, 0);
 					toast.show();
 				}
+				
+//				} else if ("Intervals".equals(subTypeSpinner.getSelectedItem()
+//						.toString())) {
+//					// indicate that intervals need to be stored
+//					layoutMarker = 0;
+//					ex.setIntervals(inflatedLayouts.size());
+//					ex.setIntervalSets(Integer.parseInt(tvIntervalSets.getText()
+//							.toString()));
+//				} else {
+//					// indicate that sets need to be stored
+//					layoutMarker = 1;
+//					ex.setSets(inflatedLayouts.size());
+//				}
+				// store the exercise data in the db
+//				try {
+//					exId = mDbHelper.createExercise(ex);
+//					// if intervals need to be stored
+//					if (layoutMarker == 0) {
+//						// list holds the new IDs for deletion from DB if
+//						// something goes wrong
+//						List<Long> intervalIds = new ArrayList<Long>();
+//
+//						// for each interval
+//						for (LinearLayout inflatedLayout : inflatedLayouts) {
+//							EditText nameText = (EditText) inflatedLayout
+//									.findViewById(R.id.etCreateExerciseIntervalName);
+//							EditText timeText = (EditText) inflatedLayout
+//									.findViewById(R.id.etCreateExerciseIntervalTime);
+//							Spinner timeTypeSpinner = (Spinner) inflatedLayout
+//									.findViewById(R.id.spnCreateExerciseIntervalTimeType);
+//
+//							String name = nameText.getText().toString();
+//							String time = (timeText.getText().toString());
+//
+//							// if the user has specified both name and time,
+//							// store the interval
+//							if (name != null && name.length() > 0
+//									&& time != null && time.length() > 0) {
+//								intervalVar.setExerciseId(exId);
+//								intervalVar.setName(name);
+//								intervalVar.setTime(Long.parseLong(time));
+//								intervalVar.setTimeType(timeTypeSpinner
+//										.getSelectedItem().toString());
+//
+//								intervalIds.add(mDbHelper
+//										.createInterval(intervalVar));
+//								// else the user needs to specify more info,
+//								// previous insertions in DB must be rolled
+//								// back
+//							} else {
+//								// delete newly inserted exercise from DB
+//								mDbHelper.trueDeleteExercise(exId);
+//								// delete any intervals that may have
+//								// already been inserted to DB
+//								for (long intervalId : intervalIds) {
+//									mDbHelper.deleteInterval(intervalId);
+//								}
+//
+//								// display to user that more info required
+//								text = "Interval names and times required.";
+//								Toast toast = Toast.makeText(context, text,
+//										duration);
+//								toast.setGravity(Gravity.CENTER, 0, 0);
+//								toast.show();
+//
+//								// end the button press sequence
+//								return;
+//							}
+//
+//						}
+//						// if sets need to be stored
+//					} else if (layoutMarker == 1) {
+//						// list holds the new IDs for deletion from DB if
+//						// something goes wrong
+//						List<Long> setIds = new ArrayList<Long>();
+//
+//						// for each set
+//						for (LinearLayout inflatedSet : inflatedLayouts) {
+//							EditText repsText = (EditText) inflatedSet
+//									.findViewById(R.id.etCreateExerciseReps);
+//							EditText weightText = (EditText) inflatedSet
+//									.findViewById(R.id.etCreateExerciseWeight);
+//
+//							String reps = repsText.getText().toString();
+//							String weight = weightText.getText().toString();
+//
+//							// if user has specified both weight and reps,
+//							// store the set
+//							if (reps != null && reps.length() > 0
+//									&& weight != null && weight.length() > 0) {
+//								setVar.setExerciseId(exId);
+//								setVar.setReps(Integer.parseInt(reps));
+//								setVar.setWeight(Double.parseDouble(weight));
+//								setIds.add(mDbHelper.createSet(setVar));
+//								// else the user needs to specify more info,
+//								// previous insertions in DB must be rolled
+//								// back
+//							} else {
+//								// delete newly inserted exercise from DB
+//								mDbHelper.trueDeleteExercise(exId);
+//								// delete any sets that may have already
+//								// been inserted to the DB
+//								for (long setId : setIds) {
+//									mDbHelper.deleteSet(setId);
+//								}
+//
+//								// display to user that more info is
+//								// required
+//								text = "Set weight and reps required.";
+//								Toast toast = Toast.makeText(context, text,
+//										duration);
+//								toast.setGravity(Gravity.CENTER, 0, 0);
+//								toast.show();
+//
+//								// end the button press sequence
+//								return;
+//							}
+//						}
+//					}
+//
+//					// display that the exercise was created
+//					text = "Exercise Created";
+//					Toast toast = Toast.makeText(context, text, duration);
+//					toast.setGravity(Gravity.CENTER, 0, 0);
+//					toast.show();
+//				} catch (IllegalArgumentException e) {
+//					Toast toast = Toast.makeText(context, e.getMessage(),
+//							duration);
+//					toast.setGravity(Gravity.CENTER, 0, 0);
+//					toast.show();
+//				}
 			}
 		});
 
