@@ -34,11 +34,13 @@ public class WorkoutWorkflowCountUpTimerFragment extends Fragment {
 	private Context context;
 	private boolean stop;
 	private boolean initializedTimer; // so timer gets set only once
-	private Button btnStartStop;
-	private Button btnRecord;
 	private long baseTime;
 	private long stopTime;
 	private int workoutId;
+	
+	private TextView tvExerciseName;
+	private Button btnStartStop;
+	private Button btnRecord;
 	private TableLayout tlResultTable;
 	
 	public WorkoutWorkflowCountUpTimerFragment (Exercise exercise, Context context, int workoutId) {
@@ -56,10 +58,15 @@ public class WorkoutWorkflowCountUpTimerFragment extends Fragment {
 		}	
 		View view = (LinearLayout) inflater.inflate(R.layout.workout_workflow_countup_timer, container, false);
 		btnStartStop = (Button) view.findViewById(R.id.btnWorkoutWorkflowCountUpTimerStartPause);
-		btnRecord = (Button) view.findViewById(R.id.btnWorkoutWorkflowCountUpTimerRecord);
 		if (btnStartStop == null) { Log.d("STEVE", "Button null"); }
 		btnStartStop.setOnClickListener(updateTimer);
+		
+		btnRecord = (Button) view.findViewById(R.id.btnWorkoutWorkflowCountUpTimerRecord);
 		btnRecord.setOnClickListener(recordTime);
+		
+		tvExerciseName = (TextView) view.findViewById(R.id.tvWorkoutWorkflowCountUpTimerExerciseName);
+		tvExerciseName.setText(exercise.getName());
+		
 		tlResultTable = (TableLayout) view.findViewById(R.id.tlWorkoutWorkflowCountUpTimeResults);
 		
 		// if phone show notes and history button
@@ -77,9 +84,7 @@ public class WorkoutWorkflowCountUpTimerFragment extends Fragment {
 			tl.addView(tr, new TableLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
 			
 		}
-		
-		
-		
+
 		chrTimer = (Chronometer) view.findViewById(R.id.chrWorkoutWorkflowCountUpTimer);
 		chrTimer.setText("00:00:00");
 		chrTimer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {

@@ -45,7 +45,7 @@ public class EditExerciseFragment extends Fragment {
 	private List<LinearLayout> inflatedLayouts;
 	private List<Integer> ids = new ArrayList<Integer>();
 	private AutoFillListener autoFillListener = new AutoFillListener();
-/*
+
 	public EditExerciseFragment() {
 
 	}
@@ -404,7 +404,7 @@ public class EditExerciseFragment extends Fragment {
 			}
 		});
 	}
-	*/
+	
 	/**
 	 * defines and initializes the array adapter for spinner, based on the
 	 * provided arrayID
@@ -412,7 +412,7 @@ public class EditExerciseFragment extends Fragment {
 	 * @param arrayID
 	 * @param spinner
 	 */
-	/*
+	
 	private void initSpinner(int arrayID, Spinner spinner) {
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
 				this.getActivity(), arrayID, android.R.layout.simple_spinner_item);
@@ -574,5 +574,5 @@ public class EditExerciseFragment extends Fragment {
 			toast.show();
 		}
 	};
-	*/
+	
 }

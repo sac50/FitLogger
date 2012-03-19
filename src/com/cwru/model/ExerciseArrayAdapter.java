@@ -72,7 +72,7 @@ public class ExerciseArrayAdapter extends ArrayAdapter<Exercise>{
 			} finally {
 				mDbHelper.close();
 			}
-			/*
+			
 			
 			FragmentTransaction transaction = fragment.getFragmentManager().beginTransaction();
 			EditExerciseFragment newFragment = new EditExerciseFragment(ex);
@@ -92,7 +92,7 @@ public class ExerciseArrayAdapter extends ArrayAdapter<Exercise>{
 //			intent.putExtra("exercise", ex);
 //			startActivity(intent);
  
- */
+ 
 		}
 	};
 	

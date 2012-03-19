@@ -46,7 +46,6 @@ public class CreateExerciseActivity extends FragmentActivity {
 	Spinner subTypeSpinner;
 	Exercise ex = new Exercise();
 
-	/*
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mDbHelper = new DbAdapter(this);
@@ -707,7 +706,7 @@ public class CreateExerciseActivity extends FragmentActivity {
 		});
 
 	}
-*/
+
 	/**
 	 * defines and initializes the array adapter for spinner, based on the
 	 * provided arrayID

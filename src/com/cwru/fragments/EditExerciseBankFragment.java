@@ -24,7 +24,7 @@ import com.cwru.model.ExerciseArrayAdapter;
 
 public class EditExerciseBankFragment extends ListFragment {
 	private DbAdapter mDbHelper;
-	/*
+	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (container == null) {
 			return null;
@@ -83,5 +83,4 @@ public class EditExerciseBankFragment extends ListFragment {
 //			startActivity(intent);
 		}
 	};
-	*/
 }
