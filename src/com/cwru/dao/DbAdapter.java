@@ -16,11 +16,12 @@ import android.util.Log;
 import com.cwru.model.Distance;
 import com.cwru.model.DistanceResult;
 import com.cwru.model.Exercise;
-import com.cwru.model.IntervalSet;
 import com.cwru.model.Interval;
+import com.cwru.model.IntervalSet;
 import com.cwru.model.Set;
 import com.cwru.model.SetResult;
 import com.cwru.model.Time;
+import com.cwru.model.TimeResult;
 import com.cwru.model.Workout;
 import com.cwru.model.WorkoutResult;
 
@@ -355,7 +356,7 @@ public class DbAdapter {
 	public ArrayList<Exercise> getAllUndeletedExercises() {
 		open();
 		ArrayList<Exercise> exerciseList = new ArrayList<Exercise>();
-		String query = "select id, name, type, comment, deleted from exercises where deleted = 'false'";
+		String query = "select id, name, type, comment, deleted from exercises where deleted = 0";
 		Cursor cursor = db.rawQuery(query, null);
 		while (cursor.moveToNext()) {
 			int id = cursor.getInt(cursor.getColumnIndex("id"));
@@ -955,5 +956,15 @@ public class DbAdapter {
 		db.execSQL(query);
 		close();
 	}
+	
+	public void storeTimeResult(TimeResult timeResult) {
+		open();
+		String query = "insert into time_result (workout_result_id, length, units) values (" + 
+					   timeResult.getWorkoutResultId() + "," + timeResult.getLength() + ",'" + timeResult.getUnits() + "')";
+		db.execSQL(query);
+		close();
+	}
+	
+	
 	
 }
