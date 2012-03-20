@@ -155,6 +155,10 @@ public class DbAdapter {
 
 	public void close() {
 		dbHelper.close();
+		/** TODO 
+		 * Check to see if db.close removes db related error messages
+		 */
+		//db.close(); 
 	}
 	
 	/**
