@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/svCreateExerciseGoal"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:id="@+id/llCreateExerciseGoal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+        
+        <TextView
+            android:id="@+id/tvCreateExerciseGoalName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/exGoalName" />
+
+        <EditText
+            android:id="@+id/etCreateExerciseGoalName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/exGoalNameHint" >
+        </EditText>
+
+        <RadioGroup
+            android:id="@+id/rgCardioOrStrength"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <RadioButton
+                android:id="@+id/rbCardio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/exerciseCardio" />
+
+            <RadioButton
+                android:id="@+id/rbStrength"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/exerciseStrength" />
+        </RadioGroup>
+
+        <Spinner
+            android:id="@+id/spnExGoalType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        
+        <LinearLayout android:id="@+id/llCreateExerciseGoalCardio"
+       	 	android:layout_width="fill_parent"
+        	android:layout_height="wrap_content"
+        	android:orientation="vertical">
+            <RadioGroup
+	            android:id="@+id/rgDistanceOrTime"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:orientation="horizontal">
+	            
+	            <RadioButton
+	                android:id="@+id/rbDistance"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:checked="true"
+	                android:text="@string/exerciseDistance" />
+	
+	            <RadioButton
+	                android:id="@+id/rbTime"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:text="@string/exerciseTime" />
+        	</RadioGroup>
+        	
+            <Spinner
+           		android:id="@+id/spnExGoalCardioExercise"
+            	android:layout_width="match_parent"
+            	android:layout_height="wrap_content"
+            	android:visibility="gone" />
+            
+        </LinearLayout>
+        
+        <LinearLayout android:id="@+id/llCreateExerciseGoalStrength"
+       	 	android:layout_width="fill_parent"
+        	android:layout_height="wrap_content"
+        	android:orientation="vertical"
+        	android:visibility="gone">
+            
+            <Spinner
+           		android:id="@+id/spnExGoalStrengthExercise"
+            	android:layout_width="match_parent"
+            	android:layout_height="wrap_content" />
+            
+        </LinearLayout>
+        
+        <Button
+            android:id="@+id/btnCreateExerciseGoalDone"
+            android:layout_width="116dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="100dp"
+            android:text="@string/done" />
+        
+    </LinearLayout>
+    
+</ScrollView>

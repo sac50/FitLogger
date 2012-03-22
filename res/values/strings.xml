@@ -6,8 +6,9 @@
     <string-array name="modules">
         	<item> Start a Workout</item>
         	<item> Create/Edit Workout</item>
-        	<item> Analytics</item>
+        	<item> Goals</item>
         	<item> History</item>
+        	<item> Analytics</item>
         	<item> Calendar </item>
     </string-array>
 
@@ -28,12 +29,34 @@
     
     <string name="exerciseName">Exercise Name</string>
     <string name="exerciseType">Exercise Type</string>
-    <string-array name="exerciseTypes">
-        	<item>Cardio</item>
+    <string-array name="exerciseCardioTypes">
+        	<item>Cardio - Generic</item>
+        	<item>Cardio - Run</item>
+        	<item>Cardio - Swim</item>
+        	<item>Cardio - Bike</item>
+        	<item>Cardio - Ski</item>
+        	<item>Cardio - Row/Paddle</item>
+    </string-array>
+    <string-array name="exerciseStrengthTypes">
+        	<item>Strength - Generic</item>
         	<item>Strength - Bicep</item>
         	<item>Strength - Chest</item>
         	<item>Strength - Tricep</item>
     </string-array>
+    
+    <string-array name="goalCardioTypes">
+        	<item>Run</item>
+        	<item>Swim</item>
+        	<item>Bike</item>
+        	<item>Ski</item>
+        	<item>Row/Paddle</item>
+        	<item>Exercise Specific</item>
+    </string-array>
+    
+    <string name="exerciseCardio">Cardio</string>
+    <string name="exerciseStrength">Strength</string>
+    <string name="exerciseTime">Time</string>
+    
     <string name="exerciseSubType">Exercise Sub-Type</string>
     <string-array name="exerciseCardioSubTypes">
        		<item>Countdown Timer</item>
@@ -81,6 +104,7 @@
     <string name="one">1</string>
     
     <string name="done">Done</string>
+    <string name="delete">Delete</string>
     
     <string name="sets">Sets:</string>
     <string name="weight">Weight</string>
@@ -99,4 +123,11 @@
     	<item>Bicep Curl</item>
     	<item>Skull Crusher</item>
     </string-array>
+    
+    <string name="exGoalName">Goal Summary</string>
+    <string name="exGoalNameHint">Ex: run a marathon</string>
+    <string name="exGoalNameOrType">Exercise Name or Type</string>
+    <string name="exGoalStarted">Started At:</string>
+    <string name="exGoalCurrent">Current Best:</string>
+    <string name="exGoalGoal">Goal:</string>
 </resources>

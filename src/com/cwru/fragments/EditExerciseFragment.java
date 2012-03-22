@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -35,7 +34,6 @@ import com.cwru.utils.AutoFillListener;
 
 public class EditExerciseFragment extends Fragment {
 	private DbAdapter mDbHelper;
-	private View topView;
 	private LinearLayout view;
 	private LinearLayout setView;
 	private Exercise ex;
@@ -66,7 +64,7 @@ public class EditExerciseFragment extends Fragment {
 			return null;
 		}
 
-		topView = (ScrollView) inflater.inflate(
+		View topView = (ScrollView) inflater.inflate(
 				R.layout.edit_exercise_editor, container, false);
 
 		if (ex != null) {
@@ -81,13 +79,6 @@ public class EditExerciseFragment extends Fragment {
 		} else {
 			topView.setVisibility(8);
 		}
-		
-//		setTextView(topView, R.id.tvEditExerciseName, ex.getName());
-//		setTextView(topView, R.id.tvEditExerciseType, ex.getType());
-//		setSubType(topView, R.id.tvEditExerciseSubType, ex);
-//		
-//		Button doneButton = (Button) topView.findViewById(R.id.btnEditExerciseDone);
-//		doneButton.setOnClickListener(doneButtonListener);
 
 		return topView;
 	}
@@ -412,7 +403,6 @@ public class EditExerciseFragment extends Fragment {
 	 * @param arrayID
 	 * @param spinner
 	 */
-	
 	private void initSpinner(int arrayID, Spinner spinner) {
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
 				this.getActivity(), arrayID, android.R.layout.simple_spinner_item);

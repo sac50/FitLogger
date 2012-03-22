@@ -25,6 +25,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,7 +34,6 @@ public class CreateExerciseActivity extends FragmentActivity {
 	DbAdapter mDbHelper;
 	EditText mNameText;
 	String exType;
-	int subType;
 	EditText exDistanceText;
 	String exDistanceType;
 	EditText exCountdownText;
@@ -43,6 +43,7 @@ public class CreateExerciseActivity extends FragmentActivity {
 	List<LinearLayout> inflatedLayouts = new ArrayList<LinearLayout>();
 	List<Set> setList;
 	Long exId;
+	Spinner typeSpinner;
 	Spinner subTypeSpinner;
 	Exercise ex = new Exercise();
 
@@ -58,30 +59,41 @@ public class CreateExerciseActivity extends FragmentActivity {
 		mNameText = (EditText) findViewById(R.id.etCreateExerciseName);
 
 		// Exercise type spinner
-		Spinner typeSpinner = (Spinner) findViewById(R.id.spnCreateExerciseType);
-		initSpinner(R.array.exerciseTypes, typeSpinner);
+		typeSpinner = (Spinner) findViewById(R.id.spnCreateExerciseType);
+		initSpinner(R.array.exerciseCardioTypes, typeSpinner);
 
 		// Exercise subtype spinner. Initialized to the Cardio spinner
 		subTypeSpinner = (Spinner) findViewById(R.id.spnCreateExerciseSubType);
-		subType = R.array.exerciseCardioSubTypes;
-		initSpinner(subType, subTypeSpinner);
+		int typeID = R.array.exerciseCardioSubTypes;
+		initSpinner(typeID, subTypeSpinner);
+		
+		//Radio group determining if exercise is Cardio or Strength
+		RadioGroup radioGroup = (RadioGroup) findViewById(R.id.rgCardioOrStrength);
+		radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(RadioGroup group, int checkedId) {
+				//populate type and sub type spinnners with Cardio info
+				if (checkedId == R.id.rbCardio) {
+					int typeID = R.array.exerciseCardioTypes;
+					initSpinner(typeID, typeSpinner);
+					typeID = R.array.exerciseCardioSubTypes;
+					initSpinner(typeID, subTypeSpinner);
+				//populate type and sub type spinners with Strength info
+				} else {
+					int typeID = R.array.exerciseStrengthTypes;
+					initSpinner(typeID, typeSpinner);
+					typeID = R.array.exerciseStrengthSubTypes;
+					initSpinner(typeID, subTypeSpinner);
+				}
+			}
+		});
 
 		typeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
 					@Override
 					public void onItemSelected(AdapterView<?> parent,View view, int pos, long id) {
 						exType = parent.getItemAtPosition(pos).toString();
-						// if the user selects Cardio, display the Cardio
-						// subtype spinner
-						if ("Cardio".equals(exType) && subType != R.array.exerciseCardioSubTypes) {
-							subType = R.array.exerciseCardioSubTypes;
-							initSpinner(subType, subTypeSpinner);
-							// else if the user selects a Strength type, display
-							// Strength subtype spinner
-						} else if (!"Cardio".equals(exType) && subType != R.array.exerciseStrengthSubTypes) {
-							subType = R.array.exerciseStrengthSubTypes;
-							initSpinner(subType, subTypeSpinner);
-						}
 					}
 
 					@Override
@@ -571,137 +583,6 @@ public class CreateExerciseActivity extends FragmentActivity {
 					toast.setGravity(Gravity.CENTER, 0, 0);
 					toast.show();
 				}
-				
-//				} else if ("Intervals".equals(subTypeSpinner.getSelectedItem()
-//						.toString())) {
-//					// indicate that intervals need to be stored
-//					layoutMarker = 0;
-//					ex.setIntervals(inflatedLayouts.size());
-//					ex.setIntervalSets(Integer.parseInt(tvIntervalSets.getText()
-//							.toString()));
-//				} else {
-//					// indicate that sets need to be stored
-//					layoutMarker = 1;
-//					ex.setSets(inflatedLayouts.size());
-//				}
-				// store the exercise data in the db
-//				try {
-//					exId = mDbHelper.createExercise(ex);
-//					// if intervals need to be stored
-//					if (layoutMarker == 0) {
-//						// list holds the new IDs for deletion from DB if
-//						// something goes wrong
-//						List<Long> intervalIds = new ArrayList<Long>();
-//
-//						// for each interval
-//						for (LinearLayout inflatedLayout : inflatedLayouts) {
-//							EditText nameText = (EditText) inflatedLayout
-//									.findViewById(R.id.etCreateExerciseIntervalName);
-//							EditText timeText = (EditText) inflatedLayout
-//									.findViewById(R.id.etCreateExerciseIntervalTime);
-//							Spinner timeTypeSpinner = (Spinner) inflatedLayout
-//									.findViewById(R.id.spnCreateExerciseIntervalTimeType);
-//
-//							String name = nameText.getText().toString();
-//							String time = (timeText.getText().toString());
-//
-//							// if the user has specified both name and time,
-//							// store the interval
-//							if (name != null && name.length() > 0
-//									&& time != null && time.length() > 0) {
-//								intervalVar.setExerciseId(exId);
-//								intervalVar.setName(name);
-//								intervalVar.setTime(Long.parseLong(time));
-//								intervalVar.setTimeType(timeTypeSpinner
-//										.getSelectedItem().toString());
-//
-//								intervalIds.add(mDbHelper
-//										.createInterval(intervalVar));
-//								// else the user needs to specify more info,
-//								// previous insertions in DB must be rolled
-//								// back
-//							} else {
-//								// delete newly inserted exercise from DB
-//								mDbHelper.trueDeleteExercise(exId);
-//								// delete any intervals that may have
-//								// already been inserted to DB
-//								for (long intervalId : intervalIds) {
-//									mDbHelper.deleteInterval(intervalId);
-//								}
-//
-//								// display to user that more info required
-//								text = "Interval names and times required.";
-//								Toast toast = Toast.makeText(context, text,
-//										duration);
-//								toast.setGravity(Gravity.CENTER, 0, 0);
-//								toast.show();
-//
-//								// end the button press sequence
-//								return;
-//							}
-//
-//						}
-//						// if sets need to be stored
-//					} else if (layoutMarker == 1) {
-//						// list holds the new IDs for deletion from DB if
-//						// something goes wrong
-//						List<Long> setIds = new ArrayList<Long>();
-//
-//						// for each set
-//						for (LinearLayout inflatedSet : inflatedLayouts) {
-//							EditText repsText = (EditText) inflatedSet
-//									.findViewById(R.id.etCreateExerciseReps);
-//							EditText weightText = (EditText) inflatedSet
-//									.findViewById(R.id.etCreateExerciseWeight);
-//
-//							String reps = repsText.getText().toString();
-//							String weight = weightText.getText().toString();
-//
-//							// if user has specified both weight and reps,
-//							// store the set
-//							if (reps != null && reps.length() > 0
-//									&& weight != null && weight.length() > 0) {
-//								setVar.setExerciseId(exId);
-//								setVar.setReps(Integer.parseInt(reps));
-//								setVar.setWeight(Double.parseDouble(weight));
-//								setIds.add(mDbHelper.createSet(setVar));
-//								// else the user needs to specify more info,
-//								// previous insertions in DB must be rolled
-//								// back
-//							} else {
-//								// delete newly inserted exercise from DB
-//								mDbHelper.trueDeleteExercise(exId);
-//								// delete any sets that may have already
-//								// been inserted to the DB
-//								for (long setId : setIds) {
-//									mDbHelper.deleteSet(setId);
-//								}
-//
-//								// display to user that more info is
-//								// required
-//								text = "Set weight and reps required.";
-//								Toast toast = Toast.makeText(context, text,
-//										duration);
-//								toast.setGravity(Gravity.CENTER, 0, 0);
-//								toast.show();
-//
-//								// end the button press sequence
-//								return;
-//							}
-//						}
-//					}
-//
-//					// display that the exercise was created
-//					text = "Exercise Created";
-//					Toast toast = Toast.makeText(context, text, duration);
-//					toast.setGravity(Gravity.CENTER, 0, 0);
-//					toast.show();
-//				} catch (IllegalArgumentException e) {
-//					Toast toast = Toast.makeText(context, e.getMessage(),
-//							duration);
-//					toast.setGravity(Gravity.CENTER, 0, 0);
-//					toast.show();
-//				}
 			}
 		});
 

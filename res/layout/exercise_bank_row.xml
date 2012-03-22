@@ -12,4 +12,11 @@
         android:text="@+id/tvEBExerciseLabel"
         android:textSize="25sp" />
     
+    <TextView
+        android:id="@+id/tvEBRExercisePosition"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@+id/tvEBRExercisePosition"
+        android:visibility="gone" />
+    
 </RelativeLayout>

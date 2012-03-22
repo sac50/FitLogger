@@ -16,6 +16,7 @@ import android.util.Log;
 import com.cwru.model.Distance;
 import com.cwru.model.DistanceResult;
 import com.cwru.model.Exercise;
+import com.cwru.model.ExerciseGoal;
 import com.cwru.model.Interval;
 import com.cwru.model.IntervalSet;
 import com.cwru.model.Set;
@@ -86,6 +87,11 @@ public class DbAdapter {
 			"create table workout_result (id integer primary key autoincrement, " + 
 			"workout_id integer not null, exercise_id integer not null, " + 
 			"date text not null);";
+	
+	private static final String CREATE_EXERCISE_GOALS_TABLE =
+			"create table exercise_goals (id integer primary key autoincrement, " +
+			"name text not null, mode integer not null, type integer not null, " +
+			"exercise_id integer, goal_one real, goal_two real, unit integer);";
 				
 	private static final String DATABASE_NAME = "FitLoggerData";
 	private static final String DATABASE_TABLE_WORKOUT = "workouts";
@@ -100,6 +106,7 @@ public class DbAdapter {
 	private static final String DATABASE_TABLE_DISTANCE_RESULT = "distance_result";
 	private static final String DATABASE_TABLE_TIME_RESULT = "time_result";
 	private static final String DATABASE_TABLE_INTERVAL_RESULT = "intervals_result";
+	private static final String DATABASE_TABLE_EXERCISE_GOAL = "exercise_goals";
 	private static final int DATABASE_VERSION = 1;
 
 	private final Context mCtx;
@@ -124,6 +131,7 @@ public class DbAdapter {
 			db.execSQL(CREATE_INTERVALS_RESULT_TABLE);
 			db.execSQL(CREATE_TIME_RESULT_TABLE);
 			db.execSQL(CREATE_DISTANCE_RESULT_TABLE);
+			db.execSQL(CREATE_EXERCISE_GOALS_TABLE);
 			Log.d("Steve", "DB CREATES");
 		}
 
@@ -588,6 +596,33 @@ public class DbAdapter {
 		db.execSQL(query);
 		close();
 	}
+	
+	/**
+	 * Inserts row into the Exercise Goal table
+	 * 
+	 * @param exGoal
+	 */
+	public void createExerciseGoal(ExerciseGoal exGoal) {
+		open();
+		
+		ContentValues initialValues = new ContentValues();
+		initialValues.put("name", exGoal.getName());
+		initialValues.put("mode", exGoal.getMode());
+		initialValues.put("type", exGoal.getType());
+		initialValues.put("goal_one", exGoal.getGoalOne());
+		if (exGoal.getExerciseId() > 0) {
+			initialValues.put("exercise_id", exGoal.getExerciseId());
+		}
+		if (exGoal.getGoalTwo() > 0) {
+			initialValues.put("goal_two", exGoal.getGoalTwo());
+		}
+		if (exGoal.getUnit() != null && exGoal.getUnit().length() > 0) {
+			initialValues.put("unit", exGoal.getUnit());
+		}
+		
+		db.insert(DATABASE_TABLE_EXERCISE_GOAL, null, initialValues);
+		close();
+	}
 
 	/**
 	 * Update a row in the exercise table.  Also updates the corresponding exercise mode table (distance, interval, time, set).
@@ -902,6 +937,96 @@ public class DbAdapter {
 		return Exercise.COUNTUP_BASED_EXERCISE;
 		
 //		return -1; // Error, exercise id not found
+	}
+	
+	/**
+	 * get all exercises of the 'Cardio' type
+	 * 
+	 * @return
+	 */
+	public ArrayList<Exercise> getAllCardioExercises() {
+		open();
+		ArrayList<Exercise> exercises = new ArrayList<Exercise>();
+		
+		String query = "select * from exercises where type like '%Cardio%'";
+		Cursor cursor = db.rawQuery(query, null);
+		while (cursor.moveToNext()) {
+			int id = cursor.getInt(cursor.getColumnIndex("id"));
+			
+			int mode = getExerciseMode(id);
+			if (mode == 4) {
+				continue;
+			}
+			
+			String name = cursor.getString(cursor.getColumnIndex("name"));
+			String type = cursor.getString(cursor.getColumnIndex("type"));
+			String comment = cursor.getString(cursor.getColumnIndex("comment"));
+			boolean deleted = cursor.getInt(cursor.getColumnIndex("deleted")) > 0;
+			exercises.add(new Exercise(id, name, type, comment, deleted, mode));
+			
+		}
+		
+		cursor.close();
+		close();
+		
+		return exercises;
+	}
+	
+	/**
+	 * get all exercises of the 'Strength' type.
+	 * 
+	 * @return exercises
+	 */
+	public ArrayList<Exercise> getAllStrengthExercises() {
+		open();
+		ArrayList<Exercise> exercises = new ArrayList<Exercise>();
+		
+		String query = "select * from exercises where type like '%Strength%'";
+		Cursor cursor = db.rawQuery(query, null);
+		while (cursor.moveToNext()) {
+			int id = cursor.getInt(cursor.getColumnIndex("id"));
+			String name = cursor.getString(cursor.getColumnIndex("name"));
+			String type = cursor.getString(cursor.getColumnIndex("type"));
+			String comment = cursor.getString(cursor.getColumnIndex("comment"));
+			boolean deleted = cursor.getInt(cursor.getColumnIndex("deleted")) > 0;
+			int mode = getExerciseMode(id);
+			exercises.add(new Exercise(id, name, type, comment, deleted, mode));
+			
+		}
+		
+		cursor.close();
+		close();
+		
+		return exercises;
+	}
+	
+	/**
+	 * Get all exercise goals in the database.
+	 * 
+	 * @return exerciseGoals
+	 */
+	public ArrayList<ExerciseGoal> getAllExerciseGoals() {
+		open();
+		ArrayList<ExerciseGoal> exerciseGoals = new ArrayList<ExerciseGoal>();
+		
+		String query = "select * from exercise_goals order by name";
+		Cursor cursor = db.rawQuery(query, null);
+		while (cursor.moveToNext()) {
+			int id = cursor.getInt(cursor.getColumnIndex("id"));
+			String name = cursor.getString(cursor.getColumnIndex("name"));
+			int mode = cursor.getInt(cursor.getColumnIndex("mode"));
+			int type = cursor.getInt(cursor.getColumnIndex("type"));
+			int exerciseId = cursor.getInt(cursor.getColumnIndex("exercise_id"));
+			double goalOne = cursor.getDouble(cursor.getColumnIndex("goal_one"));
+			double goalTwo = cursor.getDouble(cursor.getColumnIndex("goal_two"));
+			String unit = cursor.getString(cursor.getColumnIndex("unit"));
+			exerciseGoals.add(new ExerciseGoal(id, name, mode, type, exerciseId, goalOne, goalTwo, unit));
+		}
+		
+		cursor.close();
+		close();
+		
+		return exerciseGoals;
 	}
 	
 	/**

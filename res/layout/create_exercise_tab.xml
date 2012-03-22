@@ -23,6 +23,32 @@
             android:hint="@string/exerciseName" >
         </EditText>
 
+        <LinearLayout
+            android:id="@+id/linearLayout1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <RadioGroup
+                android:id="@+id/rgCardioOrStrength"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <RadioButton
+                    android:id="@+id/rbCardio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="@string/exerciseCardio" />
+
+                <RadioButton
+                    android:id="@+id/rbStrength"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/exerciseStrength" />
+            </RadioGroup>
+
+        </LinearLayout>
+
         <TextView
             android:id="@+id/tvCreateExerciseExerciseType"
             android:layout_width="match_parent"
