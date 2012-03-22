@@ -32,6 +32,15 @@
 	    android:layout_weight="10"
 		
 	/>
+	
+	<Button 
+    	android:id="@+id/btnWorkoutWorkflowCountDownTimerRecord"
+    	android:layout_width="match_parent"
+    	android:layout_height="wrap_content"
+    	android:padding="10dip"
+    	android:layout_weight="10"
+    	android:text="Record"
+    />
        
     <TableLayout 	
 	    android:id="@+id/tlWorkoutWorkflowCountDownHistoryNoteRow"
@@ -50,7 +59,7 @@
        	android:layout_width="fill_parent"
        	android:layout_height="wrap_content"
        	android:stretchColumns="*"
-       	android:layout_weight="50"  
+       	android:layout_weight="40"  
    	>
 	</TableLayout>
 </LinearLayout>

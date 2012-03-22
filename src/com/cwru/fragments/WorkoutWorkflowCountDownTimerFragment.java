@@ -3,7 +3,6 @@ package com.cwru.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
-import android.widget.Chronometer;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -19,103 +17,77 @@ import android.widget.TextView;
 
 import com.cwru.R;
 import com.cwru.controller.HomeScreen;
+import com.cwru.dao.DbAdapter;
 import com.cwru.model.Exercise;
+import com.cwru.model.Time;
+import com.cwru.model.TimeResult;
+import com.cwru.model.WorkoutResult;
 
 public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
-	private Chronometer chrTimer;
-	private CountDownTimer start1;
-	private long startTime;
-	private long countDown;
+	private CountDownTimer start;
+	private DbAdapter mDbHelper;
 	private Exercise exercise;
-	private Context context;
-	private Handler handler;
 	private long seconds;
 	private long minutes;
 	private boolean complete;
 	private boolean stop;
-	private View frameView;
 	private long time;
 	private int workoutId;
 	
+	private int secondsInCountdown;
 	private TextView tvTimer;
 	private TextView tvExerciseName;
 	private Button btnStartStop;
+	private Button btnRecord;
 	
 	public WorkoutWorkflowCountDownTimerFragment (Exercise exercise, Context context, int workoutId) {
+		mDbHelper = new DbAdapter(context);
 		this.exercise = exercise;
 		this.workoutId = workoutId;
-		this.context = context;
 		complete = false;
 		stop = true;
-		/*
-		String eType = exercise.getTimeType();
-		if (eType.equals("seconds")) {
-			seconds = exercise.getTime();
-			minutes = seconds / 60;
-			seconds = seconds % 60;
-			
-		} else if (eType.equals("minutes")) { 
-			minutes = exercise.getTime();
+
+		Time exerciseTime = mDbHelper.getTimeForExercise(exercise.getId());
+		
+		String units = exerciseTime.getUnits();
+		if (units.equals("seconds")) {
+			time = exerciseTime.getLength();
+			minutes = time / 60;
+			seconds = time % 60;			
+		} else if (units.equals("minutes")) {
+			time = exerciseTime.getLength();
+			minutes = time;
 			seconds = 0;
-		} else if (eType.equals("hours")) {
-			minutes = exercise.getTime()*60;
-			seconds = 0;
-		}
-		*/
+		} 
+
 		time = minutes*60 + seconds;
+		secondsInCountdown = (int) time;
 		time = time * 1000;
 		Log.d("STEVE", " TIME: " + time);
 		
-		start1 = new CountDownTimer(time, 1000) {
+		start = new CountDownTimer(time, 1000) {
 			@Override
 			public void onTick(long millisUntilFinished) {
 				decreaseTime();
 				tvTimer.setText(getFormatedTime());
-				Log.d("STEVE", "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
-				
 			}
-
 			@Override
 			public void onFinish() {
 				// TODO Auto-generated method stub
-				// Store into workout results 
-				/*
-				int id;
-				int workout_id;
-				long exercise_id;
-				int setNumber;
-				int reps;
-				double weight;
-				int time;
-				boolean time_type;
-				double distance;
-				int interval;
-				String comment;
-				*/ // Is this needed??  Now moved to notes fragment
-				
 			}
-		};
-
-		
-		// 			start1 = new CountDownTimer(100000, 1000) {
-
-	
+		};	
 	}
 	
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		handler = new Handler();
-	}
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (container == null) {
 			return null;
 		}	
 		View view = (LinearLayout) inflater.inflate(R.layout.workout_workflow_countdown_timer, container, false);
-		frameView = view;
 		btnStartStop = (Button) view.findViewById(R.id.btnWorkoutWorkflowCountdownTimerStartPause);
 		btnStartStop.setOnClickListener(updateTimer);
+		btnRecord = (Button) view.findViewById(R.id.btnWorkoutWorkflowCountDownTimerRecord);
+		btnRecord.setOnClickListener(recordTime);
 		tvExerciseName = (TextView) view.findViewById(R.id.tvWorkoutWorkflowCountdownTimerExerciseName);
 		tvExerciseName.setText(exercise.getName());
 		tvTimer = (TextView) view.findViewById(R.id.tvWorkoutWorkflowCountdownTimerTimer);
@@ -132,40 +104,53 @@ public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
 			tr.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 			tr.addView(btnHistory);
 			tr.addView(btnNotes);
-			tl.addView(tr, new TableLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
-			
+			tl.addView(tr, new TableLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));	
 		}
-		
 		return view;
 	}
 	
 	View.OnClickListener updateTimer = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			/*
 			if (stop) {
 				stop = false;
 				btnStartStop.setText("Pause");
-				startCountdown(frameView);
-			} else {
-				stop = true;
-				btnStartStop.setText("Start");
-				startCountdown(frameView);
-			}
-			*/
-			if (stop) {
-				stop = false;
-				btnStartStop.setText("Pause");
-				start1.start();				
+				start.start();				
 			}
 			else {
 				stop = true;
 				btnStartStop.setText("Start");
-				start1.cancel();
+				start.cancel();
 			}
-
 		}
-		
+	};
+	
+	View.OnClickListener recordTime = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			// stop countdown
+			stop = true;
+			btnStartStop.setText("Start");
+			start.cancel();
+			
+			// get the time left on the countdown
+			String timeLeft = tvTimer.getText().toString();
+			int minutes = Integer.parseInt(timeLeft.substring(0, 2));
+			int seconds = Integer.parseInt(timeLeft.substring(3,5));
+			
+			// time left in seconds
+			int timeLeftSeconds = minutes * 60 + seconds;
+			// compute time done
+			int timeDone = secondsInCountdown - timeLeftSeconds;	
+			
+			/* Generate Workout Result Row in Database */
+			WorkoutResult workoutResult = new WorkoutResult(exercise.getId(), workoutId);
+			int workoutResultId = mDbHelper.storeWorkoutResult(workoutResult);
+			/* Generate Time Result Row in Database */
+			String units = "seconds";
+			TimeResult timeResult = new TimeResult(workoutResultId, timeDone, units);
+			mDbHelper.storeTimeResult(timeResult);
+		}
 	};
 	
 	private String getFormatedTime() {
@@ -179,8 +164,6 @@ public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
 	
 	private void decreaseTime() {
 		// only update if stop is false
-		Log.d("Steve", "------------------------------------------------------------------");
-		Log.d("Steve", "Minutes: " + minutes + " | Seconds: " + seconds);
 		if (!complete) {
 			if (seconds == 0) {
 				seconds = 60;
@@ -190,7 +173,6 @@ public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
 				}
 			}
 			seconds -= 1;		
-			Log.d("Steve", "Minutes: " + minutes + " | Seconds: " + seconds);
 		}
 	}
 }
