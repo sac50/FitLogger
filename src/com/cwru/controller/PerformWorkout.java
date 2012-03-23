@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -49,7 +50,10 @@ public class PerformWorkout extends FragmentActivity {
 		getExercisesForWorkout(workoutName);
 		exerciseCounter = 0;
 		btnPrevious = (Button) this.findViewById(R.id.btnPerformWorkoutPrev);
+		btnPrevious.setOnClickListener(prevExercise);
 		btnNext = (Button) this.findViewById(R.id.btnPerformWorkoutNext);
+		btnNext.setOnClickListener(nextExercise);
+		
 		tvPercentDone = (TextView) this.findViewById(R.id.tvPerformWorkoutPercentageDone);
 		Log.d("Size", "ExercisesForWorkout: " + exercisesForWorkout.size());
 		int percentage = exerciseCounter / exercisesForWorkout.size();
@@ -186,4 +190,23 @@ public class PerformWorkout extends FragmentActivity {
 			exercisesForWorkout.add(exercise);
 		}
 	}
+	
+	View.OnClickListener nextExercise = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			exerciseCounter++;
+			int percentage = exerciseCounter / exercisesForWorkout.size();
+			tvPercentDone.setText(percentage + " % Workout Complete");
+			launchExercise();
+		}
+	};
+	
+	View.OnClickListener prevExercise = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			
+		}
+	};
 }

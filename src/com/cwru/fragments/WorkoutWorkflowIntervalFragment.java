@@ -61,6 +61,7 @@ public class WorkoutWorkflowIntervalFragment extends Fragment {
 	private TableLayout tlHistoryNotes;
 	private TextView tvNextIntervalLabel;
 	private TableLayout tlNextIntervalList; 
+
 	
 	public WorkoutWorkflowIntervalFragment(Exercise exercise, Context context, int workoutId, int intervalSetNum) {
 		mDbHelper = new DbAdapter(context);
@@ -110,7 +111,6 @@ public class WorkoutWorkflowIntervalFragment extends Fragment {
 		tlHistoryNotes = (TableLayout) view.findViewById(R.id.tlWorkoutWorkflowIntervalDistanceHistoryNoteRow);
 		tvNextIntervalLabel = (TextView) view.findViewById(R.id.tvWorkoutWorkflowIntervalDistanceNextIntervalLabel);
 		tlNextIntervalList = (TableLayout) view.findViewById(R.id.tlWorkoutWorkflowIntervalNextIntervalList);
-		
 		/* Determine if current interval is time or distance */
 		if (intervalSet.getType().equals("distance")) {
 			llIntervalTimeInput.setVisibility(LinearLayout.GONE);
@@ -218,19 +218,27 @@ public class WorkoutWorkflowIntervalFragment extends Fragment {
 			Log.d("Steve", "IntervalSetNum: " + intervalSetNum);
 			Log.d("Steve", "IntervalCycleNum: " + intervalCycleNum);
 			
-			WorkoutWorkflowIntervalFragment intervalFragment = new WorkoutWorkflowIntervalFragment(exercise, context, workoutId, intervalSetNum, intervalCycleNum, true, workoutResultId);
-			FragmentTransaction transaction = getFragmentManager().beginTransaction();
-			if (HomeScreen.isTablet) {
-				NotesFragment notes = new NotesFragment();
-				HistoryFragment history = new HistoryFragment();
-				transaction.replace(R.id.flPerformWorkoutLeftFrame, intervalFragment);
-				transaction.replace(R.id.flPerformWorkoutRightTopFrame, notes);
-				transaction.replace(R.id.flPerformWorkoutRightBottomFrame, history);
-			}
+			if (intervalSetNum <= interval.getNumRepeats()) {
+				WorkoutWorkflowIntervalFragment intervalFragment = new WorkoutWorkflowIntervalFragment(exercise, context, workoutId, intervalSetNum, intervalCycleNum, true, workoutResultId);
+				FragmentTransaction transaction = getFragmentManager().beginTransaction();
+				if (HomeScreen.isTablet) {
+					NotesFragment notes = new NotesFragment();
+					HistoryFragment history = new HistoryFragment();
+					transaction.replace(R.id.flPerformWorkoutLeftFrame, intervalFragment);
+					transaction.replace(R.id.flPerformWorkoutRightTopFrame, notes);
+					transaction.replace(R.id.flPerformWorkoutRightBottomFrame, history);
+				}
+				else {
+					transaction.replace(R.id.flPerformWorkoutMainFrame, intervalFragment);
+				}
+				transaction.commit();
+			} 
 			else {
-				transaction.replace(R.id.flPerformWorkoutMainFrame, intervalFragment);
+				/* Go to next exercise */
+				// Exercise Complete 
+				
 			}
-			transaction.commit();
+			
 			
 		}
 
