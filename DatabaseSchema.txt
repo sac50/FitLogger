@@ -1,0 +1,110 @@
+CREATE TABLE distance (
+	id integer primary key autoincrement,
+	exercise_id integer,
+	length real,
+	units text,
+	FOREIGN KEY (exercise_id) REFERENCES exercises(id)
+)
+
+CREATE TABLE distance_result (
+	id integer primary key autoincrement,
+	workout_result_id integer,
+	length real,
+	units text,
+	FOREIGN KEY (workout_result_id) REFERENCES workout_result(id)
+)	
+
+CREATE TABLE exercises ( 
+	id integer primary key autoincrement,
+	name text,
+	type text,
+	comment text,
+	deleted boolean
+)
+
+CREATE TABLE interval_result (
+	id integer primary key autoincrement,
+	workout_result_id integer,
+	interval_id integer,	   --> the interval id that it relates it to
+	interval_set_num integer,  --> the # of num repeats, which cycle it is in
+	interval_Set_id integer,   --> the interval set that was done
+	length real,
+	units text,
+	FOREIGN KEY (interval_id) REFERENCES intervals(id),
+	FOREIGN KEY (interval_set_id) REFERENCES interval_sets(id)
+)
+
+CREATE TABLE interval_sets (
+	id integer primary key autoincrement,
+	interval_id integer,
+	name text,
+	length real,
+	type text,
+	units text,
+	FOREIGN KEY (interval_id) REFERENCES intervals(id)
+)
+
+CREATE TABLE intervals ( 
+	id integer primary key autoincrement,
+	exercise_id integer,
+	num_repeats,
+	FOREIGN KEY (exercise_id) REFERENCES exercises(id)
+)
+
+CREATE TABLE set_result (
+	id integer primary key autoincrement,
+	workout_result_id integer,
+	set_number integer,
+	reps integer,
+	weight real,
+	FOREIGN KEY (workout_result_id) REFERENCES workout_result(id)
+)
+
+CREATE TABLE sets (
+	id integer primary key autoincrement,
+	exercise_id integer,
+	reps integer,
+	weight real,
+	FOREIGN KEY (exercise_id) REFERENCES exercises(id)
+)
+
+CREATE TABLE time (
+	id integer primary key autoincrement,
+	exercise_id integer,
+	length integer,
+	units text,
+	FOREIGN KEY (exercise_id) REFERENCES exercises(id)
+)
+
+CREATE TABLE time_result (
+	id integer primary key autoincrement,
+	workout_result_id integer,
+	length integer,
+	units text,
+	FOREIGN KEY (workout_result_id) REFERENCES workout_result(id);
+)
+
+CREATE TABLE workout_result (
+	id integer primary key autoincrement,
+	workout_id integer,
+	exercise_id integer,
+	date text
+	FOREIGN KEY (workout_id) REFERENCES workouts(id);
+	FOREIGN KEY (exercise_id) REFERENCES exercises(id);
+)
+
+CREATE TABLE workouts (
+	id integer primary key autoincrement,
+	name text,
+	type text,
+	exercise_sequence text,
+	repeats text,
+	repeats_sunday boolean,
+	repeats_monday boolean,
+	repeats_tuesday boolean,
+	repeats_wednesday boolean,
+	repeats_thursday boolean,
+	repeats_friday boolean,
+	repeats_saturday boolean,
+	comment text
+)
