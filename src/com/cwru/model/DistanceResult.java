@@ -38,6 +38,16 @@ public class DistanceResult {
 	}
 	
 	/**
+	 * Constructor
+	 * @param length
+	 * @param units
+	 */
+	public DistanceResult(double length, String units) {
+		this.length = length;
+		this.units = units;
+	}
+	
+	/**
 	 * Getter for the id of the distance result row in the database
 	 * @return
 	 */

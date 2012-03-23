@@ -38,6 +38,16 @@ public class TimeResult {
 	}
 	
 	/**
+	 * Constructor
+	 * @param length
+	 * @param units
+	 */
+	public TimeResult(int length, String units) {
+		this.length = length;
+		this.units = units;
+	}
+	
+	/**
 	 * Getter for the id of the row in the Time result database
 	 * @return
 	 */

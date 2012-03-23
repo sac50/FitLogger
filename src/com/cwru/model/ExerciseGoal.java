@@ -27,6 +27,8 @@ public class ExerciseGoal {
 	private int exerciseId;
 	private double goalOne;
 	private double goalTwo;
+	private double startingBestOne;
+	private double startingBestTwo;
 	private String unit;
 	
 	/**
@@ -39,9 +41,11 @@ public class ExerciseGoal {
 	 * @param exerciseId
 	 * @param goalOne
 	 * @param goalTwo
+	 * @param startingBestOne
+	 * @param startingBestTwo
 	 * @param unit
 	 */
-	public ExerciseGoal(int id, String name, int mode, int type, int exerciseId, double goalOne, double goalTwo, String unit) {
+	public ExerciseGoal(int id, String name, int mode, int type, int exerciseId, double goalOne, double goalTwo, double startingBestOne, double startingBestTwo, String unit) {
 		this.id = id;
 		this.name = name;
 		this.mode = mode;
@@ -49,6 +53,8 @@ public class ExerciseGoal {
 		this.exerciseId = exerciseId;
 		this.goalOne = goalOne;
 		this.goalTwo = goalTwo;
+		this.startingBestOne = startingBestOne;
+		this.startingBestTwo = startingBestTwo;
 		this.unit = unit;
 	}
 	
@@ -61,14 +67,18 @@ public class ExerciseGoal {
 	 * @param exerciseId
 	 * @param goalOne
 	 * @param goalTwo
+	 * @param startingBestOne
+	 * @param startingBestTwo
 	 * @param unit
 	 */
-	public ExerciseGoal(String name, int mode, int type, int exerciseId, double goalOne, double goalTwo, String unit) {
+	public ExerciseGoal(String name, int mode, int type, int exerciseId, double goalOne, double goalTwo, double startingBestOne, double startingBestTwo, String unit) {
 		this.name = name;
 		this.type = type;
 		this.exerciseId = exerciseId;
 		this.goalOne = goalOne;
 		this.goalTwo = goalTwo;
+		this.startingBestOne = startingBestOne;
+		this.startingBestTwo = startingBestTwo;
 		this.unit = unit;
 	}
 	
@@ -106,20 +116,6 @@ public class ExerciseGoal {
 	}
 
 	/**
-	 * @return the mode
-	 */
-	public int getMode() {
-		return mode;
-	}
-
-	/**
-	 * @param mode the mode to set
-	 */
-	public void setMode(int mode) {
-		this.mode = mode;
-	}
-
-	/**
 	 * @return the type
 	 */
 	public int getType() {
@@ -131,6 +127,20 @@ public class ExerciseGoal {
 	 */
 	public void setType(int type) {
 		this.type = type;
+	}
+
+	/**
+	 * @return the mode
+	 */
+	public int getMode() {
+		return mode;
+	}
+
+	/**
+	 * @param mode the mode to set
+	 */
+	public void setMode(int mode) {
+		this.mode = mode;
 	}
 
 	/**
@@ -173,6 +183,34 @@ public class ExerciseGoal {
 	 */
 	public void setGoalTwo(double goalTwo) {
 		this.goalTwo = goalTwo;
+	}
+	
+	/**
+	 * @return the startingBestOne
+	 */
+	public double getStartingBestOne() {
+		return startingBestOne;
+	}
+
+	/**
+	 * @param startingBestOne the startingBestOne to set
+	 */
+	public void setStartingBestOne(double startingBestOne) {
+		this.startingBestOne = startingBestOne;
+	}
+	
+	/**
+	 * @return the startingBestTwo
+	 */
+	public double getStartingBestTwo() {
+		return startingBestTwo;
+	}
+
+	/**
+	 * @param startingBestTwo the startingBestTwo to set
+	 */
+	public void setStartingBestTwo(double startingBestTwo) {
+		this.startingBestTwo = startingBestTwo;
 	}
 
 	/**

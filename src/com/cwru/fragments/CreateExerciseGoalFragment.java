@@ -35,13 +35,9 @@ public class CreateExerciseGoalFragment extends Fragment {
 	private ArrayList<Exercise> cardioExercises;
 	private ArrayList<Exercise> strengthExercises;
 	private Exercise exercise;
-	private Distance distance;
-	private Set set;
-	private Time time;
 	private View topView;
 	private LinearLayout cardioView;
 	private LinearLayout strengthView;
-	private LinearLayout exerciseView;
 	private View distanceView;
 	private View setView;
 	private View timeCardioView;
@@ -52,8 +48,8 @@ public class CreateExerciseGoalFragment extends Fragment {
 	private RadioGroup distanceOrTime;
 	
 	private void init() {
-		exGoal.setMode(ExerciseGoal.RUN);
-		exGoal.setType(ExerciseGoal.DISTANCE);
+		exGoal.setType(ExerciseGoal.RUN);
+		exGoal.setMode(ExerciseGoal.DISTANCE);
 		
 		cardioView = (LinearLayout) topView.findViewById(R.id.llCreateExerciseGoalCardio);
 		strengthView = (LinearLayout) topView.findViewById(R.id.llCreateExerciseGoalStrength);
@@ -82,11 +78,13 @@ public class CreateExerciseGoalFragment extends Fragment {
 		initSpinner(exStrengthSpinner, strengthExercises);
 		exStrengthSpinner.setOnItemSelectedListener(exStrengthListener);
 		
-		Exercise ex = strengthExercises.get(exStrengthSpinner.getSelectedItemPosition());
-		if (ex.getMode() == Exercise.SET_BASED_EXERCISE) {
-			strengthView.addView(setView);
-		} else {
-			strengthView.addView(timeStrengthView);
+		if (exStrengthSpinner.getSelectedItemPosition() >= 0) {
+			Exercise ex = strengthExercises.get(exStrengthSpinner.getSelectedItemPosition());
+			if (ex.getMode() == Exercise.SET_BASED_EXERCISE) {
+				strengthView.addView(setView);
+			} else {
+				strengthView.addView(timeStrengthView);
+			}
 		}
 		
 		typeSpinner = (Spinner) topView.findViewById(R.id.spnExGoalType);
@@ -123,14 +121,14 @@ public class CreateExerciseGoalFragment extends Fragment {
 					
 				//generate exercise spinner
 				} else {
-					exGoal.setMode(ExerciseGoal.SPECIFIC_STRENGTH_EXERCISE);
-					exGoal.setType(-1);
+					exGoal.setType(ExerciseGoal.SPECIFIC_STRENGTH_EXERCISE);
+					exGoal.setMode(-1);
 					
 					Exercise ex = strengthExercises.get(exStrengthSpinner.getSelectedItemPosition());
 					if (ex.getMode() == Exercise.SET_BASED_EXERCISE) {
-						exGoal.setType(ExerciseGoal.SET);
+						exGoal.setMode(ExerciseGoal.SET);
 					} else {
-						exGoal.setType(ExerciseGoal.TIME);
+						exGoal.setMode(ExerciseGoal.TIME);
 					}
 					
 					strengthView.setVisibility(0);
@@ -150,19 +148,19 @@ public class CreateExerciseGoalFragment extends Fragment {
 	}
 	
 	private void inflateCardio() {
-		exGoal.setMode((int) typeSpinner.getSelectedItemId());
+		exGoal.setType((int) typeSpinner.getSelectedItemId());
 		
 		if (exCardioSpinner.getSelectedItemPosition() == 5) {
 			if (exercise.getMode() == Exercise.DISTANCE_BASED_EXERCISE) {
-				exGoal.setType(ExerciseGoal.DISTANCE);
+				exGoal.setMode(ExerciseGoal.DISTANCE);
 			} else {
-				exGoal.setType(ExerciseGoal.TIME);
+				exGoal.setMode(ExerciseGoal.TIME);
 			}
 		}
 		if (distanceOrTime.getCheckedRadioButtonId() == R.id.rbDistance) {
-			exGoal.setType(ExerciseGoal.DISTANCE);
+			exGoal.setMode(ExerciseGoal.DISTANCE);
 		} else {
-			exGoal.setType(ExerciseGoal.TIME);
+			exGoal.setMode(ExerciseGoal.TIME);
 		}
 		
 		cardioView.setVisibility(0);
@@ -174,7 +172,7 @@ public class CreateExerciseGoalFragment extends Fragment {
 		@Override
 		public void onItemSelected(AdapterView<?> parent, View view, int pos,
 				long id) {
-			exGoal.setMode(pos);
+			exGoal.setType(pos);
 			
 			switch (pos) {
 			
@@ -186,17 +184,17 @@ public class CreateExerciseGoalFragment extends Fragment {
 				
 				if (distanceOrTime.getCheckedRadioButtonId() == R.id.rbDistance) {
 					cardioView.addView(distanceView);
-					exGoal.setType(ExerciseGoal.DISTANCE);
+					exGoal.setMode(ExerciseGoal.DISTANCE);
 				} else {
 					cardioView.addView(timeCardioView);
-					exGoal.setType(ExerciseGoal.TIME);
+					exGoal.setMode(ExerciseGoal.TIME);
 				}
 				
 				break;
 			
 			//Specific Exercise
 			case 5:
-				exGoal.setType(-1);
+				exGoal.setMode(-1);
 				
 				cardioView.addView(exCardioSpinner);
 				
@@ -210,10 +208,10 @@ public class CreateExerciseGoalFragment extends Fragment {
 				Exercise ex = cardioExercises.get(exCardioSpinner.getSelectedItemPosition());
 				if (ex.getMode() == Exercise.DISTANCE_BASED_EXERCISE) {
 					cardioView.addView(distanceView);
-					exGoal.setType(ExerciseGoal.DISTANCE);
+					exGoal.setMode(ExerciseGoal.DISTANCE);
 				} else {
 					cardioView.addView(timeCardioView);
-					exGoal.setType(ExerciseGoal.TIME);
+					exGoal.setMode(ExerciseGoal.TIME);
 				}
 				
 				exCardioSpinner.setVisibility(0);
@@ -235,14 +233,14 @@ public class CreateExerciseGoalFragment extends Fragment {
 		public void onItemSelected(AdapterView<?> parent, View view, int pos,
 				long id) {
 			Exercise ex = cardioExercises.get(pos);
-			if (ex.getMode() == Exercise.DISTANCE_BASED_EXERCISE && exGoal.getType() != ExerciseGoal.DISTANCE) {
+			if (ex.getMode() == Exercise.DISTANCE_BASED_EXERCISE && exGoal.getMode() != ExerciseGoal.DISTANCE) {
 				cardioView.removeView(timeCardioView);
 				cardioView.addView(distanceView);
-				exGoal.setType(ExerciseGoal.DISTANCE);
-			} else  if (ex.getMode() != Exercise.DISTANCE_BASED_EXERCISE && exGoal.getType() != ExerciseGoal.TIME) {
+				exGoal.setMode(ExerciseGoal.DISTANCE);
+			} else  if (ex.getMode() != Exercise.DISTANCE_BASED_EXERCISE && exGoal.getMode() != ExerciseGoal.TIME) {
 				cardioView.removeView(distanceView);
 				cardioView.addView(timeCardioView);
-				exGoal.setType(ExerciseGoal.TIME);
+				exGoal.setMode(ExerciseGoal.TIME);
 			}
 		}
 		
@@ -258,14 +256,14 @@ public class CreateExerciseGoalFragment extends Fragment {
 		public void onItemSelected(AdapterView<?> parent, View view, int pos,
 				long id) {
 			Exercise ex = strengthExercises.get(pos);
-			if (ex.getMode() == Exercise.SET_BASED_EXERCISE && exGoal.getType() != ExerciseGoal.SET) {
+			if (ex.getMode() == Exercise.SET_BASED_EXERCISE && exGoal.getMode() != ExerciseGoal.SET) {
 				strengthView.removeView(timeStrengthView);
 				strengthView.addView(setView);
-				exGoal.setType(ExerciseGoal.SET);
-			} else if (ex.getMode() != Exercise.SET_BASED_EXERCISE && exGoal.getType() != ExerciseGoal.TIME) {
+				exGoal.setMode(ExerciseGoal.SET);
+			} else if (ex.getMode() != Exercise.SET_BASED_EXERCISE && exGoal.getMode() != ExerciseGoal.TIME) {
 				strengthView.removeView(setView);
 				strengthView.addView(timeStrengthView);
-				exGoal.setType(ExerciseGoal.TIME);
+				exGoal.setMode(ExerciseGoal.TIME);
 			}
 		}
 
@@ -282,11 +280,11 @@ public class CreateExerciseGoalFragment extends Fragment {
 			if (checkedId == R.id.rbDistance) {
 				cardioView.addView(distanceView);
 				cardioView.removeView(timeCardioView);
-				exGoal.setType(ExerciseGoal.DISTANCE);
+				exGoal.setMode(ExerciseGoal.DISTANCE);
 			} else {
 				cardioView.addView(timeCardioView);
 				cardioView.removeView(distanceView);
-				exGoal.setType(ExerciseGoal.TIME);
+				exGoal.setMode(ExerciseGoal.TIME);
 			}
 		}
 	};
@@ -312,7 +310,7 @@ public class CreateExerciseGoalFragment extends Fragment {
 				return;
 			}
 			
-			switch (exGoal.getMode()) {
+			switch (exGoal.getType()) {
 			
 			default:
 				break;
@@ -326,7 +324,7 @@ public class CreateExerciseGoalFragment extends Fragment {
 				break;
 			}
 			
-			switch (exGoal.getType()) {
+			switch (exGoal.getMode()) {
 			
 			case ExerciseGoal.DISTANCE:
 				EditText text = (EditText) distanceView.findViewById(R.id.etCreateExerciseGoalDistance);
@@ -376,7 +374,7 @@ public class CreateExerciseGoalFragment extends Fragment {
 				EditText timeText;
 				Spinner timeSpinner;
 				
-				if (exGoal.getMode() == ExerciseGoal.SPECIFIC_STRENGTH_EXERCISE) {
+				if (exGoal.getType() == ExerciseGoal.SPECIFIC_STRENGTH_EXERCISE) {
 					timeText = (EditText) timeStrengthView.findViewById(R.id.etCreateExerciseGoalTime);
 					timeSpinner = (Spinner) timeStrengthView.findViewById(R.id.spnCreateExerciseGoalTime);
 				} else {

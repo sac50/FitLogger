@@ -37,19 +37,21 @@ public class ViewExerciseGoalFragment extends Fragment {
 		summary.setText(exGoal.getName());
 		
 		TextView mode = (TextView) view.findViewById(R.id.tvViewExerciseGoalMode);
-		if (exGoal.getMode() != ExerciseGoal.SPECIFIC_CARDIO_EXERCISE
-				&& exGoal.getMode() != ExerciseGoal.SPECIFIC_STRENGTH_EXERCISE) {
+		if (exGoal.getType() != ExerciseGoal.SPECIFIC_CARDIO_EXERCISE
+				&& exGoal.getType() != ExerciseGoal.SPECIFIC_STRENGTH_EXERCISE) {
 			String[] modes = {"Run", "Swim", "Bike", "Ski", "Row/Paddle"};
-			mode.setText(modes[exGoal.getMode()]);
+			mode.setText(modes[exGoal.getType()]);
 		} else {
 			String exName = mDbHelper.getExerciseFromId(exGoal.getExerciseId()).getName();
 			mode.setText(exName);
 		}
 		
+		TextView start = (TextView) view.findViewById(R.id.tvViewExerciseGoalStarted);
 		TextView goal = (TextView) view.findViewById(R.id.tvViewExerciseGoalGoal);
-		if (exGoal.getMode() == ExerciseGoal.SPECIFIC_STRENGTH_EXERCISE) {
+		if (exGoal.getType() == ExerciseGoal.SPECIFIC_STRENGTH_EXERCISE) {
 			goal.setText("weight: " + exGoal.getGoalOne() + "   reps: " + (int) exGoal.getGoalTwo());
 		} else {
+			start.setText(exGoal.getStartingBestOne() + " " + exGoal.getUnit());
 			goal.setText(exGoal.getGoalOne() + " " + exGoal.getUnit());
 		}
 		

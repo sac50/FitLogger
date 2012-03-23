@@ -25,6 +25,7 @@ import com.cwru.model.Time;
 import com.cwru.model.TimeResult;
 import com.cwru.model.Workout;
 import com.cwru.model.WorkoutResult;
+import com.cwru.utils.MeasurementConversions;
 
 /**
  * Handles all database transactions for the application.
@@ -91,7 +92,8 @@ public class DbAdapter {
 	private static final String CREATE_EXERCISE_GOALS_TABLE =
 			"create table exercise_goals (id integer primary key autoincrement, " +
 			"name text not null, mode integer not null, type integer not null, " +
-			"exercise_id integer, goal_one real, goal_two real, unit integer);";
+			"exercise_id integer, goal_one real, goal_two real, starting_best_one real, " +
+			"starting_best_two real, unit integer);";
 				
 	private static final String DATABASE_NAME = "FitLoggerData";
 	private static final String DATABASE_TABLE_WORKOUT = "workouts";
@@ -157,7 +159,7 @@ public class DbAdapter {
 
 	public DbAdapter open() throws SQLException {
 		dbHelper = new DatabaseHelper(mCtx);
-		db = dbHelper.getWritableDatabase();
+		db = dbHelper.getWritableDatabase();	
 		return this;
 	}
 
@@ -368,7 +370,7 @@ public class DbAdapter {
 	public ArrayList<Exercise> getAllUndeletedExercises() {
 		open();
 		ArrayList<Exercise> exerciseList = new ArrayList<Exercise>();
-		String query = "select id, name, type, comment, deleted from exercises where deleted = 0";
+		String query = "select id, name, type, comment, deleted from exercises where deleted = 0 order by name";
 		Cursor cursor = db.rawQuery(query, null);
 		while (cursor.moveToNext()) {
 			int id = cursor.getInt(cursor.getColumnIndex("id"));
@@ -406,6 +408,35 @@ public class DbAdapter {
 		}
 		close();
 		return exerciseList;
+	}
+	
+	/**
+	 * Retrieve all exercises that match the provided type and mode
+	 * @param type
+	 * @param mode
+	 * @return ArrayList<Exercise>
+	 */
+	public ArrayList<Exercise> getAllExercisesForTypeAndMode(String type, int mode) {
+		open();
+		
+		ArrayList<Exercise> exercises = new ArrayList<Exercise>();
+		
+		String query = "select * from exercises where type = '" + type + "'";
+		Cursor cursor = db.rawQuery(query, null);
+		while (cursor.moveToNext()) {
+			int id = cursor.getInt(cursor.getColumnIndex("id"));
+			if (mode != getExerciseMode(id)) {
+				continue;
+			}
+			String name = cursor.getString(cursor.getColumnIndex("name"));
+			String comment = cursor.getString(cursor.getColumnIndex("comment"));
+			boolean deleted = cursor.getInt(cursor.getColumnIndex("deleted")) > 0;
+			exercises.add(new Exercise(id, name, type, comment, deleted, mode));
+		}
+		
+		cursor.close();
+		close();
+		return exercises;
 	}
 	
 	/**
@@ -607,12 +638,11 @@ public class DbAdapter {
 	 * @param exGoal
 	 */
 	public void createExerciseGoal(ExerciseGoal exGoal) {
-		open();
 		
 		ContentValues initialValues = new ContentValues();
 		initialValues.put("name", exGoal.getName());
-		initialValues.put("mode", exGoal.getMode());
 		initialValues.put("type", exGoal.getType());
+		initialValues.put("mode", exGoal.getMode());
 		initialValues.put("goal_one", exGoal.getGoalOne());
 		if (exGoal.getExerciseId() > 0) {
 			initialValues.put("exercise_id", exGoal.getExerciseId());
@@ -624,6 +654,62 @@ public class DbAdapter {
 			initialValues.put("unit", exGoal.getUnit());
 		}
 		
+		if (exGoal.getMode() != ExerciseGoal.SET) {
+			String exType = new String();
+			
+			switch (exGoal.getType()) {
+			
+			case ExerciseGoal.RUN:
+				exType = "Cardio - Run";
+				break;
+			case ExerciseGoal.SWIM:
+				exType = "Cardio - Swim";
+				break;
+			case ExerciseGoal.BIKE:
+				exType = "Cardio - Bike";
+				break;
+			case ExerciseGoal.SKI:
+				exType = "Cardio - Ski";
+				break;
+			case ExerciseGoal.PADDLE:
+				exType = "Cardio - Row/Paddle";
+				break;
+			default:
+				break;
+			}
+			
+			ArrayList<Exercise> exercises = new ArrayList<Exercise>();
+			
+			switch (exGoal.getMode()) {
+			
+			case ExerciseGoal.DISTANCE:
+				if (exGoal.getExerciseId() > 0) {
+					exercises.add(getExerciseFromId(exGoal.getExerciseId()));
+				} else {
+					exercises = getAllExercisesForTypeAndMode(exType, Exercise.DISTANCE_BASED_EXERCISE);
+				}
+				DistanceResult distanceResult = getGreatestDistanceResult(exercises);
+				Double distance = MeasurementConversions.convert(distanceResult.getLength(), distanceResult.getUnits(), exGoal.getUnit());
+				initialValues.put("starting_best_one", distance);
+				break;
+			case ExerciseGoal.TIME:
+				if (exGoal.getExerciseId() > 0) {
+					exercises.add(getExerciseFromId(exGoal.getExerciseId()));
+				} else {
+					exercises = getAllExercisesForTypeAndMode(exType, Exercise.COUNTDOWN_BASED_EXERCISE);
+					exercises.addAll(getAllExercisesForTypeAndMode(exType, Exercise.COUNTUP_BASED_EXERCISE));
+				}
+				TimeResult timeResult= getGreatestTimeResult(exercises);
+				Double time = MeasurementConversions.convert(timeResult.getLength(), timeResult.getUnits(), exGoal.getUnit());
+				initialValues.put("starting_best_one", time);
+				break;
+			default:
+				break;
+			}
+
+		}
+		
+		open();
 		db.insert(DATABASE_TABLE_EXERCISE_GOAL, null, initialValues);
 		close();
 	}
@@ -1023,14 +1109,78 @@ public class DbAdapter {
 			int exerciseId = cursor.getInt(cursor.getColumnIndex("exercise_id"));
 			double goalOne = cursor.getDouble(cursor.getColumnIndex("goal_one"));
 			double goalTwo = cursor.getDouble(cursor.getColumnIndex("goal_two"));
+			double startingBestOne = cursor.getDouble(cursor.getColumnIndex("starting_best_one"));
+			double startingBestTwo = cursor.getDouble(cursor.getColumnIndex("starting_best_two"));
 			String unit = cursor.getString(cursor.getColumnIndex("unit"));
-			exerciseGoals.add(new ExerciseGoal(id, name, mode, type, exerciseId, goalOne, goalTwo, unit));
+			exerciseGoals.add(new ExerciseGoal(id, name, mode, type, exerciseId, goalOne, goalTwo, startingBestOne, startingBestTwo, unit));
 		}
 		
 		cursor.close();
 		close();
 		
 		return exerciseGoals;
+	}
+	
+	/**
+	 * determine and return the greatest DistanceResult corresponding to provided exercises
+	 * @param exercises
+	 * @return
+	 */
+	public DistanceResult getGreatestDistanceResult(ArrayList<Exercise> exercises) {
+		open();
+		
+		Double greatest = 0.0;
+		String greatestUnit = "yd.";
+		
+		for (Exercise ex : exercises) {
+			String query = "select d.length, d.units from workout_result w, distance_result d " +
+					"where w.id = d.workout_result_id and w.exercise_id = " + ex.getId();
+			Cursor cursor = db.rawQuery(query, null);
+			while (cursor.moveToNext()) {
+				Double num = cursor.getDouble(cursor.getColumnIndex("d.length"));
+				String unit = cursor.getString(cursor.getColumnIndex("d.units"));
+				greatest = MeasurementConversions.convert(greatest, greatestUnit, unit);
+				greatestUnit = unit;
+				if (greatest < num) {
+					greatest = num;
+				}
+			}
+			cursor.close();
+		}
+		
+		close();
+		return new DistanceResult(greatest, greatestUnit);
+	}
+	
+	/**
+	 * determine and return the greatest TimeResult corresponding to provided exercises
+	 * @param exercises
+	 * @return
+	 */
+	public TimeResult getGreatestTimeResult(ArrayList<Exercise> exercises) {
+		open();
+		
+		int greatest = 0;
+		String greatestUnit = "seconds";
+		
+		for (Exercise ex : exercises) {
+			String query = "select t.length, t.units from workout_result w, time_result t " +
+					"where w.id = t.workout_result_id and w.exercise_id = " + ex.getId();
+			Cursor cursor = db.rawQuery(query, null);
+			while (cursor.moveToNext()) {
+				int num = cursor.getInt(cursor.getColumnIndex("t.length"));
+				String unit = cursor.getString(cursor.getColumnIndex("t.units"));
+				greatest = (int) MeasurementConversions.convert((int) greatest, greatestUnit, unit);
+				greatestUnit = unit;
+				if (greatest < num) {
+					greatest = num;
+				}
+			}
+			cursor.close();
+		}
+		
+		close();
+		return new TimeResult(greatest, greatestUnit);
 	}
 	
 	/**
