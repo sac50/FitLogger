@@ -107,4 +107,19 @@ CREATE TABLE workouts (
 	repeats_friday boolean,
 	repeats_saturday boolean,
 	comment text
+
+)
+
+CREATE TABLE exercise_goals {
+	id integer primary key autoincrement,
+	name text not null,
+	mode integer not null,
+	type integer not null,
+	exercise_id integer,
+	goal_one real,
+	goal_two real,
+	starting_best_one real,
+	starting_best_two real,
+	unit integer
+	FOREIGN KEY (exercise_id) REFERENCES exercises(id);
 )
