@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/svViewExerciseGoal"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:id="@+id/llViewExerciseGoal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+        
+        <TextView
+        	android:id="@+id/tvViewExerciseGoalSummaryLabel"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:text="@string/exGoalName" />
+    
+    	<TextView
+    	    android:id="@+id/tvViewExerciseGoalSummary"
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:layout_marginBottom="10dp"
+    	    android:text="TextView"
+    	    android:textSize="22sp" />
+    	
+    	<TextView
+        	android:id="@+id/tvViewExerciseGoalModeLabel"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:text="@string/exGoalNameOrType" />
+    
+    	<TextView
+    	    android:id="@+id/tvViewExerciseGoalMode"
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:layout_marginBottom="10dp"
+    	    android:text="TextView"
+    	    android:textSize="22sp" />
+
+    	<LinearLayout
+    	    android:id="@+id/linearLayout2"
+    	    android:layout_width="match_parent"
+    	    android:layout_height="wrap_content" >
+    	    
+    	    <TextView
+    	        android:id="@+id/tvViewExerciseGoalStartedLabel"
+    	        android:layout_width="wrap_content"
+    	        android:layout_height="wrap_content"
+    	        android:layout_marginBottom="15dp"
+    	        android:layout_marginRight="36dp"
+    	        android:text="@string/exGoalStarted" />
+    
+    		<TextView 
+        		android:id="@+id/tvViewExerciseGoalStarted"
+        		android:layout_width="wrap_content"
+        		android:layout_height="wrap_content"
+        		android:text="TextView"/>
+    	    
+    	</LinearLayout>
+    	
+    	<LinearLayout
+    	    android:id="@+id/linearLayout3"
+    	    android:layout_width="match_parent"
+    	    android:layout_height="wrap_content" >
+    	    
+    	    <TextView
+    	        android:id="@+id/tvViewExerciseGoalCurrentLabel"
+    	        android:layout_width="wrap_content"
+    	        android:layout_height="wrap_content"
+    	        android:layout_marginBottom="15dp"
+    	        android:layout_marginRight="20dp"
+    	        android:text="@string/exGoalCurrent" />
+    
+    		<TextView 
+        		android:id="@+id/tvViewExerciseGoalCurrent"
+        		android:layout_width="wrap_content"
+        		android:layout_height="wrap_content"
+        		android:text="TextView"/>
+    	    
+    	</LinearLayout>
+    	
+    	<LinearLayout
+    	    android:id="@+id/linearLayout4"
+    	    android:layout_width="match_parent"
+    	    android:layout_height="wrap_content" >
+    	    
+    	    <TextView
+    	        android:id="@+id/tvViewExerciseGoalGoalLabel"
+    	        android:layout_width="wrap_content"
+    	        android:layout_height="wrap_content"
+    	        android:layout_marginBottom="15dp"
+    	        android:layout_marginRight="69dp"
+    	        android:text="@string/exGoalGoal" />
+    
+    		<TextView 
+        		android:id="@+id/tvViewExerciseGoalGoal"
+        		android:layout_width="wrap_content"
+        		android:layout_height="wrap_content"
+        		android:text="TextView" />
+    	    
+    	</LinearLayout>
+        
+    	<ProgressBar
+    	    android:id="@+id/pbViewExerciseGoal"
+    	    style="?android:attr/progressBarStyleHorizontal"
+    	    android:layout_width="236dp"
+    	    android:layout_height="wrap_content"
+    	    android:layout_gravity="center_horizontal" />
+    	
+    	<TextView
+    	    android:id="@+id/tvViewExerciseGoalProgress"
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:layout_gravity="center_horizontal"
+    	    android:layout_marginBottom="30dp"
+    	    android:text="TextView" />
+
+    	<Button
+    	    android:id="@+id/btnViewExerciseGoalDelete"
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:layout_gravity="center_horizontal"
+    	    android:text="@string/delete" />
+    	
+    </LinearLayout>
+</ScrollView>

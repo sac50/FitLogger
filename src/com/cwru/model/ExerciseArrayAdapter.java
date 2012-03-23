@@ -23,7 +23,7 @@ public class ExerciseArrayAdapter extends ArrayAdapter<Exercise>{
 	private DbAdapter mDbHelper;
 	
 	public ExerciseArrayAdapter(Activity context, List<Exercise> list, ListFragment fragment) {
-		super(context, com.cwru.R.layout.exercise_bank_row, list);
+		super(context, R.layout.exercise_bank_row, list);
 		this.context = context;
 		this.list = list;
 		this.fragment = fragment;
@@ -87,13 +87,6 @@ public class ExerciseArrayAdapter extends ArrayAdapter<Exercise>{
 				transaction.replace(R.id.flEditExerciseRightFrame, newFragment);
 				transaction.commit();
 			}
-			
-//			Intent intent = new Intent(EditExerciseBankFragment.this.getActivity(), EditExercise.class);
-//			intent.putExtra("exercise", ex);
-//			startActivity(intent);
- 
- 
 		}
 	};
-	
 }

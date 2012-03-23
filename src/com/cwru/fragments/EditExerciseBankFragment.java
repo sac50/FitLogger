@@ -41,46 +41,7 @@ public class EditExerciseBankFragment extends ListFragment {
 		ExerciseArrayAdapter adapter = new ExerciseArrayAdapter(this.getActivity(), exercises, this);
 		this.setListAdapter(adapter);
 		
-//		View list = (ListView) view.findViewById(android.R.id.list);
-//		View selection = (TextView) list.findViewById(R.id.tvEBRExerciseLabel);
-//		selection.setOnClickListener(editExerciseListener);
-		
-//		view.setOnClickListener(editExerciseListener);
-		
 		return view;
 	}
 	
-	View.OnClickListener editExerciseListener = new View.OnClickListener() {
-		
-		@Override
-		public void onClick(View v) {
-			TextView etExName = (TextView) v.findViewById(R.id.tvEBRExerciseLabel);
-			String exName = etExName.getText().toString();
-			
-			Exercise ex;
-			
-			try {
-				mDbHelper.open();
-				ex = mDbHelper.getExerciseFromName(exName);
-			} finally {
-				mDbHelper.close();
-			}
-			
-			FragmentTransaction transaction = getFragmentManager().beginTransaction();
-			EditExerciseFragment fragment = new EditExerciseFragment(ex);
-			
-			if (!HomeScreen.isTablet) {
-				transaction.replace(R.id.flEditExerciseMainFrame, fragment);	
-				transaction.addToBackStack(null);
-				transaction.commit();
-			} else {
-				transaction.replace(R.id.flEditExerciseRightFrame, fragment);
-				transaction.commit();
-			}
-			
-//			Intent intent = new Intent(EditExerciseBankFragment.this.getActivity(), EditExercise.class);
-//			intent.putExtra("exercise", ex);
-//			startActivity(intent);
-		}
-	};
 }

@@ -43,6 +43,9 @@ public class HomeScreen extends ListActivity {
 				else if (position == 1) {
 					Intent intent = new Intent(HomeScreen.this, CreateEditTabActivity.class);
 					startActivity(intent);
+				} else if (position == 2) {
+					Intent intent = new Intent(HomeScreen.this, GoalsActivity.class);
+					startActivity(intent);
 				}
 			}        	
         });
