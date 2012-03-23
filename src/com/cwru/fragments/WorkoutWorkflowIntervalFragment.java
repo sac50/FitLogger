@@ -85,6 +85,7 @@ public class WorkoutWorkflowIntervalFragment extends Fragment {
 		this.intervalCycleNum = ++intervalCycleNum;
 		this.workoutResultCreated = workoutResultCreated;
 		this.workoutResultId = workoutResultId;
+		this.context = context;
 		stop = true;
 	}
 	
