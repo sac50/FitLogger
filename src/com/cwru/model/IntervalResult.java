@@ -8,44 +8,50 @@ package com.cwru.model;
 public class IntervalResult {
 	private int id;
 	private int workoutResultId;
-	private String name;
+	private int intervalId;
+	private int intervalSetNum;
+	private int intervalSetId;
 	private double length;
-	private String type;
 	private String units;
 	
 	/**
 	 * Constructor
 	 * @param id
 	 * @param workoutResultId
-	 * @param name
+	 * @param intervalId
+	 * @param intervalSetNum
+	 * @param intervalSetId
 	 * @param length
-	 * @param type
 	 * @param units
 	 */
-	public IntervalResult(int id, int workoutResultId, String name, double length, String type, String units) {
+	public IntervalResult(int id, int workoutResultId, int intervalId, int intervalSetNum, int intervalSetId, double length, String units) {
 		this.id = id;
 		this.workoutResultId = workoutResultId;
-		this.name = name;
+		this.intervalId = intervalId;
+		this.intervalSetNum = intervalSetNum;
+		this.intervalSetId = intervalSetId;
 		this.length = length;
-		this.type = type;
 		this.units = units;
 	}
 	
 	/**
 	 * Constructor
 	 * @param workoutResultId
-	 * @param name
+	 * @param intervalId
+	 * @param intervalSetNum
+	 * @param intervalSetId
 	 * @param length
-	 * @param type
 	 * @param units
 	 */
-	public IntervalResult(int workoutResultId, String name, double length, String type, String units) {
+	public IntervalResult(int workoutResultId, int intervalId, int intervalSetNum, int intervalSetId, double length, String units) {
 		this.workoutResultId = workoutResultId;
-		this.name = name;
+		this.intervalId = intervalId;
+		this.intervalSetNum = intervalSetNum;
+		this.intervalSetId = intervalSetId;
 		this.length = length;
-		this.type = type;
 		this.units = units;
 	}
+	
 	
 	/**
 	 * Getter for the id of the row in the interval result table.  
@@ -58,20 +64,26 @@ public class IntervalResult {
 	 */
 	public int getWorkoutResultId() { return workoutResultId; }
 	/**
-	 * Getter for the name of the interval
+	 * Getter for the interval id that the interval result relates too
 	 * @return
 	 */
-	public String getName() { return name; }
+	public int getIntervalId() { return intervalId; }
+	/**
+	 * Getter for the interval set number that the result is for
+	 * @return
+	 */
+	public int getIntervalSetNum() { return intervalSetNum; }
+	/**
+	 * Getter for the interval set id that the result relates too
+	 * @return
+	 */
+	public int getIntervalSetId() { return intervalSetId; }
 	/**
 	 * Getter for the length of the interval
 	 * @return
 	 */
 	public double getLength() { return length; }
-	/** 
-	 * Getter for the type of the interval, either distance or time
-	 * @return
-	 */
-	public String getType() { return type; }
+
 	/**
 	 * Getter for units that correspond to the length of the interval
 	 * @return
@@ -89,20 +101,25 @@ public class IntervalResult {
 	 */
 	public void setWorkoutResultId(int workoutResultId) { this.workoutResultId = workoutResultId; }
 	/**
-	 * Setter for the name of the interval result
-	 * @param name
+	 * Setter for the Interval id
+	 * @param intervalId
 	 */
-	public void setName(String name) { this.name = name; }
+	public void setIntervalId(int intervalId) { this.intervalId = intervalId; }
+	/**
+	 * Setter for the Interval Set Number, Which set number is the result for
+	 * @param intervalSetNum
+	 */
+	public void setIntervalSetNum(int intervalSetNum) { this.intervalSetNum = intervalSetNum; }
+	/** 
+	 * Setter for the interval Set Id
+	 * @param intervalSetId
+	 */
+	public void setIntervalSetId(int intervalSetId) { this.intervalSetId = intervalSetId; }
 	/**
 	 * Setter for the length of the interval result
 	 * @param length
 	 */
 	public void setLength(double length) { this.length = length; }
-	/**
-	 * Setter for the type of the interval result, either time or distance
-	 * @param type
-	 */
-	public void setType(String type) { this.type = type; }
 	/**
 	 * Setter for the units that the interval result is measured in
 	 * @param units

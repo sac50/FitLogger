@@ -17,6 +17,7 @@ import com.cwru.model.Distance;
 import com.cwru.model.DistanceResult;
 import com.cwru.model.Exercise;
 import com.cwru.model.Interval;
+import com.cwru.model.IntervalResult;
 import com.cwru.model.IntervalSet;
 import com.cwru.model.Set;
 import com.cwru.model.SetResult;
@@ -79,8 +80,10 @@ public class DbAdapter {
 			"exercise_id integer, num_repeats integer);";
 	
 	private static final String CREATE_INTERVALS_RESULT_TABLE = 
-			"create table intervals_result (id integer primary key autoincrement, " + 
-			"workout_result_id integer, name text, length real, type text, units text);";
+			"create table interval_result ( id integer primary key autoincrement, " +
+			"workout_result_id integer, interval_id integer, " +
+			"interval_set_num integer, interval_set_id, " +
+			"length real, units text);";
 	
 	private static final String CREATE_WORKOUT_RESULT_TABLE = 
 			"create table workout_result (id integer primary key autoincrement, " + 
@@ -961,6 +964,10 @@ public class DbAdapter {
 		close();
 	}
 	
+	/**
+	 * Inserts a row into the TimeResult Table.
+	 * @param timeResult
+	 */
 	public void storeTimeResult(TimeResult timeResult) {
 		open();
 		String query = "insert into time_result (workout_result_id, length, units) values (" + 
@@ -968,6 +975,21 @@ public class DbAdapter {
 		db.execSQL(query);
 		close();
 	}
+	
+	/**
+	 * Inserts a row into the Interval Result Table.
+	 * @param intervalResult
+	 */
+	public void storeIntervalResult(IntervalResult intervalResult) {
+		open();
+		String query = "insert into interval_result (workout_result_id, interval_id, interval_set_num, interval_set_id, length, units) values (" +
+					   intervalResult.getWorkoutResultId() + "," + intervalResult.getIntervalId() + "," + intervalResult.getIntervalSetNum() + "," + 
+					   intervalResult.getIntervalSetId() + "," + intervalResult.getLength() + ",'" + intervalResult.getUnits() + "')";
+		Log.d("Steve", "Query:" + query);
+		db.execSQL(query);
+		close();
+	}
+	
 	
 	
 	

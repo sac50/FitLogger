@@ -18,6 +18,7 @@ import com.cwru.fragments.WorkoutSetFragment;
 import com.cwru.fragments.WorkoutWorkflowCountDownTimerFragment;
 import com.cwru.fragments.WorkoutWorkflowCountUpTimerFragment;
 import com.cwru.fragments.WorkoutWorkflowDistanceFragment;
+import com.cwru.fragments.WorkoutWorkflowIntervalFragment;
 import com.cwru.model.Exercise;
 
 /**
@@ -159,7 +160,17 @@ public class PerformWorkout extends FragmentActivity {
 	}
 	
 	private void launchIntervalExercise(Exercise exercise) {
-		
+		// Get Intervals for Exercise
+		exercise.setInterval(mDbHelper.getIntervalForExercise(exercise.getId()));
+		WorkoutWorkflowIntervalFragment interval = new WorkoutWorkflowIntervalFragment(exercise, this, workoutId,0);
+		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+		if (HomeScreen.isTablet) {
+			
+		} 
+		else {
+			transaction.replace(R.id.flPerformWorkoutMainFrame, interval);
+		}
+		transaction.commit();
 	}
 	
 	/**
