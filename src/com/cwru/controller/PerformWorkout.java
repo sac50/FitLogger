@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -18,6 +19,7 @@ import com.cwru.fragments.WorkoutSetFragment;
 import com.cwru.fragments.WorkoutWorkflowCountDownTimerFragment;
 import com.cwru.fragments.WorkoutWorkflowCountUpTimerFragment;
 import com.cwru.fragments.WorkoutWorkflowDistanceFragment;
+import com.cwru.fragments.WorkoutWorkflowIntervalFragment;
 import com.cwru.model.Exercise;
 
 /**
@@ -48,7 +50,10 @@ public class PerformWorkout extends FragmentActivity {
 		getExercisesForWorkout(workoutName);
 		exerciseCounter = 0;
 		btnPrevious = (Button) this.findViewById(R.id.btnPerformWorkoutPrev);
+		btnPrevious.setOnClickListener(prevExercise);
 		btnNext = (Button) this.findViewById(R.id.btnPerformWorkoutNext);
+		btnNext.setOnClickListener(nextExercise);
+		
 		tvPercentDone = (TextView) this.findViewById(R.id.tvPerformWorkoutPercentageDone);
 		Log.d("Size", "ExercisesForWorkout: " + exercisesForWorkout.size());
 		int percentage = exerciseCounter / exercisesForWorkout.size();
@@ -159,7 +164,17 @@ public class PerformWorkout extends FragmentActivity {
 	}
 	
 	private void launchIntervalExercise(Exercise exercise) {
-		
+		// Get Intervals for Exercise
+		exercise.setInterval(mDbHelper.getIntervalForExercise(exercise.getId()));
+		WorkoutWorkflowIntervalFragment interval = new WorkoutWorkflowIntervalFragment(exercise, this, workoutId,0);
+		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+		if (HomeScreen.isTablet) {
+			
+		} 
+		else {
+			transaction.replace(R.id.flPerformWorkoutMainFrame, interval);
+		}
+		transaction.commit();
 	}
 	
 	/**
@@ -175,4 +190,23 @@ public class PerformWorkout extends FragmentActivity {
 			exercisesForWorkout.add(exercise);
 		}
 	}
+	
+	View.OnClickListener nextExercise = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			exerciseCounter++;
+			int percentage = exerciseCounter / exercisesForWorkout.size();
+			tvPercentDone.setText(percentage + " % Workout Complete");
+			launchExercise();
+		}
+	};
+	
+	View.OnClickListener prevExercise = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			
+		}
+	};
 }
