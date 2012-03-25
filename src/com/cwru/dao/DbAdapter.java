@@ -1125,6 +1125,164 @@ public class DbAdapter {
 	}
 	
 	/**
+	 * Receives a newly completed workout result and determines if the completion of that
+	 * exercise fulfilled any exercise goals. Fulfilled exercise goals returned in arraylist.
+	 * 
+	 * @param WorkoutResult result
+	 * @return ArrayList<ExerciseGoal>
+	 */
+	public ArrayList<ExerciseGoal> getNewlyCompletedExerciseGoals(WorkoutResult result) {
+		ArrayList<ExerciseGoal> goals = new ArrayList<ExerciseGoal>();
+		Exercise ex = getExerciseFromId(result.getExerciseId());
+		
+		DistanceResult dResult;
+		TimeResult tResult;
+		double val = 0.0;
+		String unit = new String();
+		ArrayList<SetResult> sResults = new ArrayList<SetResult>();
+		
+		int mode = -1;
+		switch (result.getMode()) {
+		case WorkoutResult.INTERVAL_BASED_EXERCISE:
+			return goals;
+		case WorkoutResult.TIME_BASED_EXERCISE:
+			mode = ExerciseGoal.TIME;
+			tResult = getTimeResult(result.getId());
+			val = tResult.getLength();
+			unit = tResult.getUnits();
+			break;
+		case WorkoutResult.DISTANCE_BASED_EXERCISE:
+			mode = ExerciseGoal.DISTANCE;
+			dResult = getDistanceResult(result.getId());
+			val = dResult.getLength();
+			unit = dResult.getUnits();
+			break;
+		case WorkoutResult.SET_BASED_EXERCISE:
+			mode = ExerciseGoal.SET;
+			sResults = getSetResults(result.getId());
+			String query = "select * from exercise_goals where exercise_id = " + ex.getId();
+			open();
+			Cursor c = db.rawQuery(query, null);
+			while (c.moveToNext()) {
+				double weight = c.getDouble(c.getColumnIndex("goal_one"));
+				int reps = (int) c.getDouble(c.getColumnIndex("goal_two"));
+				for (SetResult sResult : sResults) {
+					if (sResult.getWeight() >= weight && sResult.getReps() >= reps) {
+						ExerciseGoal goal = new ExerciseGoal();
+						goal.setName(c.getString(c.getColumnIndex("name")));
+						goals.add(goal);
+						break;
+					}
+				}
+			}
+			c.close();
+			close();
+			return goals;
+		}
+		
+		int type = -1;
+		if ("Cardio - Run".equals(ex.getType()))
+			type = ExerciseGoal.RUN;
+		else if ("Cardio - Bike".equals(ex.getType()))
+			type = ExerciseGoal.BIKE;
+		else if ("Cardio - Swim".equals(ex.getType()))
+			type = ExerciseGoal.SWIM;
+		else if ("Cardio - Ski".equals(ex.getType()))
+			type = ExerciseGoal.SKI;
+		else if ("Cardio - Row/Paddle".equals(ex.getType()))
+			type = ExerciseGoal.PADDLE;
+		
+		open();
+		String query = "select * from exercise_goals where exercise_id = " + ex.getId() +
+				" or type = " + type + " and mode = " + mode;
+		Cursor cursor = db.rawQuery(query, null);
+		while (cursor.moveToNext()) {
+			double goalVal = cursor.getDouble(cursor.getColumnIndex("goal_one"));
+			String goalUnit = cursor.getString(cursor.getColumnIndex("unit"));
+			val = MeasurementConversions.convert(val, unit, goalUnit);
+			if (val >= goalVal) {
+				ExerciseGoal goal = new ExerciseGoal();
+				goal.setName(cursor.getString(cursor.getColumnIndex("name")));
+				goals.add(goal);
+			}
+		}
+		cursor.close();
+		close();
+		return goals;
+	}
+	
+	/**
+	 * Retrieve distance result correlating to the workout result id
+	 * @param resultId
+	 * @return
+	 */
+	public DistanceResult getDistanceResult(int resultId) {
+		open();
+		
+		DistanceResult result = null;
+		
+		String query = "select * from distance_result where workout_result_id = " + resultId;
+		Cursor cursor = db.rawQuery(query, null);
+		while (cursor.moveToNext()) {
+			int id = cursor.getInt(cursor.getColumnIndex("id"));
+			Double length = cursor.getDouble(cursor.getColumnIndex("length"));
+			String unit = cursor.getString(cursor.getColumnIndex("units"));
+			result = new DistanceResult(id, resultId, length, unit);
+		}
+		cursor.close();
+		close();
+		return result;
+	}
+	
+	/**
+	 * Retrieve time result correlating to the workout result id
+	 * @param resultId
+	 * @return
+	 */
+	public TimeResult getTimeResult(int resultId) {
+		open();
+		
+		TimeResult result = null;
+		
+		String query = "select * from time_result where workout_result_id = " + resultId;
+		Cursor cursor = db.rawQuery(query, null);
+		while (cursor.moveToNext()) {
+			int id = cursor.getInt(cursor.getColumnIndex("id"));
+			int length = cursor.getInt(cursor.getColumnIndex("length"));
+			String unit = cursor.getString(cursor.getColumnIndex("units"));
+			result = new TimeResult(id, resultId, length, unit);
+		}
+		cursor.close();
+		close();
+		return result;
+	}
+	
+	/**
+	 * Retrieve an arraylist of set results correlating to the workout result id
+	 * @param resultId
+	 * @return
+	 */
+	public ArrayList<SetResult> getSetResults(int resultId) {
+		open();
+		
+		ArrayList<SetResult> results = new ArrayList<SetResult>();
+		
+		String query = "select * from set_result where workout_result_id = " + resultId;
+		Cursor cursor = db.rawQuery(query, null);
+		while (cursor.moveToNext()) {
+			int id = cursor.getInt(cursor.getColumnIndex("id"));
+			int setNum = cursor.getInt(cursor.getColumnIndex("set_number"));
+			Double weight = cursor.getDouble(cursor.getColumnIndex("weight"));
+			int reps = cursor.getInt(cursor.getColumnIndex("reps"));
+			results.add(new SetResult(id, resultId, setNum, reps, weight));
+		}
+		
+		cursor.close();
+		close();
+		return results;
+	}
+	
+	/**
 	 * determine and return the greatest DistanceResult corresponding to provided exercises
 	 * @param exercises
 	 * @return
