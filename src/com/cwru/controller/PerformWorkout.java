@@ -73,6 +73,7 @@ public class PerformWorkout extends FragmentActivity {
 		}
 		
 		Exercise exerciseToLaunch = exercisesForWorkout.get(exerciseCounter);
+		Log.d("Steve", "ExerciseCounter: "  + exerciseCounter);
 		String type = exerciseToLaunch.getType();
 		//int sets = exerciseToLaunch.getSets();
 		switch (exerciseToLaunch.getMode()) {
@@ -194,8 +195,10 @@ public class PerformWorkout extends FragmentActivity {
 	View.OnClickListener nextExercise = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			// TODO Auto-generated method stub
 			exerciseCounter++;
+			if (exerciseCounter >= exercisesForWorkout.size()) {
+				exerciseCounter = exercisesForWorkout.size() - 1;
+			}
 			double p = (double) (exerciseCounter) / exercisesForWorkout.size();
 			p *= 100;
 			int percentage = (int) (p);
@@ -205,21 +208,44 @@ public class PerformWorkout extends FragmentActivity {
 			Log.d("Steve", "Exercise Counter: " + exerciseCounter);
 			if (percentage > 100) { percentage = 100; }
 			tvPercentDone.setText(percentage + " % Workout Complete");
-			if (exerciseCounter == exercisesForWorkout.size() -1) {
-				btnNext.setText("Finish");
-			}
-			if (exerciseCounter < exercisesForWorkout.size()) {
-	
-				launchExercise();
-			}
+			updateButtonText();
+			launchExercise();
 		}
 	};
 	
 	View.OnClickListener prevExercise = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			// TODO Auto-generated method stub
-			
+			exerciseCounter--;
+			if (exerciseCounter <= 0) {	
+				exerciseCounter = 0;
+			}	
+			double p = (double) (exerciseCounter) / exercisesForWorkout.size();
+			p *= 100;
+			int percentage = (int) (p);
+			//int percentage = (int)((double)exerciseCounter / (double)exercisesForWorkout.size()) * 100;			
+			Log.d("Steve", "% = " + percentage);
+			Log.d("Steve", "Exercises: " + exercisesForWorkout.size());
+			Log.d("Steve", "Exercise Counter: " + exerciseCounter);
+			if (percentage > 100) { percentage = 100; }
+			tvPercentDone.setText(percentage + " % Workout Complete");
+			updateButtonText();
+			launchExercise();
+						
 		}
 	};
+	
+	private void updateButtonText() {
+		if (exerciseCounter == 0) {
+			btnPrevious.setText("Begin");
+		} else {
+			btnPrevious.setText("Prev");
+		}
+		
+		if (exerciseCounter == exercisesForWorkout.size() -1) {
+			btnNext.setText("Finish");
+		} else {
+			btnNext.setText("Next");
+		}
+	}
 }
