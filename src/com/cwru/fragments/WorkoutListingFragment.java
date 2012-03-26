@@ -18,7 +18,6 @@ import com.cwru.R;
 import com.cwru.controller.HomeScreen;
 import com.cwru.controller.PerformWorkout;
 import com.cwru.dao.DbAdapter;
-import com.cwru.model.EditWorkoutInformation;
 import com.cwru.model.Workout;
 
 public class WorkoutListingFragment extends ListFragment {
@@ -78,7 +77,7 @@ public class WorkoutListingFragment extends ListFragment {
 	
 	
 	private void goToEditWorkoutInformation(String workoutName) {
-		EditWorkoutInformation editWorkoutInformation = new EditWorkoutInformation(workoutName, this.getActivity());
+		EditWorkoutInformationFragment editWorkoutInformation = new EditWorkoutInformationFragment(workoutName, this.getActivity());
 		editWorkoutInformation.setRetainInstance(true);
 		// if tablet
 		if (HomeScreen.isTablet) {

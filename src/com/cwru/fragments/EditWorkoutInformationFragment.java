@@ -1,4 +1,4 @@
-package com.cwru.model;
+package com.cwru.fragments;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -31,9 +31,9 @@ import com.cwru.R;
 import com.cwru.controller.HomeScreen;
 import com.cwru.controller.WorkoutExerciseListing;
 import com.cwru.dao.DbAdapter;
-import com.cwru.fragments.WorkoutListingFragment;
+import com.cwru.model.Workout;
 
-public class EditWorkoutInformation extends Fragment {
+public class EditWorkoutInformationFragment extends Fragment {
 	private EditText etWorkoutName;
 	private Spinner spnWorkoutType;
 	private Spinner spnRepeatWeeks;
@@ -55,8 +55,9 @@ public class EditWorkoutInformation extends Fragment {
 	private int initialThursday;
 	private int initialFriday;
 	private int initialSaturday;
-
-	public EditWorkoutInformation(String workoutName, Activity activity) { 
+	
+	private String wrkName;
+	public EditWorkoutInformationFragment(String workoutName, Activity activity) { 
 		initialWorkoutName = workoutName;
 		/* Get all parameters */
 		mDbHelper = new DbAdapter(activity);
@@ -70,6 +71,7 @@ public class EditWorkoutInformation extends Fragment {
 		initialThursday = workout.getRepeatThursday();
 		initialFriday = workout.getRepeatFriday();
 		initialSaturday = workout.getRepeatSaturday();
+		wrkName = initialWorkoutName;
 	}
 	
 	@Override
@@ -229,9 +231,33 @@ public class EditWorkoutInformation extends Fragment {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				/* Launch intent to allow exercises to be added to workout and the sequence to be set */
-				Intent intent = new Intent(EditWorkoutInformation.this.getActivity(), WorkoutExerciseListing.class);
+				/*
+				Intent intent = new Intent(EditWorkoutInformationFragment.this.getActivity(), WorkoutExerciseListing.class);
 				intent.putExtra("WorkoutName", initialWorkoutName);
-				startActivity(intent);		
+				startActivity(intent);	
+					
+				*/
+				/**TODO
+				 * MAKE WORK FOR TABLETS
+				 */
+				if (HomeScreen.isTablet) {
+					/*
+					ExerciseBankFragment ebank = new ExerciseBankFragment(workoutName);
+					ExerciseSequenceFragment esequence = new ExerciseSequenceFragment(workoutName);
+					FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+					transaction.add(R.id.flWorkoutExerciseListingLeftFrame, ebank, "exerciseBank");
+					transaction.add(R.id.flWorkoutExerciseListingRightFrame, esequence, "exerciseSequence");
+					transaction.commit();
+					*/
+				}
+				/* Phone - Show exercise bank and exercise sequence independently and linked to each other */
+				else {
+					ExerciseBankFragment ebank = new ExerciseBankFragment(wrkName);
+					//ExerciseSequenceFragment esequence = new ExerciseSequenceFragment(workoutName);
+					FragmentTransaction transaction = EditWorkoutInformationFragment.this.getFragmentManager().beginTransaction();
+					transaction.replace(R.id.flEditWorkoutInformationMainFrame, ebank, "exerciseBank");
+					transaction.commit();
+				}
 			}
 		});
 		
@@ -259,7 +285,7 @@ public class EditWorkoutInformation extends Fragment {
 			 */
 			// Name different than current and not unique
 			if (!workoutName.equals(initialWorkoutName) && validateWorkoutName(workoutName)) {
-				AlertDialog.Builder builder = new AlertDialog.Builder(EditWorkoutInformation.this.getActivity());
+				AlertDialog.Builder builder = new AlertDialog.Builder(EditWorkoutInformationFragment.this.getActivity());
 				builder.setMessage("Error: " + workoutName + " already exists as a workout name.  Please select a unique name for the workout");
 				builder.setNegativeButton("Ok", new DialogInterface.OnClickListener() {
 					@Override
@@ -308,18 +334,19 @@ public class EditWorkoutInformation extends Fragment {
 				 */
 				/* Update Workout in the Database */
 				mDbHelper.updateWorkoutInformation(workoutToUpdate, initialWorkoutName);
-				
+				wrkName = workoutName;
 				/* 
 				 * Refresh Workout Listing Fragment
 				 */
-				WorkoutListingFragment workoutListing = new WorkoutListingFragment(WorkoutListingFragment.EDIT_WORKOUT_LIST);
-				workoutListing.setRetainInstance(true);
-				EditWorkoutInformation editWorkoutInformation = new EditWorkoutInformation(workoutToUpdate.getName(), EditWorkoutInformation.this.getActivity());
-				editWorkoutInformation.setRetainInstance(true);
+			
 				// if tablet to update the workout listing with any update in workout name
 				
 				if (HomeScreen.isTablet) {
-					FragmentTransaction transaction = EditWorkoutInformation.this.getFragmentManager().beginTransaction();
+					WorkoutListingFragment workoutListing = new WorkoutListingFragment(WorkoutListingFragment.EDIT_WORKOUT_LIST);
+					workoutListing.setRetainInstance(true);
+					EditWorkoutInformationFragment editWorkoutInformation = new EditWorkoutInformationFragment(workoutToUpdate.getName(), EditWorkoutInformationFragment.this.getActivity());
+					editWorkoutInformation.setRetainInstance(true);
+					FragmentTransaction transaction = EditWorkoutInformationFragment.this.getFragmentManager().beginTransaction();
 					transaction.replace(R.id.flEditWorkoutInformationLeftFrame, workoutListing);
 					transaction.replace(R.id.flEditWorkoutInformationRightFrame, editWorkoutInformation);
 					transaction.commit();		
@@ -328,7 +355,7 @@ public class EditWorkoutInformation extends Fragment {
 				/*
 				 * Launch toast to alert user of workout updated
 				 */
-				Toast toast = Toast.makeText(EditWorkoutInformation.this.getActivity(), "Workout Updated", Toast.LENGTH_SHORT);
+				Toast toast = Toast.makeText(EditWorkoutInformationFragment.this.getActivity(), "Workout Updated", Toast.LENGTH_SHORT);
 				toast.setGravity(Gravity.CENTER, 0, 0);
 				toast.show();
 				
