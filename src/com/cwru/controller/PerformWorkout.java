@@ -196,9 +196,22 @@ public class PerformWorkout extends FragmentActivity {
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
 			exerciseCounter++;
-			int percentage = exerciseCounter / exercisesForWorkout.size();
+			double p = (double) (exerciseCounter) / exercisesForWorkout.size();
+			p *= 100;
+			int percentage = (int) (p);
+			//int percentage = (int)((double)exerciseCounter / (double)exercisesForWorkout.size()) * 100;			
+			Log.d("Steve", "% = " + percentage);
+			Log.d("Steve", "Exercises: " + exercisesForWorkout.size());
+			Log.d("Steve", "Exercise Counter: " + exerciseCounter);
+			if (percentage > 100) { percentage = 100; }
 			tvPercentDone.setText(percentage + " % Workout Complete");
-			launchExercise();
+			if (exerciseCounter == exercisesForWorkout.size() -1) {
+				btnNext.setText("Finish");
+			}
+			if (exerciseCounter < exercisesForWorkout.size()) {
+	
+				launchExercise();
+			}
 		}
 	};
 	
