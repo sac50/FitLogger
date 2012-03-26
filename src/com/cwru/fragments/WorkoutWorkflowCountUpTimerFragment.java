@@ -50,6 +50,7 @@ public class WorkoutWorkflowCountUpTimerFragment extends Fragment {
 	
 	public WorkoutWorkflowCountUpTimerFragment (Exercise exercise, Context context, int workoutId) {
 		this.exercise = exercise;
+		Log.d("Steve", "ExerciseId: " + exercise.getId());
 		this.context = context;
 		mDbHelper = new DbAdapter(context);
 		stop = true;
@@ -173,8 +174,11 @@ public class WorkoutWorkflowCountUpTimerFragment extends Fragment {
 			tlResultTable.addView(tr, new TableLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
 						
 			/* Generate Workout Result Row in Database */
-			WorkoutResult workoutResult = new WorkoutResult(exercise.getId(), workoutId);
+			WorkoutResult workoutResult = new WorkoutResult(workoutId, exercise.getId());
+			Log.d("STeve", "|| WorkoutResult ExerciseID: " + workoutResult.getExerciseId());
 			int workoutResultId = mDbHelper.storeWorkoutResult(workoutResult);
+			Log.d("Steve", "WorkoutResultIDL : " + workoutResultId);
+
 			workoutResult.setId(workoutResultId);
 			workoutResult.setMode(WorkoutResult.TIME_BASED_EXERCISE);
 			/* Generate Time Result Row in Database */
