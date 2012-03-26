@@ -27,8 +27,10 @@ public class WorkoutResult {
 	public int getWorkoutId() { return workoutId; }
 	public int getExerciseId() { return exerciseId; }
 	public String getDate() { return date; }
+	public int getMode() { return mode; }
 	public ArrayList<SetResult> getSetResultList() { return setResultList; }
 	
+	public void setId(int id) { this.id = id; }
 	public void setWorkoutId(int workoutId) { this.workoutId = workoutId;  }
 	public void setExerciseId(int exerciseId) { this.exerciseId = exerciseId; }
 	public void setDate(String date) { this.date = date; }

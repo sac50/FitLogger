@@ -1,10 +1,13 @@
 package com.cwru.fragments;
 
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,12 +18,14 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cwru.R;
 import com.cwru.controller.HomeScreen;
 import com.cwru.dao.DbAdapter;
 import com.cwru.model.DistanceResult;
 import com.cwru.model.Exercise;
+import com.cwru.model.ExerciseGoal;
 import com.cwru.model.TimeResult;
 import com.cwru.model.WorkoutResult;
 
@@ -170,11 +175,28 @@ public class WorkoutWorkflowCountUpTimerFragment extends Fragment {
 			/* Generate Workout Result Row in Database */
 			WorkoutResult workoutResult = new WorkoutResult(exercise.getId(), workoutId);
 			int workoutResultId = mDbHelper.storeWorkoutResult(workoutResult);
+			workoutResult.setId(workoutResultId);
+			workoutResult.setMode(WorkoutResult.TIME_BASED_EXERCISE);
 			/* Generate Time Result Row in Database */
 			int timeSeconds = hours * 60 * 60 + minutes * 60 + seconds;
 			String units = "seconds";
 			TimeResult timeResult = new TimeResult(workoutResultId, timeSeconds, units);
 			mDbHelper.storeTimeResult(timeResult);
+			
+			/** TODO
+			 * EXAMPLE OF CALLING FOR COMPLETED EXERCISE GOALS
+			 * NOTE THAT THE WORKOUTRESULT MUST HAVE ITS ID AND MODE SET,
+			 * WHICH I ADDED ON LINE 178-179
+			 */
+			ArrayList<ExerciseGoal> goals = mDbHelper.getNewlyCompletedExerciseGoals(workoutResult);
+			for (ExerciseGoal goal : goals) {
+				Context context = v.getContext().getApplicationContext();
+				CharSequence text = "Goal completed: " + goal.getName();
+				int duration = Toast.LENGTH_SHORT;
+				Toast toast = Toast.makeText(context, text, duration);
+				toast.setGravity(Gravity.CENTER, 0, 0);
+				toast.show();
+			}
 		}
 	};
 }
