@@ -33,6 +33,7 @@ public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
 	private boolean stop;
 	private long time;
 	private int workoutId;
+	private TableLayout tlResults;
 	
 	private int secondsInCountdown;
 	private TextView tvTimer;
@@ -92,6 +93,7 @@ public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
 		tvExerciseName.setText(exercise.getName());
 		tvTimer = (TextView) view.findViewById(R.id.tvWorkoutWorkflowCountdownTimerTimer);
 		tvTimer.setText(getFormatedTime());
+		tlResults = (TableLayout) view.findViewById(R.id.tlWorkoutWorkflowCountDownResults);
 		
 		if (!HomeScreen.isTablet) {
 			TableLayout tl = (TableLayout) view.findViewById(R.id.tlWorkoutWorkflowCountDownHistoryNoteRow);
@@ -142,6 +144,22 @@ public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
 			int timeLeftSeconds = minutes * 60 + seconds;
 			// compute time done
 			int timeDone = secondsInCountdown - timeLeftSeconds;	
+			int timeDoneMins = timeDone / 60;
+			int timeDoneSecs = timeDone % 60;
+			String timeDoneString = "";
+			if (timeDoneMins < 10) { timeDoneString += "0" + timeDoneMins + ":"; }
+			else { timeDoneString += timeDoneMins + ":"; }
+			if (timeDoneSecs < 10) { timeDoneString += "0" + timeDoneSecs; }
+			else { timeDoneString += timeDoneSecs; }
+			
+			/* Show recorded time on screen */
+			TableRow tr = new TableRow(WorkoutWorkflowCountDownTimerFragment.this.getActivity());
+			tr.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+			TextView tvTimeRecord = new TextView(WorkoutWorkflowCountDownTimerFragment.this.getActivity());
+			tvTimeRecord.setText("Time recorded: " + timeDoneString);
+			tr.addView(tvTimeRecord);
+
+			tlResults.addView(tr, new TableLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
 			
 			/* Generate Workout Result Row in Database */
 			WorkoutResult workoutResult = new WorkoutResult(exercise.getId(), workoutId);
@@ -161,7 +179,7 @@ public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
 		else { time += seconds;}
 		return time;
 	}
-	
+
 	private void decreaseTime() {
 		// only update if stop is false
 		if (!complete) {
