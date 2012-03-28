@@ -44,7 +44,7 @@ public class WorkoutExerciseListing extends FragmentActivity {
 			ExerciseBankFragment ebank = new ExerciseBankFragment(workoutName);
 			//ExerciseSequenceFragment esequence = new ExerciseSequenceFragment(workoutName);
 			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-			transaction.add(R.id.flWorkoutExerciseListingMainFrame, ebank, "exerciseBank");
+			transaction.replace(R.id.flWorkoutExerciseListingMainFrame, ebank, "exerciseBank");
 			transaction.commit();
 		}
 	}
