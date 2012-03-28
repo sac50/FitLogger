@@ -27,6 +27,7 @@ import com.cwru.model.ExerciseBankRow;
 public class ExerciseBankFragment extends ListFragment {
 	private DbAdapter mDbHelper;
 	private String workoutName;
+	private static onGoToExerciseSequenceListener listener;
 	
 	public ExerciseBankFragment (String workoutName) { 
 		this.workoutName = workoutName;
@@ -67,13 +68,16 @@ public class ExerciseBankFragment extends ListFragment {
 		@Override
 		public void onClick(View v) {
 			// Create new transaction
-			FragmentTransaction transaction = getFragmentManager().beginTransaction();
-			ExerciseSequenceFragment esequence = new ExerciseSequenceFragment(workoutName);
+		//	FragmentTransaction transaction = getFragmentManager().beginTransaction();
+		//	ExerciseSequenceFragment esequence = new ExerciseSequenceFragment(workoutName);
 			//transaction.add(R.id.flWorkoutExerciseListingRightFrame, esequence, "exerciseSequence");
 			// Replace the workout information fragment with the exercise bank
+			listener.goToExerciseSequence(workoutName);
+			/*
 			transaction.replace(R.id.flWorkoutExerciseListingMainFrame, esequence);	
 			transaction.addToBackStack(null);
 			transaction.commit();			
+			*/
 		}
 		
 	};
@@ -132,6 +136,14 @@ public class ExerciseBankFragment extends ListFragment {
 	
 	private ExerciseBankRow get(Exercise exercise, String workoutName, boolean selectedStatus) {
 		return new ExerciseBankRow(exercise, workoutName, selectedStatus);
+	}
+	
+	public interface onGoToExerciseSequenceListener {
+		void goToExerciseSequence(String workoutName);
+	}
+	
+	public static void setExerciseSequenceListener(onGoToExerciseSequenceListener listener) {
+		ExerciseBankFragment.listener = listener;
 	}
 		
 		
