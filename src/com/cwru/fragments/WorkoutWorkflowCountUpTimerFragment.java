@@ -174,6 +174,7 @@ public class WorkoutWorkflowCountUpTimerFragment extends Fragment {
 			tlResultTable.addView(tr, new TableLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
 						
 			/* Generate Workout Result Row in Database */
+			Log.d("Steve", "WorkoutID: " + workoutId);
 			WorkoutResult workoutResult = new WorkoutResult(workoutId, exercise.getId());
 			Log.d("STeve", "|| WorkoutResult ExerciseID: " + workoutResult.getExerciseId());
 			int workoutResultId = mDbHelper.storeWorkoutResult(workoutResult);

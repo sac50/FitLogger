@@ -128,7 +128,8 @@ public class WorkoutWorkflowDistanceFragment extends Fragment {
 		@Override
 		public void onClick(View v) {
 			/* Generate Workout Result Row in Database */
-			WorkoutResult workoutResult = new WorkoutResult(exercise.getId(), workoutId);
+			Log.d("Steve", "WorkoutID: " + workoutId);
+			WorkoutResult workoutResult = new WorkoutResult(workoutId, exercise.getId());
 			int workoutResultId = mDbHelper.storeWorkoutResult(workoutResult);
 			/* Generate Distance Result Row in Database */
 			double length = Double.parseDouble(etDistanceEntry.getText().toString());
