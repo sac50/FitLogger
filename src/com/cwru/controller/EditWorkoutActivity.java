@@ -6,27 +6,28 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
 import com.cwru.R;
-import com.cwru.fragments.CreateWorkoutInformationFragment;
 import com.cwru.fragments.EditWorkoutInformationFragment;
+import com.cwru.fragments.EditWorkoutInformationFragment.onGoToExerciseBankListener;
 import com.cwru.fragments.ExerciseBankFragment;
+import com.cwru.fragments.ExerciseBankFragment.onGoToExerciseSequenceListener;
 import com.cwru.fragments.ExerciseSequenceFragment;
 import com.cwru.fragments.WorkoutListingFragment;
-import com.cwru.fragments.EditWorkoutInformationFragment.onGoToExerciseBankListener;
-import com.cwru.fragments.ExerciseBankFragment.onGoToExerciseSequenceListener;
+import com.cwru.fragments.WorkoutListingFragment.onWorkoutListingClickListener;
 
-public class EditWorkoutActivity extends FragmentActivity implements onGoToExerciseSequenceListener, onGoToExerciseBankListener {
+public class EditWorkoutActivity extends FragmentActivity implements onGoToExerciseSequenceListener, onGoToExerciseBankListener, onWorkoutListingClickListener {
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		// Set Listener
 		EditWorkoutInformationFragment.setExerciseBankListener(this);
 		ExerciseBankFragment.setExerciseSequenceListener(this);
+		WorkoutListingFragment.setOnWorkoutListingClickListener(this);
 		
 		setContentView(R.layout.edit_workout_information);
 		
 		// Tablet
 		if (HomeScreen.isTablet) {
-			WorkoutListingFragment workoutListings = new WorkoutListingFragment(WorkoutListingFragment.EDIT_WORKOUT_LIST);
+			WorkoutListingFragment workoutListings = new WorkoutListingFragment();
 			workoutListings.setRetainInstance(true);
 			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 			transaction.add(R.id.flEditWorkoutInformationLeftFrame, workoutListings);
@@ -34,7 +35,7 @@ public class EditWorkoutActivity extends FragmentActivity implements onGoToExerc
 		} 
 		// Phone
 		else {
-			WorkoutListingFragment workoutListings = new WorkoutListingFragment(WorkoutListingFragment.EDIT_WORKOUT_LIST);
+			WorkoutListingFragment workoutListings = new WorkoutListingFragment();
 			workoutListings.setRetainInstance(true);
 			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 			transaction.replace(R.id.flEditWorkoutInformationMainFrame, workoutListings, "workoutListings");
@@ -80,5 +81,25 @@ public class EditWorkoutActivity extends FragmentActivity implements onGoToExerc
 			transaction.commit();
 		}
 	}
+
+	@Override
+	public void onWorkoutListingListenerClick(String workoutName) {
+		// TODO Auto-generated method stub
+		EditWorkoutInformationFragment editWorkoutInformation = new EditWorkoutInformationFragment(workoutName, this);
+		editWorkoutInformation.setRetainInstance(true);
+		// if tablet
+		if (HomeScreen.isTablet) {
+			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+			transaction.replace(R.id.flEditWorkoutInformationRightFrame, editWorkoutInformation);
+			transaction.commit();		
+		} else {
+			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+			transaction.addToBackStack(null);
+			transaction.replace(R.id.flEditWorkoutInformationMainFrame, editWorkoutInformation);
+			transaction.commit();
+		}
+		
+	}
+
 }
 

@@ -18,17 +18,16 @@ import com.cwru.R;
 import com.cwru.controller.HomeScreen;
 import com.cwru.controller.PerformWorkout;
 import com.cwru.dao.DbAdapter;
+import com.cwru.fragments.ExerciseBankFragment.onGoToExerciseSequenceListener;
 import com.cwru.model.Workout;
 
-public class WorkoutListingFragment extends ListFragment {
-	public static final int EDIT_WORKOUT_LIST = 1;
-	public static final int WORKOUT_WORKFLOW_LIST = 2;
-	
+public class WorkoutListingFragment extends ListFragment {	
 	private DbAdapter mDbHelper;
 	private int mode;
+	private static onWorkoutListingClickListener listener;
 
-	public WorkoutListingFragment(int mode){
-		this.mode = mode;
+	public WorkoutListingFragment(){
+		
 	}
 	
 	
@@ -57,15 +56,8 @@ public class WorkoutListingFragment extends ListFragment {
 	@Override 
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		String workoutName = (String) getListAdapter().getItem(position);
-		Log.d("STEVE", "Workout Listing Click : " + mode);
-		switch (mode) {
-			case EDIT_WORKOUT_LIST:
-				goToEditWorkoutInformation(workoutName);
-				break;
-			case WORKOUT_WORKFLOW_LIST:
-				goToWorkoutWorkflow(workoutName);
-				break;
-		}
+		Log.d("Steve", "Workout Name: " + workoutName);
+		listener.onWorkoutListingListenerClick(workoutName);
 	}
 	
 	private void goToWorkoutWorkflow(String workoutName) {
@@ -101,8 +93,15 @@ public class WorkoutListingFragment extends ListFragment {
 			workoutList.add(workouts[i].getName());
 			Log.d("Steve", "Workout name " + workouts[i].getName());
 		}
-
 		return workoutList.toArray(new String [0]);
+	}
+	
+	public interface onWorkoutListingClickListener {
+		void onWorkoutListingListenerClick(String workoutName);
+	}
+	
+	public static void setOnWorkoutListingClickListener(onWorkoutListingClickListener listener) {
+		WorkoutListingFragment.listener = listener;
 	}
 	
 }
