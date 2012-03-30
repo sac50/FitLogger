@@ -1478,6 +1478,27 @@ public class DbAdapter {
 		return workoutResultList;
 	}
 	
+	public ArrayList<WorkoutResult> getWorkoutResultsForExercise(int exerciseId) {
+		ArrayList<WorkoutResult> workoutResultList = new ArrayList<WorkoutResult>();
+		open();
+		String query = "select * from workout_result where exercise_id = " + exerciseId;
+		Cursor cursor = db.rawQuery(query, null);
+		while (cursor.moveToNext()) {
+			int id = cursor.getInt(cursor.getColumnIndex("id"));
+			int workout_id = cursor.getInt(cursor.getColumnIndex("workout_id"));
+			int exercise_id = cursor.getInt(cursor.getColumnIndex("exercise_id"));
+			String qDate = cursor.getString(cursor.getColumnIndex("date"));
+			int mode = getWorkoutResultMode(exercise_id);
+			WorkoutResult wr = new WorkoutResult(id, workout_id, exercise_id, qDate, mode);
+			wr = getExerciseResultForWorkoutResult(wr);
+			workoutResultList.add(wr);
+		}
+		cursor.close();
+		close();
+		return workoutResultList;
+		
+	}
+	
 	// Assigns the exercise result to the array list for the exercise
 	public WorkoutResult getExerciseResultForWorkoutResult (WorkoutResult workoutResult) {
 		WorkoutResult result = workoutResult;
@@ -1642,6 +1663,9 @@ public class DbAdapter {
 		close();
 		return workoutDates.toArray(new String [0]);		
 	}
+	
+	
+	
 	
 	
 }

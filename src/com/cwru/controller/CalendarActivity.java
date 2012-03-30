@@ -5,9 +5,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 
 import com.cwru.R;
-import com.cwru.fragments.HistoryFragment;
-import com.cwru.fragments.NotesFragment;
-import com.cwru.fragments.WorkoutSummaryFragment;
+import com.cwru.fragments.ExerciseSummaryFragment;
 
 public class CalendarActivity extends FragmentActivity {
 
@@ -16,9 +14,9 @@ public class CalendarActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.calendar);
 		
-		WorkoutSummaryFragment workoutSummary = new WorkoutSummaryFragment(this, 1, "2012/03/29");
+		ExerciseSummaryFragment exerciseSummary = new ExerciseSummaryFragment(this, 4);
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-		transaction.replace(R.id.flCalendarMainFrame, workoutSummary);
+		transaction.replace(R.id.flCalendarMainFrame, exerciseSummary);
 		transaction.commit();
 		
 	}
