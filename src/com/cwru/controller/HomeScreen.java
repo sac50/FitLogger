@@ -48,6 +48,10 @@ public class HomeScreen extends ListActivity {
 					Intent intent = new Intent(HomeScreen.this, GoalsActivity.class);
 					startActivity(intent);
 				} 
+				else if (position == 3) {
+					Intent intent = new Intent(HomeScreen.this, HistoryActivity.class);
+					startActivity(intent);
+				}
 				else if (position == 5) { 
 					Intent intent = new Intent(HomeScreen.this, CalendarActivity.class);
 					startActivity(intent);

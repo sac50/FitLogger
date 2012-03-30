@@ -1060,7 +1060,7 @@ public class DbAdapter {
 		cursor3.close();
 		close();
 		Log.d("Steve", "ERROR IN EXERCISE MODE");
-		return -1;
+		return Exercise.COUNTUP_BASED_EXERCISE;
 		
 //		return -1; // Error, exercise id not found
 	}
