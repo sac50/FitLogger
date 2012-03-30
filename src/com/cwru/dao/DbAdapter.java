@@ -249,6 +249,34 @@ public class DbAdapter {
 		return workout;
 	}
 	
+	public Workout getWorkoutFromId(int id) {
+		open();
+		String query = "select * from workouts where id = " + id;
+		Cursor cursor = db.rawQuery(query, null);
+		Workout workout = null;
+		while (cursor.moveToNext() ) {
+			int workoutId = cursor.getInt(cursor.getColumnIndex("id"));
+			String workoutName = cursor.getString(cursor.getColumnIndex("name"));
+			String workoutType = cursor.getString(cursor.getColumnIndex("type"));
+			String exerciseSequence = cursor.getString(cursor.getColumnIndex("exercise_sequence"));
+			String repeats = cursor.getString(cursor.getColumnIndex("repeats"));
+			int rptSunday = cursor.getInt(cursor.getColumnIndex("repeats_sunday"));
+			int rptMonday = cursor.getInt(cursor.getColumnIndex("repeats_monday"));
+			int rptTuesday = cursor.getInt(cursor.getColumnIndex("repeats_tuesday"));
+			int rptWednesday = cursor.getInt(cursor.getColumnIndex("repeats_wednesday"));
+			int rptThursday = cursor.getInt(cursor.getColumnIndex("repeats_thursday"));
+			int rptFriday = cursor.getInt(cursor.getColumnIndex("repeats_friday"));
+			int rptSaturday = cursor.getInt(cursor.getColumnIndex("repeats_sunday"));
+			Log.d("Su-" + rptSunday + " | Mo-" + rptMonday + " | Tu-" + rptTuesday + " | We-" + rptWednesday + " | Th-" + rptThursday, "");
+			Log.d("STEVE", "Su-" + rptSunday + " | Mo-" + rptMonday + " | Tu-" + rptTuesday + " | We-" + rptWednesday + " | Th-" + rptThursday);
+			workout = new Workout(workoutId, workoutName, workoutType, exerciseSequence, repeats, rptSunday, rptMonday, rptTuesday, rptWednesday,
+								  rptThursday, rptFriday, rptSaturday);
+		}
+		cursor.close();
+		close();
+		return workout;
+	}
+	
 	/**
 	 * Update the workout table with new information by querying for initial workout name
 	 * @param workout
@@ -993,40 +1021,45 @@ public class DbAdapter {
 		/* Set Table */
 		String query = "select id from sets where exercise_id = " + exerciseId;
 		Cursor cursor = db.rawQuery(query, null);
-		if (cursor.moveToLast()) {
+		if (cursor.moveToNext()) {
 			mode = Exercise.SET_BASED_EXERCISE;
 			cursor.close();
 			close();
 			return mode;
 		}
+		cursor.close();
 		/* Time Table */ 
 		query = "select id from time where exercise_id = " + exerciseId;
-		cursor = db.rawQuery(query, null);
-		if (cursor.moveToLast()) {
+		Cursor cursor1 = db.rawQuery(query, null);
+		if (cursor1.moveToNext()) {
 			mode = Exercise.COUNTDOWN_BASED_EXERCISE;
-			cursor.close();
+			cursor1.close();
 			close();
 			return mode;
 		}
+		cursor1.close();
 		/* Interval Table */
 		query = "select id from intervals where exercise_id = " + exerciseId;
-		cursor = db.rawQuery(query, null);
-		if (cursor.moveToLast()) {
+		Cursor cursor2 = db.rawQuery(query, null);
+		if (cursor2.moveToNext()) {
 			mode = Exercise.INTERVAL_BASED_EXERCISE;
-			cursor.close();
+			cursor2.close();
 			close();
 			return mode;
 		}
+		cursor2.close();
 		/* Distance Table */
 		query = "select id from distance where exercise_id = " + exerciseId;
-		cursor = db.rawQuery(query, null);
-		if (cursor.moveToLast()) {
+		Cursor cursor3 = db.rawQuery(query, null);
+		if (cursor3.moveToNext()) {
 			mode = Exercise.DISTANCE_BASED_EXERCISE;
-			cursor.close();
+			cursor3.close();
 			close();
 			return mode;
 		}
-		
+		cursor3.close();
+		close();
+		Log.d("Steve", "ERROR IN EXERCISE MODE");
 		return Exercise.COUNTUP_BASED_EXERCISE;
 		
 //		return -1; // Error, exercise id not found
@@ -1423,7 +1456,178 @@ public class DbAdapter {
 		close();
 	}
 	
+	public ArrayList<WorkoutResult> getWorkoutResultForWorkout(int workoutId, String date) {
+		ArrayList<WorkoutResult> workoutResultList = new ArrayList<WorkoutResult>();
+		open();
+		String query = "select * from workout_result where  workout_id = " + workoutId + " and date = '" + date + "'";
+		Cursor cursor = db.rawQuery(query, null);
+		while (cursor.moveToNext()) {
+			int id = cursor.getInt(cursor.getColumnIndex("id"));
+			int workout_id = cursor.getInt(cursor.getColumnIndex("workout_id"));
+			int exercise_id = cursor.getInt(cursor.getColumnIndex("exercise_id"));
+			String qDate = cursor.getString(cursor.getColumnIndex("date"));
+			int mode = getWorkoutResultMode(exercise_id);
+			Log.d("Steve", "=================================================");
+			Log.d("Steve", "Mode: " + mode);
+			WorkoutResult wr = new WorkoutResult(id, workout_id, exercise_id, qDate, mode);
+			wr = getExerciseResultForWorkoutResult(wr);
+			workoutResultList.add(wr);			
+		}
+		cursor.close();
+		close();
+		return workoutResultList;
+	}
 	
+	// Assigns the exercise result to the array list for the exercise
+	public WorkoutResult getExerciseResultForWorkoutResult (WorkoutResult workoutResult) {
+		WorkoutResult result = workoutResult;
+		int mode = workoutResult.getMode();
+		switch (mode) {
+			case WorkoutResult.TIME_BASED_EXERCISE:
+				Log.d("Steve", "Countdown");
+				result.setTimeResultList(getTimeResultForWorkoutResult(workoutResult.getId()));
+				break;
+			case WorkoutResult.DISTANCE_BASED_EXERCISE:
+				Log.d("Steve", "Distance");
+				result.setDistanceResultList(getDistanceResultForWorkoutResult(workoutResult.getId()));
+				break;
+			case WorkoutResult.INTERVAL_BASED_EXERCISE:
+				Log.d("Steve", "Interval");
+				result.setIntervalResultList(getIntervalResultForWorkoutResult(workoutResult.getId()));
+				break;
+			case WorkoutResult.SET_BASED_EXERCISE:
+				Log.d("Steve", "Set");
+				result.setSetResultList(getSetResultsForWorkoutResult(workoutResult.getId()));
+				break;
+		}
+		return result;
+	}
+	
+	public ArrayList<SetResult> getSetResultsForWorkoutResult(int workoutResultId) {
+		open();
+		ArrayList<SetResult> setResultList = new ArrayList<SetResult>();
+		String query = "select * from set_result where workout_result_id = " + workoutResultId;
+		Cursor cursor = db.rawQuery(query, null);
+		while (cursor.moveToNext()) {
+			int set_number = cursor.getInt(cursor.getColumnIndex("set_number"));
+			int reps = cursor.getInt(cursor.getColumnIndex("reps"));
+			double weight = cursor.getDouble(cursor.getColumnIndex("weight"));
+			SetResult setResult = new SetResult(workoutResultId, set_number, reps, weight);
+			setResultList.add(setResult);
+		}
+		cursor.close();
+		close();
+		return setResultList;
+	}
+	
+	
+	public ArrayList<IntervalResult> getIntervalResultForWorkoutResult(int workoutResultId) {
+		open();
+		ArrayList<IntervalResult> intervalResultList = new ArrayList<IntervalResult>();
+		String query = "select name, interval_result.interval_id, interval_result.interval_set_id, interval_set_num, interval_result.length, " +
+		               "interval_result.units " + 
+					   "from interval_result " + 
+					   "join interval_sets on interval_result.interval_set_id = interval_sets.id and workout_result_id = " + workoutResultId;
+		Cursor cursor = db.rawQuery(query, null);
+		while (cursor.moveToNext()) {
+			String name = cursor.getString(0);
+			int intervalId = cursor.getInt(1);
+			int intervalSetId = cursor.getInt(2);
+			int intervalSetNum = cursor.getInt(3);
+			double length = cursor.getDouble(4);
+			String units = cursor.getString(5);
+			IntervalResult intervalResult = new IntervalResult(workoutResultId, intervalId, intervalSetNum, intervalSetId, length, units,name);
+			intervalResultList.add(intervalResult);			
+		}
+		cursor.close();
+		close();
+		return intervalResultList;
+	}
+	
+	
+	public ArrayList<DistanceResult> getDistanceResultForWorkoutResult(int workoutResultId) {
+		open();
+		String query = "select * from distance_result where workout_result_id = " + workoutResultId;
+		ArrayList<DistanceResult> distanceResultList = new ArrayList<DistanceResult> ();
+		Cursor cursor = db.rawQuery(query, null);
+		while (cursor.moveToNext()) {
+			double length = cursor.getDouble(cursor.getColumnIndex("length"));
+			String units = cursor.getString(cursor.getColumnIndex("units"));
+			DistanceResult distanceResult = new DistanceResult(workoutResultId, length, units);
+			distanceResultList.add(distanceResult);
+		}
+		cursor.close();
+		close();
+		return distanceResultList;
+	}
+	
+	public ArrayList<TimeResult> getTimeResultForWorkoutResult (int workoutResultId) {
+		open();
+		String query = "select * from time_result where workout_result_id = " + workoutResultId;
+		ArrayList<TimeResult> timeResultList = new ArrayList<TimeResult>();
+		Cursor cursor = db.rawQuery(query, null);
+		while (cursor.moveToNext()) {
+			int length = cursor.getInt(cursor.getColumnIndex("length"));
+			String units = cursor.getString(cursor.getColumnIndex("units"));
+			TimeResult timeResult = new TimeResult(workoutResultId, length, units);
+			timeResultList.add(timeResult);
+		}
+		cursor.close();
+		close();
+		return timeResultList;		
+	}
+	
+	public int getWorkoutResultMode(int exerciseId) {
+		open();
+		int mode = -1;
+		/* Query all exercise type tables */
+		/* Set Table */
+		String query = "select id from sets where exercise_id = " + exerciseId;
+		Cursor cursor = db.rawQuery(query, null);
+		if (cursor.moveToNext()) {
+			mode = WorkoutResult.SET_BASED_EXERCISE;
+			cursor.close();
+			close();
+			return mode;
+		}
+		/* Time Table */ 
+		query = "select id from time where exercise_id = " + exerciseId;
+		cursor = db.rawQuery(query, null);
+		if (cursor.moveToNext()) {
+			mode = WorkoutResult.TIME_BASED_EXERCISE;
+			cursor.close();
+			close();
+			return mode;
+		}
+		/* Interval Table */
+		query = "select id from intervals where exercise_id = " + exerciseId;
+		cursor = db.rawQuery(query, null);
+		if (cursor.moveToNext()) {
+			mode = WorkoutResult.INTERVAL_BASED_EXERCISE;
+			cursor.close();
+			close();
+			return mode;
+		}
+		/* Distance Table */
+		query = "select id from distance where exercise_id = " + exerciseId;
+		cursor = db.rawQuery(query, null);
+		if (cursor.moveToNext()) {
+			mode = WorkoutResult.DISTANCE_BASED_EXERCISE;
+			cursor.close();
+			close();
+			return mode;
+		}
+		cursor.close();
+		close();
+		if (mode == -1)
+			Log.d("Steve", "ERROR IN WORKOUT RESULT MODE: " + exerciseId);
+		else 
+			Log.d("Steve", "FOUND IN WORKOUT RESULT MODE:" + exerciseId);
+		// Countup has no time stored.  so it must be count up which is a time
+		return WorkoutResult.TIME_BASED_EXERCISE;
+		
+//		return -1; // Error, exercise id not found
+	}
 	
 	
 }

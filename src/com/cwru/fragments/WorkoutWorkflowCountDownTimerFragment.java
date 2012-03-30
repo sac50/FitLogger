@@ -162,7 +162,8 @@ public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
 			tlResults.addView(tr, new TableLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
 			
 			/* Generate Workout Result Row in Database */
-			WorkoutResult workoutResult = new WorkoutResult(exercise.getId(), workoutId);
+			Log.d("Steve", "WorkoutID: " + workoutId);
+			WorkoutResult workoutResult = new WorkoutResult(workoutId, exercise.getId());
 			int workoutResultId = mDbHelper.storeWorkoutResult(workoutResult);
 			/* Generate Time Result Row in Database */
 			String units = "seconds";
