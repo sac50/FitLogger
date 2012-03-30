@@ -24,10 +24,10 @@ import com.cwru.model.Workout;
 public class WorkoutListingFragment extends ListFragment {	
 	private DbAdapter mDbHelper;
 	private int mode;
-	private static onGoToEditWorkoutListener listener;
+	private static onWorkoutListingClickListener listener;
 
 	public WorkoutListingFragment(){
-
+		
 	}
 	
 	
@@ -57,7 +57,7 @@ public class WorkoutListingFragment extends ListFragment {
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		String workoutName = (String) getListAdapter().getItem(position);
 		Log.d("Steve", "Workout Name: " + workoutName);
-		listener.goToEditWorkout(workoutName);
+		listener.onWorkoutListingListenerClick(workoutName);
 	}
 	
 	private void goToWorkoutWorkflow(String workoutName) {
@@ -93,15 +93,14 @@ public class WorkoutListingFragment extends ListFragment {
 			workoutList.add(workouts[i].getName());
 			Log.d("Steve", "Workout name " + workouts[i].getName());
 		}
-
 		return workoutList.toArray(new String [0]);
 	}
 	
-	public interface onGoToEditWorkoutListener {
-		void goToEditWorkout(String workoutName);
+	public interface onWorkoutListingClickListener {
+		void onWorkoutListingListenerClick(String workoutName);
 	}
 	
-	public static void setOnGotoEditWorkoutListener(onGoToEditWorkoutListener listener) {
+	public static void setOnWorkoutListingClickListener(onWorkoutListingClickListener listener) {
 		WorkoutListingFragment.listener = listener;
 	}
 	

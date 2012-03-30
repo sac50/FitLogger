@@ -1629,5 +1629,19 @@ public class DbAdapter {
 //		return -1; // Error, exercise id not found
 	}
 	
+	public String [] getWorkoutDates (int workoutId) {
+		open();
+		String query = "select distinct date from workout_result where workout_id = " + workoutId + " order by date desc";
+		ArrayList<String> workoutDates = new ArrayList<String>();
+		Cursor cursor = db.rawQuery(query, null);
+		while (cursor.moveToNext()) {
+			String date = cursor.getString(cursor.getColumnIndex("date"));
+			workoutDates.add(date);
+		}
+		cursor.close();
+		close();
+		return workoutDates.toArray(new String [0]);		
+	}
+	
 	
 }

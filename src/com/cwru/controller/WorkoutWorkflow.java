@@ -8,15 +8,15 @@ import android.util.Log;
 
 import com.cwru.R;
 import com.cwru.fragments.WorkoutListingFragment;
-import com.cwru.fragments.WorkoutListingFragment.onGoToEditWorkoutListener;
+import com.cwru.fragments.WorkoutListingFragment.onWorkoutListingClickListener;
 
-public class WorkoutWorkflow extends FragmentActivity implements onGoToEditWorkoutListener {	
+public class WorkoutWorkflow extends FragmentActivity implements onWorkoutListingClickListener {	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.workout_workflow);
 		// Set Fragment Listeners
-		WorkoutListingFragment.setOnGotoEditWorkoutListener(this);
+		WorkoutListingFragment.setOnWorkoutListingClickListener(this);
 		
 		WorkoutListingFragment workouts = new WorkoutListingFragment();
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -27,10 +27,10 @@ public class WorkoutWorkflow extends FragmentActivity implements onGoToEditWorko
 	}
 
 	@Override
-	public void goToEditWorkout(String workoutName) {
+	public void onWorkoutListingListenerClick(String workoutName) {
 		Intent intent = new Intent(this, PerformWorkout.class);
 		intent.putExtra("workoutName", workoutName);
-		startActivity(intent);
+		startActivity(intent);		
 	}
 	
 

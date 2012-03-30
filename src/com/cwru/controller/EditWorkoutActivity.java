@@ -6,23 +6,22 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
 import com.cwru.R;
-import com.cwru.fragments.CreateWorkoutInformationFragment;
 import com.cwru.fragments.EditWorkoutInformationFragment;
+import com.cwru.fragments.EditWorkoutInformationFragment.onGoToExerciseBankListener;
 import com.cwru.fragments.ExerciseBankFragment;
+import com.cwru.fragments.ExerciseBankFragment.onGoToExerciseSequenceListener;
 import com.cwru.fragments.ExerciseSequenceFragment;
 import com.cwru.fragments.WorkoutListingFragment;
-import com.cwru.fragments.EditWorkoutInformationFragment.onGoToExerciseBankListener;
-import com.cwru.fragments.ExerciseBankFragment.onGoToExerciseSequenceListener;
-import com.cwru.fragments.WorkoutListingFragment.onGoToEditWorkoutListener;
+import com.cwru.fragments.WorkoutListingFragment.onWorkoutListingClickListener;
 
-public class EditWorkoutActivity extends FragmentActivity implements onGoToExerciseSequenceListener, onGoToExerciseBankListener, onGoToEditWorkoutListener {
+public class EditWorkoutActivity extends FragmentActivity implements onGoToExerciseSequenceListener, onGoToExerciseBankListener, onWorkoutListingClickListener {
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		// Set Listener
 		EditWorkoutInformationFragment.setExerciseBankListener(this);
 		ExerciseBankFragment.setExerciseSequenceListener(this);
-		WorkoutListingFragment.setOnGotoEditWorkoutListener(this);
+		WorkoutListingFragment.setOnWorkoutListingClickListener(this);
 		
 		setContentView(R.layout.edit_workout_information);
 		
@@ -84,7 +83,7 @@ public class EditWorkoutActivity extends FragmentActivity implements onGoToExerc
 	}
 
 	@Override
-	public void goToEditWorkout(String workoutName) {
+	public void onWorkoutListingListenerClick(String workoutName) {
 		// TODO Auto-generated method stub
 		EditWorkoutInformationFragment editWorkoutInformation = new EditWorkoutInformationFragment(workoutName, this);
 		editWorkoutInformation.setRetainInstance(true);
@@ -101,5 +100,6 @@ public class EditWorkoutActivity extends FragmentActivity implements onGoToExerc
 		}
 		
 	}
+
 }
 
