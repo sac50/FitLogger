@@ -13,20 +13,22 @@ import com.cwru.fragments.ExerciseSequenceFragment;
 import com.cwru.fragments.WorkoutListingFragment;
 import com.cwru.fragments.EditWorkoutInformationFragment.onGoToExerciseBankListener;
 import com.cwru.fragments.ExerciseBankFragment.onGoToExerciseSequenceListener;
+import com.cwru.fragments.WorkoutListingFragment.onGoToEditWorkoutListener;
 
-public class EditWorkoutActivity extends FragmentActivity implements onGoToExerciseSequenceListener, onGoToExerciseBankListener {
+public class EditWorkoutActivity extends FragmentActivity implements onGoToExerciseSequenceListener, onGoToExerciseBankListener, onGoToEditWorkoutListener {
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		// Set Listener
 		EditWorkoutInformationFragment.setExerciseBankListener(this);
 		ExerciseBankFragment.setExerciseSequenceListener(this);
+		WorkoutListingFragment.setOnGotoEditWorkoutListener(this);
 		
 		setContentView(R.layout.edit_workout_information);
 		
 		// Tablet
 		if (HomeScreen.isTablet) {
-			WorkoutListingFragment workoutListings = new WorkoutListingFragment(WorkoutListingFragment.EDIT_WORKOUT_LIST);
+			WorkoutListingFragment workoutListings = new WorkoutListingFragment();
 			workoutListings.setRetainInstance(true);
 			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 			transaction.add(R.id.flEditWorkoutInformationLeftFrame, workoutListings);
@@ -34,7 +36,7 @@ public class EditWorkoutActivity extends FragmentActivity implements onGoToExerc
 		} 
 		// Phone
 		else {
-			WorkoutListingFragment workoutListings = new WorkoutListingFragment(WorkoutListingFragment.EDIT_WORKOUT_LIST);
+			WorkoutListingFragment workoutListings = new WorkoutListingFragment();
 			workoutListings.setRetainInstance(true);
 			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 			transaction.replace(R.id.flEditWorkoutInformationMainFrame, workoutListings, "workoutListings");
@@ -79,6 +81,25 @@ public class EditWorkoutActivity extends FragmentActivity implements onGoToExerc
 			transaction.addToBackStack(null);
 			transaction.commit();
 		}
+	}
+
+	@Override
+	public void goToEditWorkout(String workoutName) {
+		// TODO Auto-generated method stub
+		EditWorkoutInformationFragment editWorkoutInformation = new EditWorkoutInformationFragment(workoutName, this);
+		editWorkoutInformation.setRetainInstance(true);
+		// if tablet
+		if (HomeScreen.isTablet) {
+			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+			transaction.replace(R.id.flEditWorkoutInformationRightFrame, editWorkoutInformation);
+			transaction.commit();		
+		} else {
+			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+			transaction.addToBackStack(null);
+			transaction.replace(R.id.flEditWorkoutInformationMainFrame, editWorkoutInformation);
+			transaction.commit();
+		}
+		
 	}
 }
 
