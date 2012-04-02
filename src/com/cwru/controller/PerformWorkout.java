@@ -1,6 +1,9 @@
 package com.cwru.controller;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.StringTokenizer;
 
 import android.os.Bundle;
@@ -16,6 +19,7 @@ import com.cwru.dao.DbAdapter;
 import com.cwru.fragments.HistoryFragment;
 import com.cwru.fragments.NotesFragment;
 import com.cwru.fragments.WorkoutSetFragment;
+import com.cwru.fragments.WorkoutSummaryFragment;
 import com.cwru.fragments.WorkoutWorkflowCountDownTimerFragment;
 import com.cwru.fragments.WorkoutWorkflowCountUpTimerFragment;
 import com.cwru.fragments.WorkoutWorkflowDistanceFragment;
@@ -196,8 +200,10 @@ public class PerformWorkout extends FragmentActivity {
 		@Override
 		public void onClick(View v) {
 			exerciseCounter++;
+			boolean finished = false;
 			if (exerciseCounter >= exercisesForWorkout.size()) {
-				exerciseCounter = exercisesForWorkout.size() - 1;
+				finished = true;
+				exerciseCounter = exercisesForWorkout.size();
 			}
 			double p = (double) (exerciseCounter) / exercisesForWorkout.size();
 			p *= 100;
@@ -208,8 +214,32 @@ public class PerformWorkout extends FragmentActivity {
 			Log.d("Steve", "Exercise Counter: " + exerciseCounter);
 			if (percentage > 100) { percentage = 100; }
 			tvPercentDone.setText(percentage + " % Workout Complete");
-			updateButtonText();
-			launchExercise();
+			Log.d("STEVE", "Exercise Counter: " +  exerciseCounter + " | " + exercisesForWorkout.size());
+			if (finished) {
+					// Launch Workout Summary
+					/**TODO 
+					 * CHANGE DATE TO MM/DD/YYYY
+					 */
+					DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+					//get current date time with Date()
+				    Date date = new Date();
+				    String dateString = dateFormat.format(date);
+					WorkoutSummaryFragment workoutSummary = new WorkoutSummaryFragment(PerformWorkout.this, workoutId, dateString);
+					FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+					if (HomeScreen.isTablet) {
+			
+					}
+					else {
+						transaction.replace(R.id.flPerformWorkoutMainFrame, workoutSummary);
+						tvPercentDone.setText("100 % Workout Complete");
+					}
+					transaction.commit();
+			
+			}
+			else {
+				updateButtonText();
+				launchExercise();
+			}
 		}
 	};
 	
