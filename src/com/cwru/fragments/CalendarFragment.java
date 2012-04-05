@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cwru.R;
+import com.cwru.fragments.CreateWorkoutInformationFragment.onGoToExerciseBankListener;
 import com.cwru.model.DayOfWeekAdapter;
 
 public class CalendarFragment extends Fragment {
@@ -29,14 +30,20 @@ public class CalendarFragment extends Fragment {
 	private GridView gvCalendar;
 	private GridCellAdapter adapter;
 	private GridView gvDaysOfWeek;
+	private boolean returnDate;
+	private static returnDateListener listener;
+
 	
 	private Calendar calendar;
 	
-	private static String [] a = {"1","2","3","4","5","6","7","8","9" };
-
+	private static String [] monthNames = {"January", "February", "March", "April", "May", "June", "July", "August",
+										   "September","October","November","December" };
 	
-	public CalendarFragment(Context context) {
+	public CalendarFragment(Context context, boolean returnDate) {
 		calendar = Calendar.getInstance();
+		this.returnDate = returnDate;
+		// Get Current Month
+		calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 1);
 	}
 	
 	@Override
@@ -57,6 +64,7 @@ public class CalendarFragment extends Fragment {
 		DayOfWeekAdapter dowAdapter = new DayOfWeekAdapter(this.getActivity());
 		gvDaysOfWeek.setAdapter(dowAdapter);
 		
+		tvMonth.setText(monthNames[calendar.get(Calendar.MONTH)]);
 		adapter = new GridCellAdapter(this.getActivity(), R.id.btnCalendarDayGridCell);
 		adapter.notifyDataSetChanged();
 		gvCalendar.setAdapter(adapter);
@@ -76,10 +84,9 @@ public class CalendarFragment extends Fragment {
 		dates.add("F");
 		dates.add("S");
 		*/
+		
 		// Set Day to first of month
 		calendar.set(Calendar.DAY_OF_MONTH, 1);
-		// Get Current Month
-		calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 1);
 		// Decrement until we hit sunday
 		while (calendar.get(Calendar.DAY_OF_WEEK) != 1) {
 			calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) - 1);
@@ -88,19 +95,19 @@ public class CalendarFragment extends Fragment {
 		// Date String ==> DD-COLOR-MM-YY
 		int month = calendar.get(Calendar.MONTH);
 		while (calendar.get(Calendar.MONTH) == month) {
-			dates.add(calendar.get(Calendar.DAY_OF_MONTH) + "-GREY-" + month + "-" + calendar.get(Calendar.YEAR));
+			dates.add((calendar.get(Calendar.MONTH)+1) + "-GREY-" + calendar.get(Calendar.DAY_OF_MONTH) + "-" + calendar.get(Calendar.YEAR));
 			calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) + 1);
 		}
 		// reset month
 		month = calendar.get(Calendar.MONTH);
 		// Add everything to array until we hit next month
 		while (calendar.get(Calendar.MONTH) == month) {
-			dates.add(calendar.get(Calendar.DAY_OF_MONTH) + "-WHITE-" + month + "-" + calendar.get(Calendar.YEAR));
+			dates.add((calendar.get(Calendar.MONTH)+1) + "-WHITE-" + calendar.get(Calendar.DAY_OF_MONTH) + "-" + calendar.get(Calendar.YEAR));
 			calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) + 1);
 		}
 		// Finish adding with dates of next month until we get to sunday
 		while (calendar.get(Calendar.DAY_OF_WEEK) != 1) {
-			dates.add(calendar.get(Calendar.DAY_OF_MONTH) + "-GREY-" + month + "-" + calendar.get(Calendar.YEAR));
+			dates.add((calendar.get(Calendar.MONTH)+1) + "-GREY-" + calendar.get(Calendar.DAY_OF_MONTH) + "-" + calendar.get(Calendar.YEAR));
 			calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) + 1);
 		}
 		
@@ -150,10 +157,10 @@ public class CalendarFragment extends Fragment {
 			// Date String ==> DD-COLOR-MM-YY
 			Log.d("Steve", "" + list.get(position));
 			String[] day_color = list.get(position).split("-");
-			String day = day_color[0];
-			String month = day_color[2];
+			String month = day_color[0];
+			String day = day_color[2];
 			String year = day_color[3];
-			gridcell.setTag(day + "-" + month + "-" + year);
+			gridcell.setTag(month + "-" + day + "-" + year);
 			gridcell.setText(day);
 
 			if (day_color[1].equals("GREY")) {
@@ -169,7 +176,18 @@ public class CalendarFragment extends Fragment {
 		@Override
 		public void onClick(View view) {
 			String dateSelected = (String) view.getTag();
+			if (returnDate) {
+				listener.returnSelectedDate(dateSelected);
+			}
 			Log.d("Steve", "Date Selected: " + dateSelected);
 		}
+	}
+	
+	public interface returnDateListener {
+		void returnSelectedDate(String dateSelected);
+	}
+	
+	public static void setExerciseBankListener(returnDateListener listener) {
+		CalendarFragment.listener = listener;
 	}
 }

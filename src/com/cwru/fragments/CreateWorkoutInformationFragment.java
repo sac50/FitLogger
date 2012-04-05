@@ -7,6 +7,7 @@ import java.util.Calendar;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -27,6 +28,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 
 import com.cwru.R;
+import com.cwru.controller.CalendarActivity;
 import com.cwru.controller.HomeScreen;
 import com.cwru.dao.DbAdapter;
 import com.cwru.model.Workout;
@@ -185,6 +187,10 @@ public class CreateWorkoutInformationFragment extends Fragment {
 		button.setOnClickListener(createWorkoutListener);
 		rgNumOccurances.setOnClickListener(radioButtonListener);
 		rgEndOnDate.setOnClickListener(radioButtonListener);
+		btnEndOnDate.setOnClickListener(getEndDateListener);
+		Calendar calendar = Calendar.getInstance();
+		String currentDate = calendar.get(Calendar.MONTH) + "-" + calendar.get(Calendar.DAY_OF_MONTH) + "-" + calendar.get(Calendar.YEAR);
+		btnEndOnDate.setText(currentDate);
 		
 		LinearLayout ll = (LinearLayout) view.findViewById(R.id.llCreateWorkoutInformationContainer);
 		ll.addView(button);
@@ -212,6 +218,25 @@ public class CreateWorkoutInformationFragment extends Fragment {
 			}
 		}
 	};
+	
+	View.OnClickListener getEndDateListener = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			Intent intent = new Intent(CreateWorkoutInformationFragment.this.getActivity(), CalendarActivity.class);
+			intent.putExtra("RETURN-DATE", true);
+			startActivityForResult(intent,1);
+		}
+	};
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+		if (resultCode == 1 && requestCode == 1) {
+			if (intent.hasExtra("DATE-SELECTED")) {
+				btnEndOnDate.setText(intent.getExtras().getString("DATE-SELECTED"));
+			}
+		}
+	}
+	
 	/**
 	 * Create Workout Button Click Listener
 	 */
