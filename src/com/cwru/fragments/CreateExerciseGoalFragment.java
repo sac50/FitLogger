@@ -22,6 +22,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
@@ -46,8 +48,12 @@ public class CreateExerciseGoalFragment extends Fragment {
 	private Spinner exCardioSpinner;
 	private Spinner exStrengthSpinner;
 	private RadioGroup distanceOrTime;
+	private CheckBox checkBox;
 	
 	private void init() {
+		checkBox = (CheckBox) topView.findViewById(R.id.cbCreateExerciseGoalCumulative);
+		checkBox.setOnCheckedChangeListener(cumulativeListener);
+		
 		exGoal.setType(ExerciseGoal.RUN);
 		exGoal.setMode(ExerciseGoal.DISTANCE);
 		
@@ -123,15 +129,16 @@ public class CreateExerciseGoalFragment extends Fragment {
 				} else {
 					exGoal.setType(ExerciseGoal.SPECIFIC_STRENGTH_EXERCISE);
 					exGoal.setMode(-1);
-					
-					Exercise ex = strengthExercises.get(exStrengthSpinner.getSelectedItemPosition());
-					if (ex.getMode() == Exercise.SET_BASED_EXERCISE) {
-						exGoal.setMode(ExerciseGoal.SET);
-					} else {
-						exGoal.setMode(ExerciseGoal.TIME);
+					if (strengthExercises.size() > 0) {
+						Exercise ex = strengthExercises.get(exStrengthSpinner.getSelectedItemPosition());
+						if (ex.getMode() == Exercise.SET_BASED_EXERCISE) {
+							exGoal.setMode(ExerciseGoal.SET);
+						} else {
+							exGoal.setMode(ExerciseGoal.TIME);
+						}
+						
+						strengthView.setVisibility(0);
 					}
-					
-					strengthView.setVisibility(0);
 					
 					//hide type spinner if present
 					typeSpinner.setVisibility(8);
@@ -166,6 +173,19 @@ public class CreateExerciseGoalFragment extends Fragment {
 		cardioView.setVisibility(0);
 
 	}
+	
+	CompoundButton.OnCheckedChangeListener cumulativeListener = new CompoundButton.OnCheckedChangeListener() {
+		
+		@Override
+		public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+			EditText repsText = (EditText) setView.findViewById(R.id.etCreateExerciseReps);
+			if (isChecked) {
+				repsText.setVisibility(4);
+			} else {
+				repsText.setVisibility(0);
+			}
+		}
+	};
 	
 	AdapterView.OnItemSelectedListener typeListener = new AdapterView.OnItemSelectedListener() {
 
@@ -296,6 +316,8 @@ public class CreateExerciseGoalFragment extends Fragment {
 			EditText nameText = (EditText) topView.findViewById(R.id.etCreateExerciseGoalName);
 			String name = nameText.getText().toString();
 			
+			exGoal.setIsCumulative(checkBox.isChecked());
+			
 			Context context = v.getContext();
 			CharSequence toastText;
 			int duration = Toast.LENGTH_SHORT;
@@ -320,7 +342,15 @@ public class CreateExerciseGoalFragment extends Fragment {
 				break;
 			
 			case ExerciseGoal.SPECIFIC_STRENGTH_EXERCISE:
-				exGoal.setExerciseId(strengthExercises.get(exStrengthSpinner.getSelectedItemPosition()).getId());
+				if (strengthExercises.size() > 0) {
+					exGoal.setExerciseId(strengthExercises.get(exStrengthSpinner.getSelectedItemPosition()).getId());
+				} else {
+					toastText = "You do not have any strength exercises to choose from.";
+					Toast toast = Toast.makeText(context, toastText, duration);
+					toast.setGravity(Gravity.CENTER, 0, 0);
+					toast.show();
+					return;
+				}
 				break;
 			}
 			
@@ -353,7 +383,10 @@ public class CreateExerciseGoalFragment extends Fragment {
 				String weight = weightText.getText().toString();
 				String reps = repsText.getText().toString();
 				
-				if (weight != null && weight.length() > 0
+				if (weight != null && weight.length() > 0 && exGoal.getIsCumulative()) {
+					exGoal.setGoalOne(Double.parseDouble(weight));
+					mDbHelper.createExerciseGoal(exGoal);
+				} else if (weight != null && weight.length() > 0
 						&& reps != null && reps.length() > 0) {
 					exGoal.setGoalOne(Double.parseDouble(weight));
 					exGoal.setGoalTwo(Double.parseDouble(reps));

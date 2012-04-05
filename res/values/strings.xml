@@ -124,10 +124,12 @@
     	<item>Skull Crusher</item>
     </string-array>
     
+    <string name="showCompleted">Show Completed</string>
     <string name="exGoalName">Goal Summary</string>
     <string name="exGoalNameHint">Ex: run a marathon</string>
     <string name="exGoalNameOrType">Exercise Name or Type</string>
     <string name="exGoalStarted">Started At:</string>
     <string name="exGoalCurrent">Current Best:</string>
     <string name="exGoalGoal">Goal:</string>
+    <string name="cumulative">Cumulative</string>
 </resources>

@@ -1,8 +1,11 @@
 package com.cwru.fragments;
 
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,11 +16,13 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cwru.R;
 import com.cwru.controller.HomeScreen;
 import com.cwru.dao.DbAdapter;
 import com.cwru.model.Exercise;
+import com.cwru.model.ExerciseGoal;
 import com.cwru.model.Set;
 import com.cwru.model.SetResult;
 import com.cwru.model.WorkoutResult;
@@ -105,6 +110,25 @@ public class WorkoutSetFragment extends Fragment {
 			
 			SetResult setResult = new SetResult(workoutResultId, setNum, reps, weight);
 			mDbHelper.storeSetResult(setResult);
+			
+			WorkoutResult wResult = new WorkoutResult(workoutId, exercise.getId());
+			wResult.setId(workoutResultId);
+			wResult.setMode(WorkoutResult.SET_BASED_EXERCISE);
+			/** TODO
+			 * EXAMPLE OF CALLING FOR COMPLETED EXERCISE GOALS
+			 * NOTE THAT THE WORKOUTRESULT MUST HAVE ITS ID AND MODE SET,
+			 * WHICH I ADDED ON LINE 178-179
+			 */
+			ArrayList<ExerciseGoal> goals = mDbHelper.getNewlyCompletedExerciseGoals(wResult);
+			for (ExerciseGoal goal : goals) {
+				Context context = v.getContext().getApplicationContext();
+				CharSequence text = "Goal completed: " + goal.getName();
+				int duration = Toast.LENGTH_SHORT;
+				Toast toast = Toast.makeText(context, text, duration);
+				toast.setGravity(Gravity.CENTER, 0, 0);
+				toast.show();
+			}
+			
 			// WorkoutResults (int workout_id, int exercise_id, int setNumber, int reps, double weight)
 			// If more sets, populate with pre determined value
 			if (setCounter < sets.length) { 

@@ -22,13 +22,15 @@ public class ExerciseGoal {
 	
 	private int id;
 	private String name;
+	private boolean isCumulative;
+	private boolean isCompleted;
 	private int mode;
 	private int type;
 	private int exerciseId;
 	private double goalOne;
 	private double goalTwo;
-	private double startingBestOne;
-	private double startingBestTwo;
+	private double currentBestOne;
+	private double currentBestTwo;
 	private String unit;
 	
 	/**
@@ -36,25 +38,29 @@ public class ExerciseGoal {
 	 * 
 	 * @param id
 	 * @param name
+	 * @param isCumulative
+	 * @param isCompleted
 	 * @param mode
 	 * @param type
 	 * @param exerciseId
 	 * @param goalOne
 	 * @param goalTwo
-	 * @param startingBestOne
-	 * @param startingBestTwo
+	 * @param currentBestOne
+	 * @param currentBestTwo
 	 * @param unit
 	 */
-	public ExerciseGoal(int id, String name, int mode, int type, int exerciseId, double goalOne, double goalTwo, double startingBestOne, double startingBestTwo, String unit) {
+	public ExerciseGoal(int id, String name, boolean isCumulative, boolean isCompleted, int mode, int type, int exerciseId, double goalOne, double goalTwo, double currentBestOne, double currentBestTwo, String unit) {
 		this.id = id;
 		this.name = name;
+		this.isCumulative = isCumulative;
+		this.isCompleted = isCompleted;
 		this.mode = mode;
 		this.type = type;
 		this.exerciseId = exerciseId;
 		this.goalOne = goalOne;
 		this.goalTwo = goalTwo;
-		this.startingBestOne = startingBestOne;
-		this.startingBestTwo = startingBestTwo;
+		this.currentBestOne = currentBestOne;
+		this.currentBestTwo = currentBestTwo;
 		this.unit = unit;
 	}
 	
@@ -62,23 +68,27 @@ public class ExerciseGoal {
 	 * Constructor taking all values except id for ExerciseGoal
 	 * 
 	 * @param name
+	 * @param isCumulative
+	 * @param isCompleted
 	 * @param mode
 	 * @param type
 	 * @param exerciseId
 	 * @param goalOne
 	 * @param goalTwo
-	 * @param startingBestOne
-	 * @param startingBestTwo
+	 * @param currentBestOne
+	 * @param currentBestTwo
 	 * @param unit
 	 */
-	public ExerciseGoal(String name, int mode, int type, int exerciseId, double goalOne, double goalTwo, double startingBestOne, double startingBestTwo, String unit) {
+	public ExerciseGoal(String name, boolean isCumulative, boolean isCompleted, int mode, int type, int exerciseId, double goalOne, double goalTwo, double currentBestOne, double currentBestTwo, String unit) {
 		this.name = name;
+		this.isCumulative = isCumulative;
+		this.isCompleted = isCompleted;
 		this.type = type;
 		this.exerciseId = exerciseId;
 		this.goalOne = goalOne;
 		this.goalTwo = goalTwo;
-		this.startingBestOne = startingBestOne;
-		this.startingBestTwo = startingBestTwo;
+		this.currentBestOne = currentBestOne;
+		this.currentBestTwo = currentBestTwo;
 		this.unit = unit;
 	}
 	
@@ -113,6 +123,38 @@ public class ExerciseGoal {
 	 */
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	/**
+	 * 
+	 * @return boolean isCumulative
+	 */
+	public boolean getIsCumulative() {
+		return isCumulative;
+	}
+	
+	/**
+	 * 
+	 * @param boolean isCumulative
+	 */
+	public void setIsCumulative(boolean isCumulative) {
+		this.isCumulative = isCumulative;
+	}
+	
+	/**
+	 * 
+	 * @return boolean isCompleted
+	 */
+	public boolean getIsCompleted() {
+		return isCompleted;
+	}
+	
+	/**
+	 * 
+	 * @param boolean isCompleted
+	 */
+	public void setIsCompleted(boolean isCompleted) {
+		this.isCompleted = isCompleted;
 	}
 
 	/**
@@ -186,31 +228,31 @@ public class ExerciseGoal {
 	}
 	
 	/**
-	 * @return the startingBestOne
+	 * @return the currentBestOne
 	 */
-	public double getStartingBestOne() {
-		return startingBestOne;
+	public double getCurrentBestOne() {
+		return currentBestOne;
 	}
 
 	/**
-	 * @param startingBestOne the startingBestOne to set
+	 * @param currentBestOne the currentBestOne to set
 	 */
-	public void setStartingBestOne(double startingBestOne) {
-		this.startingBestOne = startingBestOne;
+	public void setCurrentBestOne(double currentBestOne) {
+		this.currentBestOne = currentBestOne;
 	}
 	
 	/**
-	 * @return the startingBestTwo
+	 * @return the currentBestTwo
 	 */
-	public double getStartingBestTwo() {
-		return startingBestTwo;
+	public double getCurrentBestTwo() {
+		return currentBestTwo;
 	}
 
 	/**
-	 * @param startingBestTwo the startingBestTwo to set
+	 * @param currentBestTwo the currentBestTwo to set
 	 */
-	public void setStartingBestTwo(double startingBestTwo) {
-		this.startingBestTwo = startingBestTwo;
+	public void setCurrentBestTwo(double currentBestTwo) {
+		this.currentBestTwo = currentBestTwo;
 	}
 
 	/**

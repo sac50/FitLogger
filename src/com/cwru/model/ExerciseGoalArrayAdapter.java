@@ -59,6 +59,11 @@ public class ExerciseGoalArrayAdapter extends ArrayAdapter<ExerciseGoal> {
 		
 		ExerciseGoalRow row = (ExerciseGoalRow) view.getTag();
 		row.textView.setText(list.get(position).getName());
+		
+		//if the goal has been completed, set text color to green
+		if (list.get(position).getIsCompleted()) {
+			row.textView.setTextColor(0xFF33FF00);
+		}
 		row.pos.setText(Integer.toString(position));
 		
 		view.setOnClickListener(exerciseGoalListener);		

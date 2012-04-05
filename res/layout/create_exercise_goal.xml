@@ -23,6 +23,12 @@
             android:hint="@string/exGoalNameHint" >
         </EditText>
 
+        <CheckBox
+            android:id="@+id/cbCreateExerciseGoalCumulative"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cumulative" />
+
         <RadioGroup
             android:id="@+id/rgCardioOrStrength"
             android:layout_width="wrap_content"
@@ -40,6 +46,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/exerciseStrength" />
+
         </RadioGroup>
 
         <Spinner

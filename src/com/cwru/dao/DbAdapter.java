@@ -94,9 +94,9 @@ public class DbAdapter {
 	
 	private static final String CREATE_EXERCISE_GOALS_TABLE =
 			"create table exercise_goals (id integer primary key autoincrement, " +
-			"name text not null, mode integer not null, type integer not null, " +
-			"exercise_id integer, goal_one real, goal_two real, starting_best_one real, " +
-			"starting_best_two real, unit integer);";
+			"name text not null, is_cumulative int not null, is_completed int not null, " +
+			"mode integer not null, type integer not null, exercise_id integer, goal_one real, " +
+			"goal_two real, current_best_one real, current_best_two real, unit integer);";
 				
 	private static final String DATABASE_NAME = "FitLoggerData";
 	private static final String DATABASE_TABLE_WORKOUT = "workouts";
@@ -644,6 +644,8 @@ public class DbAdapter {
 		
 		ContentValues initialValues = new ContentValues();
 		initialValues.put("name", exGoal.getName());
+		initialValues.put("is_cumulative", exGoal.getIsCumulative() ? 1 : 0);
+		initialValues.put("is_completed", 0);
 		initialValues.put("type", exGoal.getType());
 		initialValues.put("mode", exGoal.getMode());
 		initialValues.put("goal_one", exGoal.getGoalOne());
@@ -681,34 +683,36 @@ public class DbAdapter {
 				break;
 			}
 			
-			ArrayList<Exercise> exercises = new ArrayList<Exercise>();
+			initialValues.put("current_best_one", 0);
 			
-			switch (exGoal.getMode()) {
-			
-			case ExerciseGoal.DISTANCE:
-				if (exGoal.getExerciseId() > 0) {
-					exercises.add(getExerciseFromId(exGoal.getExerciseId()));
-				} else {
-					exercises = getAllExercisesForTypeAndMode(exType, Exercise.DISTANCE_BASED_EXERCISE);
-				}
-				DistanceResult distanceResult = getGreatestDistanceResult(exercises);
-				Double distance = MeasurementConversions.convert(distanceResult.getLength(), distanceResult.getUnits(), exGoal.getUnit());
-				initialValues.put("starting_best_one", distance);
-				break;
-			case ExerciseGoal.TIME:
-				if (exGoal.getExerciseId() > 0) {
-					exercises.add(getExerciseFromId(exGoal.getExerciseId()));
-				} else {
-					exercises = getAllExercisesForTypeAndMode(exType, Exercise.COUNTDOWN_BASED_EXERCISE);
-					exercises.addAll(getAllExercisesForTypeAndMode(exType, Exercise.COUNTUP_BASED_EXERCISE));
-				}
-				TimeResult timeResult= getGreatestTimeResult(exercises);
-				Double time = MeasurementConversions.convert(timeResult.getLength(), timeResult.getUnits(), exGoal.getUnit());
-				initialValues.put("starting_best_one", time);
-				break;
-			default:
-				break;
-			}
+//			ArrayList<Exercise> exercises = new ArrayList<Exercise>();
+//			
+//			switch (exGoal.getMode()) {
+//			
+//			case ExerciseGoal.DISTANCE:
+//				if (exGoal.getExerciseId() > 0) {
+//					exercises.add(getExerciseFromId(exGoal.getExerciseId()));
+//				} else {
+//					exercises = getAllExercisesForTypeAndMode(exType, Exercise.DISTANCE_BASED_EXERCISE);
+//				}
+//				DistanceResult distanceResult = getGreatestDistanceResult(exercises);
+//				Double distance = MeasurementConversions.convert(distanceResult.getLength(), distanceResult.getUnits(), exGoal.getUnit());
+//				initialValues.put("current_best", distance);
+//				break;
+//			case ExerciseGoal.TIME:
+//				if (exGoal.getExerciseId() > 0) {
+//					exercises.add(getExerciseFromId(exGoal.getExerciseId()));
+//				} else {
+//					exercises = getAllExercisesForTypeAndMode(exType, Exercise.COUNTDOWN_BASED_EXERCISE);
+//					exercises.addAll(getAllExercisesForTypeAndMode(exType, Exercise.COUNTUP_BASED_EXERCISE));
+//				}
+//				TimeResult timeResult= getGreatestTimeResult(exercises);
+//				Double time = MeasurementConversions.convert(timeResult.getLength(), timeResult.getUnits(), exGoal.getUnit());
+//				initialValues.put("current_best", time);
+//				break;
+//			default:
+//				break;
+//			}
 
 		}
 		
@@ -1107,21 +1111,51 @@ public class DbAdapter {
 		while (cursor.moveToNext()) {
 			int id = cursor.getInt(cursor.getColumnIndex("id"));
 			String name = cursor.getString(cursor.getColumnIndex("name"));
+			boolean isCumulative = cursor.getInt(cursor.getColumnIndex("is_cumulative")) == 1;
+			boolean isCompleted = cursor.getInt(cursor.getColumnIndex("is_completed")) == 1;
 			int mode = cursor.getInt(cursor.getColumnIndex("mode"));
 			int type = cursor.getInt(cursor.getColumnIndex("type"));
 			int exerciseId = cursor.getInt(cursor.getColumnIndex("exercise_id"));
 			double goalOne = cursor.getDouble(cursor.getColumnIndex("goal_one"));
 			double goalTwo = cursor.getDouble(cursor.getColumnIndex("goal_two"));
-			double startingBestOne = cursor.getDouble(cursor.getColumnIndex("starting_best_one"));
-			double startingBestTwo = cursor.getDouble(cursor.getColumnIndex("starting_best_two"));
+			double currentBestOne = cursor.getDouble(cursor.getColumnIndex("current_best_one"));
+			double currentBestTwo = cursor.getDouble(cursor.getColumnIndex("current_best_two"));
 			String unit = cursor.getString(cursor.getColumnIndex("unit"));
-			exerciseGoals.add(new ExerciseGoal(id, name, mode, type, exerciseId, goalOne, goalTwo, startingBestOne, startingBestTwo, unit));
+			exerciseGoals.add(new ExerciseGoal(id, name, isCumulative, isCompleted, mode, type, exerciseId, goalOne, goalTwo, currentBestOne, currentBestTwo, unit));
 		}
 		
 		cursor.close();
 		close();
 		
 		return exerciseGoals;
+	}
+	
+	/**
+	 * Updates the current best and completed values of the provided exercise goal
+	 * 
+	 * @param ExerciseGoal goal
+	 */
+	public void updateExerciseGoal(ExerciseGoal goal) {
+		open();
+		String query = "update exercise_goals " +
+				"set is_completed = " + (goal.getIsCompleted() ? 1 : 0) +
+				", current_best_one = " + goal.getCurrentBestOne() +
+				", current_best_two = " + goal.getCurrentBestTwo() +
+				" where id = " + goal.getId();
+		db.execSQL(query);
+		close();
+	}
+	
+	/**
+	 * Deletes the exercise goal corresponding to the provided exercise goal id
+	 * 
+	 * @param id
+	 */
+	public void deleteExerciseGoal(int id) {
+		open();
+		String query = "delete from exercise_goals where id = " + id;
+		db.execSQL(query);
+		close();
 	}
 	
 	/**
@@ -1160,20 +1194,51 @@ public class DbAdapter {
 		case WorkoutResult.SET_BASED_EXERCISE:
 			mode = ExerciseGoal.SET;
 			sResults = getSetResults(result.getId());
+			SetResult sResult = sResults.get(sResults.size() - 1);
 			String query = "select * from exercise_goals where exercise_id = " + ex.getId();
 			open();
 			Cursor c = db.rawQuery(query, null);
 			while (c.moveToNext()) {
-				double weight = c.getDouble(c.getColumnIndex("goal_one"));
-				int reps = (int) c.getDouble(c.getColumnIndex("goal_two"));
-				for (SetResult sResult : sResults) {
-					if (sResult.getWeight() >= weight && sResult.getReps() >= reps) {
-						ExerciseGoal goal = new ExerciseGoal();
+				ExerciseGoal goal = new ExerciseGoal();
+				
+				int id = c.getInt(c.getColumnIndex("id"));
+				boolean isCumulative = c.getInt(c.getColumnIndex("is_cumulative")) == 1;
+				boolean isCompleted = c.getInt(c.getColumnIndex("is_completed")) == 1;
+				double goalWeight = c.getDouble(c.getColumnIndex("goal_one"));
+				int goalReps = (int) c.getDouble(c.getColumnIndex("goal_two"));
+				double currentWeight = c.getDouble(c.getColumnIndex("current_best_one"));
+				int currentReps = (int) c.getDouble(c.getColumnIndex("current_best_two"));
+
+				goal.setIsCompleted(isCompleted);
+				
+				if (isCumulative) {
+					goal.setId(id);
+					goal.setCurrentBestOne(currentWeight + sResult.getWeight() * sResult.getReps());
+					
+					if (goal.getCurrentBestOne() >= goalWeight && !isCompleted) {
+						goal.setIsCompleted(true);
 						goal.setName(c.getString(c.getColumnIndex("name")));
 						goals.add(goal);
-						break;
 					}
+					
+					updateExerciseGoal(goal);
+				} else if (sResult.getWeight() >= goalWeight && sResult.getReps() >= goalReps && !goal.getIsCompleted()) {
+					goal.setId(id);
+					goal.setName(c.getString(c.getColumnIndex("name")));
+					goal.setCurrentBestOne(sResult.getWeight());
+					goal.setCurrentBestTwo(sResult.getReps());
+					goal.setIsCompleted(true);
+					updateExerciseGoal(goal);
+					goals.add(goal);
+				} else if (sResult.getWeight() > currentWeight || 
+						sResult.getWeight() == currentWeight && sResult.getReps() > currentReps) {
+					goal.setId(id);
+					goal.setCurrentBestOne(sResult.getWeight());
+					goal.setCurrentBestTwo(sResult.getReps());
+					goal.setIsCompleted(goal.getIsCompleted());
+					updateExerciseGoal(goal);
 				}
+				
 			}
 			c.close();
 			close();
@@ -1197,13 +1262,33 @@ public class DbAdapter {
 				" or type = " + type + " and mode = " + mode;
 		Cursor cursor = db.rawQuery(query, null);
 		while (cursor.moveToNext()) {
+			ExerciseGoal goal = new ExerciseGoal();
+			int id = cursor.getInt(cursor.getColumnIndex("id"));
+			boolean isCumulative = cursor.getInt(cursor.getColumnIndex("is_cumulative")) == 1;
+			goal.setIsCompleted(cursor.getInt(cursor.getColumnIndex("is_completed")) == 1);
 			double goalVal = cursor.getDouble(cursor.getColumnIndex("goal_one"));
+			double currentBestOne = cursor.getDouble(cursor.getColumnIndex("current_best_one"));
 			String goalUnit = cursor.getString(cursor.getColumnIndex("unit"));
 			val = MeasurementConversions.convert(val, unit, goalUnit);
-			if (val >= goalVal) {
-				ExerciseGoal goal = new ExerciseGoal();
-				goal.setName(cursor.getString(cursor.getColumnIndex("name")));
-				goals.add(goal);
+			
+			if (isCumulative) {
+				goal.setId(id);
+				goal.setCurrentBestOne(val + currentBestOne);
+				if (goal.getCurrentBestOne() > goalVal && !goal.getIsCompleted()) {
+					goal.setName(cursor.getString(cursor.getColumnIndex("name")));
+					goal.setIsCompleted(true);
+					goals.add(goal);
+				}
+				updateExerciseGoal(goal);
+			} else if (val > currentBestOne) {
+				goal.setId(id);
+				goal.setCurrentBestOne(val);
+				if (val > goalVal && !goal.getIsCompleted()) {
+					goal.setName(cursor.getString(cursor.getColumnIndex("name")));
+					goal.setIsCompleted(true);
+					goals.add(goal);
+				}
+				updateExerciseGoal(goal);
 			}
 		}
 		cursor.close();

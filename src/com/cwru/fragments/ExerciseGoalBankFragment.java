@@ -13,10 +13,14 @@ import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 
 public class ExerciseGoalBankFragment extends ListFragment {
 	private DbAdapter mDbHelper;
+	ExerciseGoalArrayAdapter allAdapter;
+	ExerciseGoalArrayAdapter incompleteAdapter;
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (container == null) {
@@ -26,19 +30,41 @@ public class ExerciseGoalBankFragment extends ListFragment {
 		
 		View view = (LinearLayout) inflater.inflate(R.layout.exercise_goal_bank, container, false);
 		
-		List<ExerciseGoal> exerciseGoals = new ArrayList<ExerciseGoal>();
+		CheckBox cb = (CheckBox) view.findViewById(R.id.cbShowCompletedExGoals);
+		cb.setOnCheckedChangeListener(listener);
+		
+		List<ExerciseGoal> allExerciseGoals = new ArrayList<ExerciseGoal>();
+		List<ExerciseGoal> incompleteExerciseGoals = new ArrayList<ExerciseGoal>();
 		ExerciseGoal goal = new ExerciseGoal();
 		goal.setName("+ Add Goal");
-		exerciseGoals.add(goal);
+		allExerciseGoals.add(goal);
+		incompleteExerciseGoals.add(goal);
 		
 		List<ExerciseGoal> dbGoals = mDbHelper.getAllExerciseGoals();
 		for (ExerciseGoal i : dbGoals) {
-			exerciseGoals.add(i);
+			allExerciseGoals.add(i);
+			if (!i.getIsCompleted()){
+				incompleteExerciseGoals.add(i);
+			}
 		}
 		
-		ExerciseGoalArrayAdapter adapter = new ExerciseGoalArrayAdapter(this.getActivity(), exerciseGoals, this);
-		this.setListAdapter(adapter);
+		allAdapter = new ExerciseGoalArrayAdapter(this.getActivity(), allExerciseGoals, this);
+		incompleteAdapter = new ExerciseGoalArrayAdapter(this.getActivity(), incompleteExerciseGoals, this);
+		this.setListAdapter(incompleteAdapter);
 		
 		return view;
 	}
+	
+	CompoundButton.OnCheckedChangeListener listener = new CompoundButton.OnCheckedChangeListener() {
+		
+		@Override
+		public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+			if (isChecked) {
+				setListAdapter(allAdapter);
+			} else {
+				setListAdapter(incompleteAdapter);
+			}
+		}
+	};
+	
 }

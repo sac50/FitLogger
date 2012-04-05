@@ -531,7 +531,7 @@ public class CreateExerciseActivity extends FragmentActivity {
 								IntervalSet intervalSet = new IntervalSet(name, Double.parseDouble(length), "time", unit);
 								intervalSets.add(intervalSet);
 							} else {
-								IntervalSet intervalSet = new IntervalSet(name, Double.parseDouble(length), "time", unit);
+								IntervalSet intervalSet = new IntervalSet(name, Double.parseDouble(length), "distance", unit);
 								intervalSets.add(intervalSet);
 							}
 						}

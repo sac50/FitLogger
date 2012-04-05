@@ -37,27 +37,6 @@
     	    android:layout_marginBottom="10dp"
     	    android:text="TextView"
     	    android:textSize="22sp" />
-
-    	<LinearLayout
-    	    android:id="@+id/linearLayout2"
-    	    android:layout_width="match_parent"
-    	    android:layout_height="wrap_content" >
-    	    
-    	    <TextView
-    	        android:id="@+id/tvViewExerciseGoalStartedLabel"
-    	        android:layout_width="wrap_content"
-    	        android:layout_height="wrap_content"
-    	        android:layout_marginBottom="15dp"
-    	        android:layout_marginRight="36dp"
-    	        android:text="@string/exGoalStarted" />
-    
-    		<TextView 
-        		android:id="@+id/tvViewExerciseGoalStarted"
-        		android:layout_width="wrap_content"
-        		android:layout_height="wrap_content"
-        		android:text="TextView"/>
-    	    
-    	</LinearLayout>
     	
     	<LinearLayout
     	    android:id="@+id/linearLayout3"
