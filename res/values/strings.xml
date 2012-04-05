@@ -130,4 +130,8 @@
     <string name="exGoalStarted">Started At:</string>
     <string name="exGoalCurrent">Current Best:</string>
     <string name="exGoalGoal">Goal:</string>
+    
+    
+    
+    <color name="white">#FFFFFF</color>
 </resources>

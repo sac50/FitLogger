@@ -22,7 +22,7 @@ import com.cwru.model.IntervalResult;
 import com.cwru.model.SetResult;
 import com.cwru.model.TimeResult;
 import com.cwru.model.WorkoutResult;
-;
+
 
 public class WorkoutSummaryFragment extends Fragment {
 

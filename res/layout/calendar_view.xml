@@ -39,11 +39,19 @@
         
     </LinearLayout>
     
+    <GridView 
+    	android:id="@+id/gvCalendarViewDaysOfWeekHeading"
+    	android:numColumns="7"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+    />
+    
 	<GridView 
 		android:id="@+id/gvCalendarViewCalendar"
 		android:numColumns="7"
 		android:layout_width="fill_parent"
 		android:layout_height="match_parent"    
+		android:verticalSpacing="3dp"
 	/>
     
 

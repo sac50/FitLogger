@@ -1,8 +1,12 @@
 package com.cwru.fragments;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,6 +20,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TableLayout;
@@ -23,9 +28,7 @@ import android.widget.TableRow;
 
 import com.cwru.R;
 import com.cwru.controller.HomeScreen;
-import com.cwru.controller.WorkoutExerciseListing;
 import com.cwru.dao.DbAdapter;
-import com.cwru.fragments.ExerciseBankFragment.onGoToExerciseSequenceListener;
 import com.cwru.model.Workout;
 
 /**
@@ -45,6 +48,10 @@ public class CreateWorkoutInformationFragment extends Fragment {
 	private CheckBox thursday;
 	private CheckBox friday;
 	private CheckBox saturday;
+	private RadioButton rgNumOccurances;
+	private LinearLayout llNumOccurances;
+	private RadioButton rgEndOnDate;
+	private Button btnEndOnDate;
 	private DbAdapter mDbHelper;
 	private static onGoToExerciseBankListener listener;
 
@@ -69,6 +76,10 @@ public class CreateWorkoutInformationFragment extends Fragment {
 		thursday = new CheckBox(this.getActivity());
 		friday = new CheckBox(this.getActivity());
 		saturday = new CheckBox(this.getActivity());
+		rgNumOccurances = (RadioButton) view.findViewById(R.id.rbCreateWorkoutNumOccurances);
+		llNumOccurances = (LinearLayout) view.findViewById(R.id.llCreateWorkoutNumOccurances);
+		rgEndOnDate = (RadioButton) view.findViewById(R.id.rbCreateWorkoutEndOnDate);
+		btnEndOnDate = (Button) view.findViewById(R.id.btnCreateWorkoutEndDate);
 		
 		/* Set data for spinners type and repeat weeks */
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
@@ -172,6 +183,8 @@ public class CreateWorkoutInformationFragment extends Fragment {
 		Button button = new Button(this.getActivity());
 		button.setText("Create Workout");
 		button.setOnClickListener(createWorkoutListener);
+		rgNumOccurances.setOnClickListener(radioButtonListener);
+		rgEndOnDate.setOnClickListener(radioButtonListener);
 		
 		LinearLayout ll = (LinearLayout) view.findViewById(R.id.llCreateWorkoutInformationContainer);
 		ll.addView(button);
@@ -182,6 +195,23 @@ public class CreateWorkoutInformationFragment extends Fragment {
 	private boolean validateWorkoutName(String workoutName) {
 		return mDbHelper.workoutNameExist(workoutName);
 	}
+	
+	View.OnClickListener radioButtonListener = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			// NumOccurances Checked
+			if (rgNumOccurances.isChecked()) {
+				llNumOccurances.setVisibility(LinearLayout.VISIBLE);
+				btnEndOnDate.setVisibility(Button.GONE);
+			} 
+			// Date Checked
+			else if (rgEndOnDate.isChecked()) {
+				llNumOccurances.setVisibility(LinearLayout.GONE);
+				btnEndOnDate.setVisibility(Button.VISIBLE);
+				
+			}
+		}
+	};
 	/**
 	 * Create Workout Button Click Listener
 	 */
@@ -243,7 +273,10 @@ public class CreateWorkoutInformationFragment extends Fragment {
 				 * Add workout repeat information to insert command
 				 */
 				/* Create Workout in the Database */
-				mDbHelper.createWorkout(workoutToCreate);
+				int workoutId = mDbHelper.createWorkout(workoutToCreate);
+				int numRepeats = 0;
+				createCalendarEntry(workoutId, repeatDays, repeatSunday, repeatMonday, repeatTuesday,
+									repeatWednesday, repeatThursday, repeatFriday, repeatSaturday, numRepeats);
 				
 				/** TODO
 				 * Change intent launch so tabbed implementation remains
@@ -262,6 +295,61 @@ public class CreateWorkoutInformationFragment extends Fragment {
 		}
 	};
 	
+	public void createCalendarEntry(int workoutId, String repeats, int repeatSunday,
+			int repeatMonday, int repeatTuesday, int repeatWednesday, int repeatThursday,
+			int repeatFriday, int repeatSaturday, int numRepeats) {
+		ArrayList<String> records = new ArrayList<String>();
+		Calendar calendar = Calendar.getInstance();
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/dd/MM");
+		boolean insert = false;
+		for (int i = 0; i < numRepeats; i++) {
+			String date = dateFormat.format(calendar.getTime());
+			switch (calendar.get(Calendar.DAY_OF_WEEK)) {
+				case Calendar.SUNDAY:
+					if (repeatSunday == 0) {
+						insert = true;
+					}
+					break;
+				case Calendar.MONDAY:
+					if (repeatMonday == 0) {
+						insert = true;
+					}
+					break;
+				case Calendar.TUESDAY:
+					if (repeatTuesday == 0) {
+						insert = true;
+					}
+					break;
+				case Calendar.WEDNESDAY:
+					if (repeatWednesday == 0) { 
+						insert = true;
+					}
+					break;
+				case Calendar.THURSDAY:
+					if (repeatThursday == 0) {
+						insert = true;
+					}
+					break;
+				case Calendar.FRIDAY:
+					if (repeatFriday == 0) {
+						insert = true;
+					}
+					break;
+				case Calendar.SATURDAY:
+					if (repeatSaturday == 0) {
+						insert = true;
+					}
+					break;
+			}
+			
+			if (insert) {
+				String insertQuery = "insert into calendar (date, workout_id) values ('" + date + "'," + workoutId + ")";
+				records.add(insertQuery);
+			}
+		}
+		
+	}
+
 	public interface onGoToExerciseBankListener {
 		void goToExerciseBank(String workoutName);
 	}

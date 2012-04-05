@@ -3,6 +3,7 @@ package com.cwru.dao;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import android.content.ContentValues;
@@ -97,6 +98,10 @@ public class DbAdapter {
 			"name text not null, mode integer not null, type integer not null, " +
 			"exercise_id integer, goal_one real, goal_two real, starting_best_one real, " +
 			"starting_best_two real, unit integer);";
+	
+	private static final String CREATE_CALENDAR_TABLE = 
+			"create table calendar (id integer primary key autoincrement, " + 
+			"date text not null, workout_id);";
 				
 	private static final String DATABASE_NAME = "FitLoggerData";
 	private static final String DATABASE_TABLE_WORKOUT = "workouts";
@@ -112,6 +117,7 @@ public class DbAdapter {
 	private static final String DATABASE_TABLE_TIME_RESULT = "time_result";
 	private static final String DATABASE_TABLE_INTERVAL_RESULT = "intervals_result";
 	private static final String DATABASE_TABLE_EXERCISE_GOAL = "exercise_goals";
+	private static final String DATABASE_TABLE_CALENDAR = "calendar";
 	private static final int DATABASE_VERSION = 1;
 
 	private final Context mCtx;
@@ -137,6 +143,7 @@ public class DbAdapter {
 			db.execSQL(CREATE_TIME_RESULT_TABLE);
 			db.execSQL(CREATE_DISTANCE_RESULT_TABLE);
 			db.execSQL(CREATE_EXERCISE_GOALS_TABLE);
+			db.execSQL(CREATE_CALENDAR_TABLE);
 			Log.d("Steve", "DB CREATES");
 		}
 
@@ -178,7 +185,7 @@ public class DbAdapter {
 	 * Inserts row into the Workout table
 	 * @param workout
 	 */
-	public void createWorkout(Workout workout) {
+	public int createWorkout(Workout workout) {
 		open();
 		ContentValues initialValues = new ContentValues();
 		initialValues.put("name", workout.getName());
@@ -196,7 +203,15 @@ public class DbAdapter {
 		// comment defaulted to blank, gets set during a workout
 		initialValues.put("comment", "");
 		db.insert(DATABASE_TABLE_WORKOUT, null, initialValues);
+		String selectId = "select id from workouts where name = '" + workout.getName() + "'";
+		Cursor cursor = db.rawQuery(selectId, null);
+		int workoutId = 0;
+		while (cursor.moveToNext()) {
+			workoutId = cursor.getInt(cursor.getColumnIndex("id"));
+		}
+		cursor.close();
 		close();
+		return workoutId;
 	}
 	
 	/**
@@ -1664,8 +1679,27 @@ public class DbAdapter {
 		return workoutDates.toArray(new String [0]);		
 	}
 	
-	
-	
+	public void createCalendarEntry(int workoutId, String repeats, boolean repeatSunday,
+					boolean repeatMonday, boolean repeatTuesday, boolean repeatWednesday, boolean repeatThursday,
+					boolean repeatFriday, boolean repeatSaturday, int numRepeats) {
+
+			
+			open();
+			/*
+			try {
+				db.beginTransaction();
+				for (int i = 0; i < records.size(); i++) {
+					db.rawQuery(records.get(i), null);
+				}
+				db.setTransactionSuccessful();
+			} catch (SQLException e) {
+				
+			} finally {
+				db.endTransaction();
+			}
+			*/
+			close();
+	}
 	
 	
 }
