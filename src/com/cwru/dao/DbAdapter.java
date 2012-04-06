@@ -1679,25 +1679,13 @@ public class DbAdapter {
 		return workoutDates.toArray(new String [0]);		
 	}
 	
-	public void createCalendarEntry(int workoutId, String repeats, boolean repeatSunday,
-					boolean repeatMonday, boolean repeatTuesday, boolean repeatWednesday, boolean repeatThursday,
-					boolean repeatFriday, boolean repeatSaturday, int numRepeats) {
-
-			
+	public void createCalendarEntry(ArrayList<String> records) {
 			open();
-			/*
-			try {
-				db.beginTransaction();
-				for (int i = 0; i < records.size(); i++) {
-					db.rawQuery(records.get(i), null);
-				}
-				db.setTransactionSuccessful();
-			} catch (SQLException e) {
-				
-			} finally {
-				db.endTransaction();
+			Log.d("STEVE", "INSERTS");
+			for (int i = 0; i < records.size(); i++) {
+				Log.d("Steve", "QUERY: " + records.get(i));
+				db.execSQL(records.get(i));
 			}
-			*/
 			close();
 	}
 	

@@ -43,7 +43,7 @@ public class CalendarFragment extends Fragment {
 		calendar = Calendar.getInstance();
 		this.returnDate = returnDate;
 		// Get Current Month
-		calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 1);
+		calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH));
 	}
 	
 	@Override
@@ -86,6 +86,8 @@ public class CalendarFragment extends Fragment {
 		*/
 		
 		// Set Day to first of month
+		int month = calendar.get(Calendar.MONTH);
+
 		calendar.set(Calendar.DAY_OF_MONTH, 1);
 		// Decrement until we hit sunday
 		while (calendar.get(Calendar.DAY_OF_WEEK) != 1) {
@@ -93,10 +95,11 @@ public class CalendarFragment extends Fragment {
 		}
 		// Add prior month days
 		// Date String ==> DD-COLOR-MM-YY
-		int month = calendar.get(Calendar.MONTH);
-		while (calendar.get(Calendar.MONTH) == month) {
-			dates.add((calendar.get(Calendar.MONTH)+1) + "-GREY-" + calendar.get(Calendar.DAY_OF_MONTH) + "-" + calendar.get(Calendar.YEAR));
-			calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) + 1);
+		if (month != calendar.get(Calendar.MONTH)) {
+			while (calendar.get(Calendar.MONTH) == month) {
+				dates.add((calendar.get(Calendar.MONTH)+1) + "-GREY-" + calendar.get(Calendar.DAY_OF_MONTH) + "-" + calendar.get(Calendar.YEAR));
+				calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) + 1);
+			}
 		}
 		// reset month
 		month = calendar.get(Calendar.MONTH);
@@ -160,7 +163,7 @@ public class CalendarFragment extends Fragment {
 			String month = day_color[0];
 			String day = day_color[2];
 			String year = day_color[3];
-			gridcell.setTag(month + "-" + day + "-" + year);
+			gridcell.setTag(formatDate(month, day, year));
 			gridcell.setText(day);
 
 			if (day_color[1].equals("GREY")) {
@@ -189,5 +192,20 @@ public class CalendarFragment extends Fragment {
 	
 	public static void setExerciseBankListener(returnDateListener listener) {
 		CalendarFragment.listener = listener;
+	}
+	
+	public String formatDate(String month, String day, String year) {
+		int m = Integer.parseInt(month);
+		int d = Integer.parseInt(day);
+		int y = Integer.parseInt(year);
+		
+		String date = "";
+		if ( m < 10) { date += "0" + m + "/";}
+		else { date += m + "/"; }
+		if (d < 10) { date += "0" + d + "/"; }
+		else { date += d + "/"; }
+		date += y;
+		Log.d("Steve", "Format Date: " + date);
+		return date;		
 	}
 }

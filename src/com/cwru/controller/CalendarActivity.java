@@ -22,12 +22,15 @@ public class CalendarActivity extends FragmentActivity implements returnDateList
 		CalendarFragment.setExerciseBankListener(this);
 		
 		Bundle extras = getIntent().getExtras();
-		if (extras.containsKey("RETURN-DATE")) {
-			returnDate = true;
+		if (extras != null) {
+			if (extras.containsKey("RETURN-DATE")) {
+				returnDate = true;
+			} else {
+				returnDate = false;
+			}
 		} else {
 			returnDate = false;
 		}
-		
 		CalendarFragment calendar = new CalendarFragment(this, returnDate);
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		transaction.replace(R.id.flCalendarMainFrame, calendar);

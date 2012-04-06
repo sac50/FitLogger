@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -52,6 +53,7 @@ public class CreateWorkoutInformationFragment extends Fragment {
 	private CheckBox saturday;
 	private RadioButton rgNumOccurances;
 	private LinearLayout llNumOccurances;
+	private EditText etNumOccurances;
 	private RadioButton rgEndOnDate;
 	private Button btnEndOnDate;
 	private DbAdapter mDbHelper;
@@ -80,6 +82,7 @@ public class CreateWorkoutInformationFragment extends Fragment {
 		saturday = new CheckBox(this.getActivity());
 		rgNumOccurances = (RadioButton) view.findViewById(R.id.rbCreateWorkoutNumOccurances);
 		llNumOccurances = (LinearLayout) view.findViewById(R.id.llCreateWorkoutNumOccurances);
+		etNumOccurances = (EditText) view.findViewById(R.id.etCreateWorkoutNumOccurances);
 		rgEndOnDate = (RadioButton) view.findViewById(R.id.rbCreateWorkoutEndOnDate);
 		btnEndOnDate = (Button) view.findViewById(R.id.btnCreateWorkoutEndDate);
 		
@@ -299,9 +302,18 @@ public class CreateWorkoutInformationFragment extends Fragment {
 				 */
 				/* Create Workout in the Database */
 				int workoutId = mDbHelper.createWorkout(workoutToCreate);
-				int numRepeats = 0;
-				createCalendarEntry(workoutId, repeatDays, repeatSunday, repeatMonday, repeatTuesday,
-									repeatWednesday, repeatThursday, repeatFriday, repeatSaturday, numRepeats);
+				// if num occurances checked
+				if (rgNumOccurances.isChecked()) {
+					int numRepeats = Integer.parseInt(etNumOccurances.getText().toString());
+					createCalendarEntryNumOccurances(workoutId, workoutRepeatWeeks, repeatSunday, repeatMonday, repeatTuesday,
+							repeatWednesday, repeatThursday, repeatFriday, repeatSaturday, numRepeats);
+				} 
+				// if end date selected 
+				else if (rgEndOnDate.isChecked()) {
+					String endDate = btnEndOnDate.getText().toString();
+					createCalendarEntryByEndDate(workoutId, workoutRepeatWeeks, repeatSunday, repeatMonday, repeatTuesday,
+							repeatWednesday, repeatThursday, repeatFriday, repeatSaturday, endDate);					
+				}
 				
 				/** TODO
 				 * Change intent launch so tabbed implementation remains
@@ -320,15 +332,19 @@ public class CreateWorkoutInformationFragment extends Fragment {
 		}
 	};
 	
-	public void createCalendarEntry(int workoutId, String repeats, int repeatSunday,
+	
+	public void createCalendarEntryNumOccurances(int workoutId, String repeats, int repeatSunday,
 			int repeatMonday, int repeatTuesday, int repeatWednesday, int repeatThursday,
 			int repeatFriday, int repeatSaturday, int numRepeats) {
 		ArrayList<String> records = new ArrayList<String>();
 		Calendar calendar = Calendar.getInstance();
-		DateFormat dateFormat = new SimpleDateFormat("yyyy/dd/MM");
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
 		boolean insert = false;
-		for (int i = 0; i < numRepeats; i++) {
+		Log.d("Steve", "=======================================================");
+		int counter = 1;
+		while (counter <= numRepeats) {
 			String date = dateFormat.format(calendar.getTime());
+			Log.d("Steve", "Date: " + date);
 			switch (calendar.get(Calendar.DAY_OF_WEEK)) {
 				case Calendar.SUNDAY:
 					if (repeatSunday == 0) {
@@ -370,8 +386,150 @@ public class CreateWorkoutInformationFragment extends Fragment {
 			if (insert) {
 				String insertQuery = "insert into calendar (date, workout_id) values ('" + date + "'," + workoutId + ")";
 				records.add(insertQuery);
+				counter++;
 			}
+			
+			insert = false;
+
+			/* Weekly, Bi-weekly, 3 weeks, 4 weeks */
+			// only check after we do a week full of testing
+			if ( calendar.get(Calendar.DAY_OF_WEEK)== 1) {
+				if (repeats.equals("Weekly")) {
+					// do nothing
+				} else if (repeats.equals("Bi-weekly")) {
+					// add 7 days
+					calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) + 7);
+					
+				} else if (repeats.equals("3 weeks")) {
+					// add 14 days
+					calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) + 14);
+				} else if (repeats.equals("4 weeks")) {
+					// add 21 days
+					calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) + 21);
+				}
+				calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) + 1);			
+
+				continue;
+			}
+			
+			calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) + 1);		
 		}
+		
+		// insert records into the db
+		mDbHelper.createCalendarEntry(records);
+		
+	}
+	
+	public void createCalendarEntryByEndDate(int workoutId, String repeats, int repeatSunday,
+			int repeatMonday, int repeatTuesday, int repeatWednesday, int repeatThursday,
+			int repeatFriday, int repeatSaturday, String untilDate) {
+		// End Date is in form mm-dd-yyyy
+		String [] dateFields = untilDate.split("/");
+		String endDate = dateFields[2] + "/" + dateFields[0] + "/" + dateFields[1];
+		
+		ArrayList<String> records = new ArrayList<String>();
+		Calendar calendar = Calendar.getInstance();
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+		boolean insert = false;
+		String date = dateFormat.format(calendar.getTime());
+		Log.d("Steve", "Date: " + date);
+		while (continueInDateAdd(date, endDate)) {
+			insert = false;
+			date = dateFormat.format(calendar.getTime());
+			Log.d("Steve", "Date2: " + date);
+			switch (calendar.get(Calendar.DAY_OF_WEEK)) {
+				case Calendar.SUNDAY:
+					if (repeatSunday == 0) {
+						insert = true;
+					}
+					break;
+				case Calendar.MONDAY:
+					if (repeatMonday == 0) {
+						insert = true;
+					}
+					break;
+				case Calendar.TUESDAY:
+					if (repeatTuesday == 0) {
+						insert = true;
+					}
+					break;
+				case Calendar.WEDNESDAY:
+					if (repeatWednesday == 0) { 
+						insert = true;
+					}
+					break;
+				case Calendar.THURSDAY:
+					if (repeatThursday == 0) {
+						insert = true;
+					}
+					break;
+				case Calendar.FRIDAY:
+					if (repeatFriday == 0) {
+						insert = true;
+					}
+					break;
+				case Calendar.SATURDAY:
+					if (repeatSaturday == 0) {
+						insert = true;
+					}
+					break;
+			}
+			
+			Log.d("Steve", "Date : " + date + " | Insert: " + insert);
+			if (insert) {
+				String insertQuery = "insert into calendar (date, workout_id) values ('" + date + "'," + workoutId + ")";
+				records.add(insertQuery);
+			}
+			
+			/* Weekly, Bi-weekly, 3 weeks, 4 weeks */
+			// only check after we do a week full of testing
+			if (calendar.get(Calendar.DAY_OF_WEEK) == 1) {
+				if (repeats.equals("Weekly")) {
+					// do nothing
+				} else if (repeats.equals("Bi-weekly")) {
+					// add 7 days
+					calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) + 7);
+					
+				} else if (repeats.equals("3 weeks")) {
+					// add 14 days
+					calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) + 14);
+				} else if (repeats.equals("4 weeks")) {
+					// add 21 days
+					calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) + 21);
+				}
+				calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) + 1);			
+
+				continue;
+			}
+			calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) + 1);			
+
+
+		}
+		
+		Log.d("Steve", "Records Size: " + records.size());
+		// insert records into the db
+		mDbHelper.createCalendarEntry(records);
+		
+	}
+	
+	public boolean continueInDateAdd(String date1, String date2) {
+		String [] dt1 = date1.split("/");
+		String [] dt2 = date2.split("/");
+		int m1 = Integer.parseInt(dt1[1])-1;
+		int m2 = Integer.parseInt(dt2[1])-1;
+		int y1 = Integer.parseInt(dt1[0]);
+		int y2 = Integer.parseInt(dt2[0]);
+		int d1 = Integer.parseInt(dt1[2]);
+		int d2 = Integer.parseInt(dt2[2]);
+		
+		Date current = new Date(y1,m1,d1);
+		Date end = new Date(y2,m2,d2);
+		
+		if (current.before(end)) {
+			return true;
+		} else {
+			return false;
+		}		
 		
 	}
 
