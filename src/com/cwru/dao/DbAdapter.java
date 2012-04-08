@@ -3,8 +3,8 @@ package com.cwru.dao;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.Hashtable;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -1689,5 +1689,21 @@ public class DbAdapter {
 			close();
 	}
 	
+	public Hashtable<String, Boolean> getWorkoutDatesForCalendar(String whereClause) {
+		open();
+		Hashtable<String, Boolean> hash = new Hashtable<String, Boolean>();
+		String query = "select date from calendar " + whereClause;
+		Log.d("Steve", query);
+		Cursor cursor = db.rawQuery(query, null);
+		Log.d("STEVE", "DB QUERY---------------------------------------------------------");
+		while (cursor.moveToNext()) {
+			String date = cursor.getString(cursor.getColumnIndex("date"));
+			Log.d("Steve", "Date: " + date);
+			hash.put(date, true);
+		}
+		cursor.close();
+		close();
+		return hash;
+	}
 	
 }
