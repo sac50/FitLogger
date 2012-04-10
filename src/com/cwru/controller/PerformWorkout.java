@@ -1,6 +1,9 @@
 package com.cwru.controller;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.StringTokenizer;
 
 import android.os.Bundle;
@@ -16,6 +19,7 @@ import com.cwru.dao.DbAdapter;
 import com.cwru.fragments.HistoryFragment;
 import com.cwru.fragments.NotesFragment;
 import com.cwru.fragments.WorkoutSetFragment;
+import com.cwru.fragments.WorkoutSummaryFragment;
 import com.cwru.fragments.WorkoutWorkflowCountDownTimerFragment;
 import com.cwru.fragments.WorkoutWorkflowCountUpTimerFragment;
 import com.cwru.fragments.WorkoutWorkflowDistanceFragment;
@@ -73,6 +77,7 @@ public class PerformWorkout extends FragmentActivity {
 		}
 		
 		Exercise exerciseToLaunch = exercisesForWorkout.get(exerciseCounter);
+		Log.d("Steve", "ExerciseCounter: "  + exerciseCounter);
 		String type = exerciseToLaunch.getType();
 		//int sets = exerciseToLaunch.getSets();
 		switch (exerciseToLaunch.getMode()) {
@@ -194,19 +199,83 @@ public class PerformWorkout extends FragmentActivity {
 	View.OnClickListener nextExercise = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			// TODO Auto-generated method stub
 			exerciseCounter++;
-			int percentage = exerciseCounter / exercisesForWorkout.size();
+			boolean finished = false;
+			if (exerciseCounter >= exercisesForWorkout.size()) {
+				finished = true;
+				exerciseCounter = exercisesForWorkout.size();
+			}
+			double p = (double) (exerciseCounter) / exercisesForWorkout.size();
+			p *= 100;
+			int percentage = (int) (p);
+			//int percentage = (int)((double)exerciseCounter / (double)exercisesForWorkout.size()) * 100;			
+			Log.d("Steve", "% = " + percentage);
+			Log.d("Steve", "Exercises: " + exercisesForWorkout.size());
+			Log.d("Steve", "Exercise Counter: " + exerciseCounter);
+			if (percentage > 100) { percentage = 100; }
 			tvPercentDone.setText(percentage + " % Workout Complete");
-			launchExercise();
+			Log.d("STEVE", "Exercise Counter: " +  exerciseCounter + " | " + exercisesForWorkout.size());
+			if (finished) {
+					// Launch Workout Summary
+					/**TODO 
+					 * CHANGE DATE TO MM/DD/YYYY
+					 */
+					DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+					//get current date time with Date()
+				    Date date = new Date();
+				    String dateString = dateFormat.format(date);
+					WorkoutSummaryFragment workoutSummary = new WorkoutSummaryFragment(PerformWorkout.this, workoutId, dateString);
+					FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+					if (HomeScreen.isTablet) {
+			
+					}
+					else {
+						transaction.replace(R.id.flPerformWorkoutMainFrame, workoutSummary);
+						tvPercentDone.setText("100 % Workout Complete");
+					}
+					transaction.commit();
+			
+			}
+			else {
+				updateButtonText();
+				launchExercise();
+			}
 		}
 	};
 	
 	View.OnClickListener prevExercise = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			// TODO Auto-generated method stub
-			
+			exerciseCounter--;
+			if (exerciseCounter <= 0) {	
+				exerciseCounter = 0;
+			}	
+			double p = (double) (exerciseCounter) / exercisesForWorkout.size();
+			p *= 100;
+			int percentage = (int) (p);
+			//int percentage = (int)((double)exerciseCounter / (double)exercisesForWorkout.size()) * 100;			
+			Log.d("Steve", "% = " + percentage);
+			Log.d("Steve", "Exercises: " + exercisesForWorkout.size());
+			Log.d("Steve", "Exercise Counter: " + exerciseCounter);
+			if (percentage > 100) { percentage = 100; }
+			tvPercentDone.setText(percentage + " % Workout Complete");
+			updateButtonText();
+			launchExercise();
+						
 		}
 	};
+	
+	private void updateButtonText() {
+		if (exerciseCounter == 0) {
+			btnPrevious.setText("Begin");
+		} else {
+			btnPrevious.setText("Prev");
+		}
+		
+		if (exerciseCounter == exercisesForWorkout.size() -1) {
+			btnNext.setText("Finish");
+		} else {
+			btnNext.setText("Next");
+		}
+	}
 }

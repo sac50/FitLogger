@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.Gravity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -99,6 +100,7 @@ public class WorkoutSetFragment extends Fragment {
 		public void onClick(View v) {
 			if (workoutResultId < 0) {
 				WorkoutResult workoutResult = new WorkoutResult(workoutId, exercise.getId());
+				Log.d("Steve", "WorkoutID: " + workoutId);
 				workoutResultId = mDbHelper.storeWorkoutResult(workoutResult);
 			}
 			

@@ -188,6 +188,7 @@ public class WorkoutWorkflowIntervalFragment extends Fragment {
 			// If workout result not created, create it and set flag that it was created
 			if (!workoutResultCreated) {
 				workoutResultCreated = true;
+				Log.d("Steve", "WorkoutID: " + workoutId);
 				WorkoutResult workoutResult = new WorkoutResult(workoutId, exercise.getId());
 				workoutResultId = mDbHelper.storeWorkoutResult(workoutResult);
 			}
@@ -206,7 +207,7 @@ public class WorkoutWorkflowIntervalFragment extends Fragment {
 				units = "seconds";
 			}
 			
-			IntervalResult intervalResult = new IntervalResult(workoutResultId, interval.getId(), intervalCycleNum, intervalSet.getId(), length, units);
+			IntervalResult intervalResult = new IntervalResult(workoutResultId, interval.getId(), intervalSetNum, intervalSet.getId(), length, units);
 			mDbHelper.storeIntervalResult(intervalResult);		
 			
 			if (intervalCycleNum == interval.getIntervalSets().size()) {

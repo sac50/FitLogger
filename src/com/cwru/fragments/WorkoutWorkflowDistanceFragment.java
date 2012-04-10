@@ -45,6 +45,7 @@ public class WorkoutWorkflowDistanceFragment extends Fragment {
 	private EditText etDistanceEntry;
 	private Spinner spnDistanceUnits; 
 	private Button btnRecord;
+	private TableLayout tlResults;
 	
 	public WorkoutWorkflowDistanceFragment (Exercise exercise, Context context, int workoutId) {
 		this.exercise = exercise;
@@ -66,6 +67,7 @@ public class WorkoutWorkflowDistanceFragment extends Fragment {
 		etDistanceEntry = (EditText) view.findViewById(R.id.etWorkoutWorkflowDistanceText);
 		spnDistanceUnits = (Spinner) view.findViewById(R.id.spnWorkoutWorkflowDistanceUnits);
 		btnRecord = (Button) view.findViewById(R.id.btnWorkoutWorkflowDistanceRecord);
+		tlResults = (TableLayout) view.findViewById(R.id.tlWorkoutWorkflowDistanceResults);
 		
 		/* Set Values */
 		tvExerciseName.setText(exercise.getName());
@@ -126,13 +128,23 @@ public class WorkoutWorkflowDistanceFragment extends Fragment {
 		@Override
 		public void onClick(View v) {
 			/* Generate Workout Result Row in Database */
-			WorkoutResult workoutResult = new WorkoutResult(exercise.getId(), workoutId);
+			Log.d("Steve", "WorkoutID: " + workoutId);
+			WorkoutResult workoutResult = new WorkoutResult(workoutId, exercise.getId());
 			int workoutResultId = mDbHelper.storeWorkoutResult(workoutResult);
 			/* Generate Distance Result Row in Database */
 			double length = Double.parseDouble(etDistanceEntry.getText().toString());
 			String units = (String) spnDistanceUnits.getSelectedItem();
 			DistanceResult distanceResult = new DistanceResult(workoutResultId, length, units);
 			mDbHelper.storeDistanceResult(distanceResult);			
+			
+			/* Show recorded time on screen */
+			TableRow tr = new TableRow(WorkoutWorkflowDistanceFragment.this.getActivity());
+			tr.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+			TextView tvTimeRecord = new TextView(WorkoutWorkflowDistanceFragment.this.getActivity());
+			tvTimeRecord.setText("Distance recorded: " + length + " " + units);
+			tr.addView(tvTimeRecord);
+
+			tlResults.addView(tr, new TableLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
 		}
 	};
 	

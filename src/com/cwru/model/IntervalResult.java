@@ -13,6 +13,7 @@ public class IntervalResult {
 	private int intervalSetId;
 	private double length;
 	private String units;
+	private String name;
 	
 	/**
 	 * Constructor
@@ -52,7 +53,15 @@ public class IntervalResult {
 		this.units = units;
 	}
 	
-	
+	public IntervalResult(int workoutResultId, int intervalId, int intervalSetNum, int intervalSetId, double length, String units, String name) {
+		this.workoutResultId = workoutResultId;
+		this.intervalId = intervalId;
+		this.intervalSetNum = intervalSetNum;
+		this.intervalSetId = intervalSetId;
+		this.length = length;
+		this.units = units;
+		this.name = name;
+	}
 	/**
 	 * Getter for the id of the row in the interval result table.  
 	 * @return
@@ -90,6 +99,8 @@ public class IntervalResult {
 	 */
 	public String getUnits() { return units; }
 	
+	public String getName() { return name; }
+	
 	/**
 	 * Setter for the id of the row that the interval result is.
 	 * @param id
@@ -125,4 +136,6 @@ public class IntervalResult {
 	 * @param units
 	 */
 	public void setUnits(String units) { this.units = units; }
+	
+	public void setName(String name) { this.name = name; }
 }

@@ -22,6 +22,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".controller.HistoryActivity" android:configChanges="orientation|keyboardHidden" />
+        <activity android:name=".controller.WorkoutHistory" android:configChanges="orientation|keyboardHidden" />
+        <activity android:name=".controller.ExerciseHistory" android:configChanges="orientation|keyboardHidden" />
         <activity android:name=".controller.CreateEditTabActivity" android:configChanges="orientation|keyboardHidden"/>
         <activity android:name=".controller.CreateExerciseActivity" android:configChanges="orientation|keyboardHidden" />
         <activity android:name=".controller.CreateWorkoutActivity" android:configChanges="orientation|keyboardHidden" />
@@ -34,6 +37,7 @@
         <activity android:name=".controller.WorkoutExerciseListing" android:configChanges="orientation|keyboardHidden" />
    		<activity android:name=".controller.WorkoutWorkflow" android:configChanges="orientation|keyboardHidden" />
    		<activity android:name=".controller.PerformWorkout" android:configChanges="orientation|keyboardHidden" />
+   		<activity android:name=".controller.CalendarActivity" android:configChanges="orientation|keyboardHidden" />
     </application>
 
 </manifest>

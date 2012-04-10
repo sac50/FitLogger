@@ -55,7 +55,7 @@
 
 	
 	<TableLayout 	
-	    android:id="@+id/tlWorkoutWorkflowSetResults"
+	    android:id="@+id/tlWorkoutWorkflowCountDownResults"
        	android:layout_width="fill_parent"
        	android:layout_height="wrap_content"
        	android:stretchColumns="*"

@@ -25,6 +25,7 @@ import com.cwru.R;
 import com.cwru.controller.HomeScreen;
 import com.cwru.controller.WorkoutExerciseListing;
 import com.cwru.dao.DbAdapter;
+import com.cwru.fragments.ExerciseBankFragment.onGoToExerciseSequenceListener;
 import com.cwru.model.Workout;
 
 /**
@@ -45,6 +46,8 @@ public class CreateWorkoutInformationFragment extends Fragment {
 	private CheckBox friday;
 	private CheckBox saturday;
 	private DbAdapter mDbHelper;
+	private static onGoToExerciseBankListener listener;
+
 	/**
 	 * UI View associated with the fragment
 	 */
@@ -245,14 +248,27 @@ public class CreateWorkoutInformationFragment extends Fragment {
 				/** TODO
 				 * Change intent launch so tabbed implementation remains
 				 */
+				
+				listener.goToExerciseBank(workoutName);
+
+				
 				/* Launch intent to allow exercises to be added to workout and the sequence to be set */
+				/*
 				Intent intent = new Intent(CreateWorkoutInformationFragment.this.getActivity(), WorkoutExerciseListing.class);
 				intent.putExtra("WorkoutName", workoutName);
 				startActivity(intent);		
+				*/
 			}
 		}
 	};
 	
+	public interface onGoToExerciseBankListener {
+		void goToExerciseBank(String workoutName);
+	}
+	
+	public static void setExerciseBankListener(onGoToExerciseBankListener listener) {
+		CreateWorkoutInformationFragment.listener = listener;
+	}
 	
 
 }
