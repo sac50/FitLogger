@@ -322,7 +322,13 @@ public class CreateExerciseGoalFragment extends Fragment {
 			CharSequence toastText;
 			int duration = Toast.LENGTH_SHORT;
 			
-			if (name != null && name.length() > 0) {
+			if (name != null && "+ Add Goal".equals(name)) {
+				toastText = "Invalid name.";
+				Toast toast = Toast.makeText(context, toastText, duration);
+				toast.setGravity(Gravity.CENTER, 0, 0);
+				toast.show();
+				return;
+			} else if (name != null && name.length() > 0) {
 				exGoal.setName(name);
 			} else {
 				toastText = "Please specify a name for your goal.";
@@ -435,13 +441,14 @@ public class CreateExerciseGoalFragment extends Fragment {
 				FragmentTransaction transaction = CreateExerciseGoalFragment.this.getFragmentManager().beginTransaction();
 				ExerciseGoalBankFragment newFrag = new ExerciseGoalBankFragment();
 				
-				transaction.replace(R.id.flExerciseGoalLeftFrame, newFrag);
+				transaction.replace(R.id.flGoalLeftFrame, newFrag);
+				transaction.remove(CreateExerciseGoalFragment.this);
 				transaction.commit();
 			} else {
 				FragmentTransaction transaction = CreateExerciseGoalFragment.this.getFragmentManager().beginTransaction();
 				ExerciseGoalBankFragment newFrag = new ExerciseGoalBankFragment();
 				
-				transaction.replace(R.id.flExerciseGoalMainFrame, newFrag);
+				transaction.replace(R.id.flGoalMainFrame, newFrag);
 				transaction.commit();
 			}
 		}

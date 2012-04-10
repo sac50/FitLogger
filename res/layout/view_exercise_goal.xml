@@ -97,7 +97,7 @@
 
     	<Button
     	    android:id="@+id/btnViewExerciseGoalDelete"
-    	    android:layout_width="wrap_content"
+    	    android:layout_width="116dp"
     	    android:layout_height="wrap_content"
     	    android:layout_gravity="center_horizontal"
     	    android:text="@string/delete" />

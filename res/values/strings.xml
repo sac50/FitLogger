@@ -105,6 +105,8 @@
     
     <string name="done">Done</string>
     <string name="delete">Delete</string>
+    <string name="update">Update</string>
+    <string name="completed">Completed</string>
     
     <string name="sets">Sets:</string>
     <string name="weight">Weight</string>
@@ -132,4 +134,20 @@
     <string name="exGoalCurrent">Current Best:</string>
     <string name="exGoalGoal">Goal:</string>
     <string name="cumulative">Cumulative</string>
+    <string name="description">Description</string>
+    
+    <string name="bodyGoalCategory">Goal Category</string>
+    <string name="bodyGoalHint">Ex: Body Weight</string>
+    <string name="bodyGoalInformation">Goal Information</string>
+    <string name="bodyGoalStarted">Starting #</string>
+    <string name="bodyGoalGoal">Goal #</string>
+    <string-array name="bodyGoalUnits">
+        <item>lb.</item>
+        <item>in.</item>
+        <item>Kg.</item>
+        <item>cm.</item>
+        <item>%</item>
+    </string-array>
+    
+    <string name="customGoalHint">Ex: find a workout partner!</string>
 </resources>

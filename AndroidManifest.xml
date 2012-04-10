@@ -28,6 +28,8 @@
         <activity android:name=".controller.EditExerciseActivity" android:configChanges="orientation|keyboardHidden" />
         <activity android:name=".controller.EditWorkoutActivity" android:configChanges="orientation|keyboardHidden" />
         <activity android:name=".controller.ExerciseGoalActivity" android:configChanges="orientation|keyboardHidden" />
+        <activity android:name=".controller.BodyGoalActivity" android:configChanges="orientation|keyboardHidden" />
+        <activity android:name=".controller.CustomGoalActivity" android:configChanges="orientation|keyboardHidden" />
         <activity android:name=".controller.GoalsActivity" android:configChanges="orientation|keyboardHidden" />
         <activity android:name=".controller.WorkoutExerciseListing" android:configChanges="orientation|keyboardHidden" />
    		<activity android:name=".controller.WorkoutWorkflow" android:configChanges="orientation|keyboardHidden" />

@@ -5,7 +5,8 @@ import java.util.List;
 
 import com.cwru.R;
 import com.cwru.dao.DbAdapter;
-import com.cwru.model.ExerciseGoal;
+import com.cwru.model.CustomGoal;
+import com.cwru.model.CustomGoalArrayAdapter;
 import com.cwru.model.ExerciseGoalArrayAdapter;
 
 import android.os.Bundle;
@@ -17,10 +18,10 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 
-public class ExerciseGoalBankFragment extends ListFragment {
+public class CustomGoalBankFragment extends ListFragment {
 	private DbAdapter mDbHelper;
-	ExerciseGoalArrayAdapter allAdapter;
-	ExerciseGoalArrayAdapter incompleteAdapter;
+	CustomGoalArrayAdapter allAdapter;
+	CustomGoalArrayAdapter incompleteAdapter;
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (container == null) {
@@ -33,25 +34,25 @@ public class ExerciseGoalBankFragment extends ListFragment {
 		CheckBox cb = (CheckBox) view.findViewById(R.id.cbShowCompletedGoals);
 		cb.setOnCheckedChangeListener(listener);
 		
-		List<ExerciseGoal> allExerciseGoals = new ArrayList<ExerciseGoal>();
-		List<ExerciseGoal> incompleteExerciseGoals = new ArrayList<ExerciseGoal>();
-		ExerciseGoal goal = new ExerciseGoal();
+		List<CustomGoal> allCustomGoals = new ArrayList<CustomGoal>();
+		List<CustomGoal> incompleteCustomGoals = new ArrayList<CustomGoal>();
+		CustomGoal goal = new CustomGoal();
 		goal.setName("+ Add Goal");
-		allExerciseGoals.add(goal);
-		incompleteExerciseGoals.add(goal);
+		allCustomGoals.add(goal);
+		incompleteCustomGoals.add(goal);
 		
-		List<ExerciseGoal> dbGoals = mDbHelper.getAllExerciseGoals();
-		for (ExerciseGoal i : dbGoals) {
-			allExerciseGoals.add(i);
-			if (!i.getIsCompleted()){
-				incompleteExerciseGoals.add(i);
+		List<CustomGoal> dbGoals = mDbHelper.getAllCustomGoals();
+		for (CustomGoal i : dbGoals) {
+			allCustomGoals.add(i);
+			if (!i.getIsCompleted()) {
+				incompleteCustomGoals.add(i);
 			}
 		}
 		
-		allAdapter = new ExerciseGoalArrayAdapter(this.getActivity(), allExerciseGoals, this);
-		incompleteAdapter = new ExerciseGoalArrayAdapter(this.getActivity(), incompleteExerciseGoals, this);
-		this.setListAdapter(incompleteAdapter);
+		allAdapter = new CustomGoalArrayAdapter(this.getActivity(), allCustomGoals, this);
+		incompleteAdapter = new CustomGoalArrayAdapter(this.getActivity(), incompleteCustomGoals, this);
 		
+		this.setListAdapter(incompleteAdapter);
 		return view;
 	}
 	
@@ -66,5 +67,4 @@ public class ExerciseGoalBankFragment extends ListFragment {
 			}
 		}
 	};
-	
 }

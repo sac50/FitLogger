@@ -110,14 +110,14 @@ public class ViewExerciseGoalFragment extends Fragment {
 				FragmentTransaction transaction = ViewExerciseGoalFragment.this.getFragmentManager().beginTransaction();
 				ExerciseGoalBankFragment newFrag = new ExerciseGoalBankFragment();
 				
-				transaction.replace(R.id.flExerciseGoalLeftFrame, newFrag);
+				transaction.replace(R.id.flGoalLeftFrame, newFrag);
 				transaction.remove(ViewExerciseGoalFragment.this);
 				transaction.commit();
 			} else {
 				FragmentTransaction transaction = ViewExerciseGoalFragment.this.getFragmentManager().beginTransaction();
 				ExerciseGoalBankFragment newFrag = new ExerciseGoalBankFragment();
 				
-				transaction.replace(R.id.flExerciseGoalMainFrame, newFrag);
+				transaction.replace(R.id.flGoalMainFrame, newFrag);
 				transaction.commit();
 			}
 		}

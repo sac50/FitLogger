@@ -1,20 +1,20 @@
 package com.cwru.controller;
 
 import com.cwru.R;
-import com.cwru.fragments.ExerciseGoalBankFragment;
+import com.cwru.fragments.CustomGoalBankFragment;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 
-public class ExerciseGoalActivity extends FragmentActivity {
+public class CustomGoalActivity extends FragmentActivity {
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.goal_information);
 		
-		ExerciseGoalBankFragment goalBank = new ExerciseGoalBankFragment();
+		CustomGoalBankFragment goalBank = new CustomGoalBankFragment();
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		
 		// Tablet

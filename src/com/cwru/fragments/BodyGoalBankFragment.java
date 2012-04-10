@@ -5,8 +5,8 @@ import java.util.List;
 
 import com.cwru.R;
 import com.cwru.dao.DbAdapter;
-import com.cwru.model.ExerciseGoal;
-import com.cwru.model.ExerciseGoalArrayAdapter;
+import com.cwru.model.BodyGoal;
+import com.cwru.model.BodyGoalArrayAdapter;
 
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -17,10 +17,10 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 
-public class ExerciseGoalBankFragment extends ListFragment {
+public class BodyGoalBankFragment extends ListFragment {
 	private DbAdapter mDbHelper;
-	ExerciseGoalArrayAdapter allAdapter;
-	ExerciseGoalArrayAdapter incompleteAdapter;
+	private BodyGoalArrayAdapter allAdapter;
+	private BodyGoalArrayAdapter incompleteAdapter;
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (container == null) {
@@ -33,29 +33,30 @@ public class ExerciseGoalBankFragment extends ListFragment {
 		CheckBox cb = (CheckBox) view.findViewById(R.id.cbShowCompletedGoals);
 		cb.setOnCheckedChangeListener(listener);
 		
-		List<ExerciseGoal> allExerciseGoals = new ArrayList<ExerciseGoal>();
-		List<ExerciseGoal> incompleteExerciseGoals = new ArrayList<ExerciseGoal>();
-		ExerciseGoal goal = new ExerciseGoal();
-		goal.setName("+ Add Goal");
-		allExerciseGoals.add(goal);
-		incompleteExerciseGoals.add(goal);
+		List<BodyGoal> allBodyGoals = new ArrayList<BodyGoal>();
+		List<BodyGoal> incompleteBodyGoals = new ArrayList<BodyGoal>();
+		BodyGoal goal = new BodyGoal();
+		goal.setCategory("+ Add Goal");
+		allBodyGoals.add(goal);
+		incompleteBodyGoals.add(goal);
 		
-		List<ExerciseGoal> dbGoals = mDbHelper.getAllExerciseGoals();
-		for (ExerciseGoal i : dbGoals) {
-			allExerciseGoals.add(i);
-			if (!i.getIsCompleted()){
-				incompleteExerciseGoals.add(i);
+		List<BodyGoal> dbGoals = mDbHelper.getAllBodyGoals();
+		for (BodyGoal i : dbGoals) {
+			if (!i.isCompleted()) {
+				incompleteBodyGoals.add(i);
 			}
+			allBodyGoals.add(i);
 		}
 		
-		allAdapter = new ExerciseGoalArrayAdapter(this.getActivity(), allExerciseGoals, this);
-		incompleteAdapter = new ExerciseGoalArrayAdapter(this.getActivity(), incompleteExerciseGoals, this);
-		this.setListAdapter(incompleteAdapter);
+		allAdapter = new BodyGoalArrayAdapter(this.getActivity(), allBodyGoals, this);
+		incompleteAdapter = new BodyGoalArrayAdapter(this.getActivity(), incompleteBodyGoals, this);
+		
+		setListAdapter(incompleteAdapter);
 		
 		return view;
 	}
 	
-	CompoundButton.OnCheckedChangeListener listener = new CompoundButton.OnCheckedChangeListener() {
+CompoundButton.OnCheckedChangeListener listener = new CompoundButton.OnCheckedChangeListener() {
 		
 		@Override
 		public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -66,5 +67,4 @@ public class ExerciseGoalBankFragment extends ListFragment {
 			}
 		}
 	};
-	
 }

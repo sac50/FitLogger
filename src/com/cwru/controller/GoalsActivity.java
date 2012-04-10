@@ -26,12 +26,12 @@ public class GoalsActivity extends TabActivity {
 		tabHost.addTab(tabSpec);
 		
 		//Create Body Goals tab
-//		intent = new Intent().setClass(this, BodyGoalsActivity.class);
+		intent = new Intent().setClass(this, BodyGoalActivity.class);
 		tabSpec = tabHost.newTabSpec("bodyGoals").setIndicator("Body Goals").setContent(intent);
 		tabHost.addTab(tabSpec);
 		
 		//Create Custom Goals tab
-//		intent = new Intent().setClass(this, CustomGoalsActivity.class);
+		intent = new Intent().setClass(this, CustomGoalActivity.class);
 		tabSpec = tabHost.newTabSpec("customGoals").setIndicator("Custom Goals").setContent(intent);
 		tabHost.addTab(tabSpec);
 		

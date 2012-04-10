@@ -13,6 +13,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.cwru.model.BodyGoal;
+import com.cwru.model.CustomGoal;
 import com.cwru.model.Distance;
 import com.cwru.model.DistanceResult;
 import com.cwru.model.Exercise;
@@ -97,6 +99,15 @@ public class DbAdapter {
 			"name text not null, is_cumulative int not null, is_completed int not null, " +
 			"mode integer not null, type integer not null, exercise_id integer, goal_one real, " +
 			"goal_two real, current_best_one real, current_best_two real, unit integer);";
+	
+	private static final String CREATE_BODY_GOALS_TABLE =
+			"create table body_goals (id integer primary key autoincrement, " +
+			"category text not null, unit text not null, started real not null, " +
+			"current real not null, goal real not null, is_completed integer not null);";
+	
+	private static final String CREATE_CUSTOM_GOALS_TABLE =
+			"create table custom_goals (id integer primary key autoincrement, " +
+			"name text not null, description text not null, is_completed int not null);";
 				
 	private static final String DATABASE_NAME = "FitLoggerData";
 	private static final String DATABASE_TABLE_WORKOUT = "workouts";
@@ -112,6 +123,8 @@ public class DbAdapter {
 	private static final String DATABASE_TABLE_TIME_RESULT = "time_result";
 	private static final String DATABASE_TABLE_INTERVAL_RESULT = "intervals_result";
 	private static final String DATABASE_TABLE_EXERCISE_GOAL = "exercise_goals";
+	private static final String DATABASE_TABLE_BODY_GOAL = "body_goals";
+	private static final String DATABASE_TABLE_CUSTOM_GOAL = "custom_goals";
 	private static final int DATABASE_VERSION = 1;
 
 	private final Context mCtx;
@@ -137,6 +150,8 @@ public class DbAdapter {
 			db.execSQL(CREATE_TIME_RESULT_TABLE);
 			db.execSQL(CREATE_DISTANCE_RESULT_TABLE);
 			db.execSQL(CREATE_EXERCISE_GOALS_TABLE);
+			db.execSQL(CREATE_BODY_GOALS_TABLE);
+			db.execSQL(CREATE_CUSTOM_GOALS_TABLE);
 			Log.d("Steve", "DB CREATES");
 		}
 
@@ -684,40 +699,45 @@ public class DbAdapter {
 			}
 			
 			initialValues.put("current_best_one", 0);
-			
-//			ArrayList<Exercise> exercises = new ArrayList<Exercise>();
-//			
-//			switch (exGoal.getMode()) {
-//			
-//			case ExerciseGoal.DISTANCE:
-//				if (exGoal.getExerciseId() > 0) {
-//					exercises.add(getExerciseFromId(exGoal.getExerciseId()));
-//				} else {
-//					exercises = getAllExercisesForTypeAndMode(exType, Exercise.DISTANCE_BASED_EXERCISE);
-//				}
-//				DistanceResult distanceResult = getGreatestDistanceResult(exercises);
-//				Double distance = MeasurementConversions.convert(distanceResult.getLength(), distanceResult.getUnits(), exGoal.getUnit());
-//				initialValues.put("current_best", distance);
-//				break;
-//			case ExerciseGoal.TIME:
-//				if (exGoal.getExerciseId() > 0) {
-//					exercises.add(getExerciseFromId(exGoal.getExerciseId()));
-//				} else {
-//					exercises = getAllExercisesForTypeAndMode(exType, Exercise.COUNTDOWN_BASED_EXERCISE);
-//					exercises.addAll(getAllExercisesForTypeAndMode(exType, Exercise.COUNTUP_BASED_EXERCISE));
-//				}
-//				TimeResult timeResult= getGreatestTimeResult(exercises);
-//				Double time = MeasurementConversions.convert(timeResult.getLength(), timeResult.getUnits(), exGoal.getUnit());
-//				initialValues.put("current_best", time);
-//				break;
-//			default:
-//				break;
-//			}
-
 		}
 		
 		open();
 		db.insert(DATABASE_TABLE_EXERCISE_GOAL, null, initialValues);
+		close();
+	}
+	
+	/**
+	 * Inserts row into the Body Goal table
+	 * 
+	 * @param BodyGoal goal
+	 */
+	public void createBodyGoal(BodyGoal goal) {
+		ContentValues initialValues = new ContentValues();
+		initialValues.put("category", goal.getCategory());
+		initialValues.put("unit", goal.getUnit());
+		initialValues.put("started", goal.getStarted());
+		initialValues.put("current", goal.getCurrent());
+		initialValues.put("goal", goal.getGoal());
+		initialValues.put("is_completed", goal.isCompleted());
+		
+		open();
+		db.insert(DATABASE_TABLE_BODY_GOAL, null, initialValues);
+		close();
+	}
+	
+	/**
+	 * Inserts row into the Custom Goal table
+	 * 
+	 * @param CustomGoal goal
+	 */
+	public void createCustomGoal(CustomGoal goal) {
+		ContentValues initialValues = new ContentValues();
+		initialValues.put("name", goal.getName());
+		initialValues.put("description", goal.getDescription());
+		initialValues.put("is_completed", goal.getIsCompleted() ? 1 : 0);
+		
+		open();
+		db.insert(DATABASE_TABLE_CUSTOM_GOAL, null, initialValues);
 		close();
 	}
 
@@ -1131,6 +1151,58 @@ public class DbAdapter {
 	}
 	
 	/**
+	 * Get all body goals in the database
+	 * 
+	 * @return ArrayList<BodyGoal>
+	 */
+	public ArrayList<BodyGoal> getAllBodyGoals() {
+		open();
+		ArrayList<BodyGoal> bodyGoals = new ArrayList<BodyGoal>();
+		
+		String query = "select * from body_goals order by category";
+		Cursor cursor = db.rawQuery(query, null);
+		while (cursor.moveToNext()) {
+			int id = cursor.getInt(cursor.getColumnIndex("id"));
+			String category = cursor.getString(cursor.getColumnIndex("category"));
+			String unit = cursor.getString(cursor.getColumnIndex("unit"));
+			Double started = cursor.getDouble(cursor.getColumnIndex("started"));
+			Double current = cursor.getDouble(cursor.getColumnIndex("current"));
+			Double goal = cursor.getDouble(cursor.getColumnIndex("goal"));
+			boolean isCompleted = cursor.getInt(cursor.getColumnIndex("is_completed")) == 1 ? true : false;
+			bodyGoals.add(new BodyGoal(id, category, unit, started, current, goal, isCompleted));
+		}
+		cursor.close();
+		close();
+		
+		return bodyGoals;
+	}
+	
+	/**
+	 * Get all Custom Goals in the database.
+	 * 
+	 * @return ArrayList<CustomGoal>
+	 */
+	public ArrayList<CustomGoal> getAllCustomGoals() {
+		open();
+		ArrayList<CustomGoal> customGoals = new ArrayList<CustomGoal>();
+		
+		String query = "select * from custom_goals order by name";
+		Cursor cursor = db.rawQuery(query, null);
+		while (cursor.moveToNext()) {
+			int id = cursor.getInt(cursor.getColumnIndex("id"));
+			String name = cursor.getString(cursor.getColumnIndex("name"));
+			String description = cursor.getString(cursor.getColumnIndex("description"));
+			boolean isCompleted = cursor.getInt(cursor.getColumnIndex("is_completed")) == 1;
+			customGoals.add(new CustomGoal(id, name, description, isCompleted));
+		}
+		
+		cursor.close();
+		close();
+		
+		return customGoals;
+	}
+	
+	/**
 	 * Updates the current best and completed values of the provided exercise goal
 	 * 
 	 * @param ExerciseGoal goal
@@ -1146,6 +1218,30 @@ public class DbAdapter {
 		close();
 	}
 	
+	public void updateBodyGoal(BodyGoal goal) {
+		open();
+		String query = "update body_goals " +
+				"set current = " + goal.getCurrent() +
+				", is_completed = " + (goal.isCompleted() ? 1 : 0) +
+				" where id = " + goal.getId();
+		db.execSQL(query);
+		close();
+	}
+	
+	/**
+	 * Updates the custom goal with whether or not the goal has been completed
+	 * 
+	 * @param CustomGoal goal
+	 */
+	public void updateCustomGoal(CustomGoal goal) {
+		open();
+		String query = "update custom_goals " +
+				"set is_completed = " + (goal.getIsCompleted() ? 1 : 0) +
+				" where id = " + goal.getId();
+		db.execSQL(query);
+		close();
+	}
+	
 	/**
 	 * Deletes the exercise goal corresponding to the provided exercise goal id
 	 * 
@@ -1154,6 +1250,30 @@ public class DbAdapter {
 	public void deleteExerciseGoal(int id) {
 		open();
 		String query = "delete from exercise_goals where id = " + id;
+		db.execSQL(query);
+		close();
+	}
+	
+	/**
+	 * Delete the body goal corresponding to the provided body goal id
+	 * 
+	 * @param id
+	 */
+	public void deleteBodyGoal(int id) {
+		open();
+		String query = "delete from body_goals where id = " + id;
+		db.execSQL(query);
+		close();
+	}
+	
+	/**
+	 * Deletes the custom goal corresponding to the provided custom goal id
+	 * 
+	 * @param id
+	 */
+	public void deleteCustomGoal(int id) {
+		open();
+		String query = "delete from custom_goals where id = " + id;
 		db.execSQL(query);
 		close();
 	}
