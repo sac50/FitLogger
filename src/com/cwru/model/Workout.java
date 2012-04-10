@@ -27,6 +27,11 @@ public class Workout {
 		this.type = type;
 	}
 	
+	public Workout (int id, String name) { 
+		this.id = id; 
+		this.name = name;
+	}
+	
 	public Workout(String workoutName, String workoutType,String workoutRepeatWeeks, int repeatSunday, int repeatMonday,
 			int repeatTuesday, int repeatWednesday, int repeatThursday,	int repeatFriday, int repeatSaturday) {
 		this.name = workoutName;

@@ -33,7 +33,8 @@ public class CalendarFragment extends Fragment {
 	private GridView gvDaysOfWeek;
 	private boolean returnDate;
 	private String dateWhereClause;
-	private static returnDateListener listener;
+	private static returnDateListener listenerReturnDate;
+	private static goToDayEventsListener listenerGoToDayEvents;
 
 	
 	private Calendar calendar;
@@ -77,16 +78,6 @@ public class CalendarFragment extends Fragment {
 	
 	public ArrayList<String> getCalendarArray() {
 		ArrayList<String> dates = new ArrayList<String>();
-		/*
-		// Add Day of Week Labels
-		dates.add("S");
-		dates.add("M");
-		dates.add("T");
-		dates.add("W");
-		dates.add("R");
-		dates.add("F");
-		dates.add("S");
-		*/
 		
 		// Set Day to first of month
 		int month = calendar.get(Calendar.MONTH);
@@ -102,9 +93,7 @@ public class CalendarFragment extends Fragment {
 		if (month != calendar.get(Calendar.MONTH)) {
 			while (calendar.get(Calendar.MONTH) == month) {
 				dates.add((calendar.get(Calendar.MONTH)+1) + "-GREY-" + calendar.get(Calendar.DAY_OF_MONTH) + "-" + calendar.get(Calendar.YEAR));
-				/**
-				 * TODO
-				 */
+
 				dateWhereClause += "date = '" + getDateInYearMonthForm(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)) + "' or ";
 				calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) + 1);
 			}
@@ -209,7 +198,6 @@ public class CalendarFragment extends Fragment {
 
 			Calendar cal = Calendar.getInstance();
 			if ((cal.get(Calendar.MONTH) + 1) == m && cal.get(Calendar.DAY_OF_MONTH) == d && cal.get(Calendar.YEAR) == y) {
-				Log.d("Steve", "=============================> YELLOW");
 				gridcell.setTextColor(Color.YELLOW);
 			}
 			else {
@@ -219,17 +207,20 @@ public class CalendarFragment extends Fragment {
 					gridcell.setTextColor(Color.WHITE);
 				}
 			}
-			
-			
+
 			return row;
-	
 		}
 		
 		@Override
 		public void onClick(View view) {
 			String dateSelected = (String) view.getTag();
 			if (returnDate) {
-				listener.returnSelectedDate(dateSelected);
+				listenerReturnDate.returnSelectedDate(dateSelected);
+			}
+			else {
+				// Date selected is in form mm/dd/yyyy
+				String dateToGo = convertMMDDYYYYtoYYYYMMDD(dateSelected);
+				listenerGoToDayEvents.goToDayEvents(dateToGo);
 			}
 			Log.d("Steve", "Date Selected: " + dateSelected);
 		}
@@ -239,10 +230,17 @@ public class CalendarFragment extends Fragment {
 		void returnSelectedDate(String dateSelected);
 	}
 	
-	public static void setExerciseBankListener(returnDateListener listener) {
-		CalendarFragment.listener = listener;
+	public static void setGetDateListener(returnDateListener listener) {
+		CalendarFragment.listenerReturnDate = listener;
 	}
 	
+	public interface goToDayEventsListener {
+		void goToDayEvents(String date);
+	}
+	
+	public static void setGotToDayEventsListener( goToDayEventsListener listener) {
+		CalendarFragment.listenerGoToDayEvents = listener;
+	}
 	public String formatDate(String month, String day, String year) {
 		int m = Integer.parseInt(month);
 		int d = Integer.parseInt(day);
@@ -256,5 +254,11 @@ public class CalendarFragment extends Fragment {
 		date += y;
 		//Log.d("Steve", "Format Date: " + date);
 		return date;		
+	}
+	
+	public String convertMMDDYYYYtoYYYYMMDD(String date) {
+		String [] dateSplit = date.split("/");
+		String dateOut = dateSplit[2] + "/" + dateSplit[0] + "/" + dateSplit[1];
+		return dateOut;
 	}
 }

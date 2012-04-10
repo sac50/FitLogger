@@ -1706,4 +1706,21 @@ public class DbAdapter {
 		return hash;
 	}
 	
+	public ArrayList<String> getWorkoutsForDate(String date) {
+		ArrayList<String> workoutList = new ArrayList<String>();
+		// select distinct name, workouts.id from calendar join workouts on 
+		// calendar.workout_id = workouts.id and date = '2012/04/17'
+		String query = "select distinct name from calendar join workouts on " +
+					   "calendar.workout_id = workouts.id and date = '" + date + "'";
+		open();
+		Cursor cursor = db.rawQuery(query, null);
+		while (cursor.moveToNext()) {
+			String name = cursor.getString(cursor.getColumnIndex("name"));
+			workoutList.add(name);
+		}
+		cursor.close();
+		close();
+		return workoutList;
+	}
+	
 }

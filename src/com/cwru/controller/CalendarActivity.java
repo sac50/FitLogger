@@ -6,10 +6,12 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 
 import com.cwru.R;
+import com.cwru.fragments.CalendarDayViewFragment;
 import com.cwru.fragments.CalendarFragment;
+import com.cwru.fragments.CalendarFragment.goToDayEventsListener;
 import com.cwru.fragments.CalendarFragment.returnDateListener;
 
-public class CalendarActivity extends FragmentActivity implements returnDateListener {
+public class CalendarActivity extends FragmentActivity implements returnDateListener, goToDayEventsListener {
 	private boolean returnDate;
 	
 
@@ -19,7 +21,8 @@ public class CalendarActivity extends FragmentActivity implements returnDateList
 		setContentView(R.layout.calendar);
 		
 		// Set Listener
-		CalendarFragment.setExerciseBankListener(this);
+		CalendarFragment.setGetDateListener(this);
+		CalendarFragment.setGotToDayEventsListener(this);
 		
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
@@ -44,6 +47,16 @@ public class CalendarActivity extends FragmentActivity implements returnDateList
 		intent.putExtra("DATE-SELECTED", dateSelected);
 		setResult(1, intent);
 		super.finish();
+	}
+
+	@Override
+	public void goToDayEvents(String date) {
+		// TODO Auto-generated method stub
+		CalendarDayViewFragment dayView = new CalendarDayViewFragment(this, date);
+		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+		transaction.replace(R.id.flCalendarMainFrame, dayView);
+		transaction.commit();
+		
 	}
 
 }
