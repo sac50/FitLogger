@@ -21,8 +21,7 @@
 		style="@style/calendar_event_style"
 		android:layout_gravity="right"
 		android:layout_width="10dip"
-		android:layout_height="10dip"
-		android:text="S">
+		android:layout_height="10dip" >
 	</TextView>
 	
 </RelativeLayout>

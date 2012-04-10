@@ -90,6 +90,7 @@ public class CalendarFragment extends Fragment {
 		
 		// Set Day to first of month
 		int month = calendar.get(Calendar.MONTH);
+		int dom = calendar.get(Calendar.DAY_OF_MONTH);
 
 		calendar.set(Calendar.DAY_OF_MONTH, 1);
 		// Decrement until we hit sunday
@@ -123,7 +124,6 @@ public class CalendarFragment extends Fragment {
 			calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) + 1);
 		}
 		
-		//Log.d("Steve", "Dates SIZE: " + dates.size());
 		return dates;
 		
 	}
@@ -192,25 +192,34 @@ public class CalendarFragment extends Fragment {
 			gridcell.setOnClickListener(this);
 			// Color past and next motnths gray
 			// Date String ==> DD-COLOR-MM-YY
-			//Log.d("Steve", "" + list.get(position));
 			String[] day_color = list.get(position).split("-");
 			String month = day_color[0];
 			String day = day_color[2];
 			String year = day_color[3];
+			int m = Integer.parseInt(month);
+			int d = Integer.parseInt(day);
+			int y = Integer.parseInt(year);
 			String hashDate = getDateInYearMonthFormCorrectMonth(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day));
-			Log.d("Steve", "HashDate: " + hashDate);
 			if (workoutDateHash.containsKey(hashDate)) {
-				Log.d("Steve", "Workout Date Hash True");
-				gridcell.setBackgroundColor(android.R.color.black);
+				// past block
+				gridcell.setBackgroundResource(R.drawable.calendar_bg_red);
 			}
 			gridcell.setTag(formatDate(month, day, year));
 			gridcell.setText(day);
 
-			if (day_color[1].equals("GREY")) {
-				gridcell.setTextColor(Color.LTGRAY);
-			} else if (day_color[1].equals("WHITE")) {
-				gridcell.setTextColor(Color.WHITE);
+			Calendar cal = Calendar.getInstance();
+			if ((cal.get(Calendar.MONTH) + 1) == m && cal.get(Calendar.DAY_OF_MONTH) == d && cal.get(Calendar.YEAR) == y) {
+				Log.d("Steve", "=============================> YELLOW");
+				gridcell.setTextColor(Color.YELLOW);
 			}
+			else {
+				if (day_color[1].equals("GREY")) {
+					gridcell.setTextColor(Color.LTGRAY);
+				} else if (day_color[1].equals("WHITE")) {
+					gridcell.setTextColor(Color.WHITE);
+				}
+			}
+			
 			
 			return row;
 	
