@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cwru.R;
@@ -60,9 +61,17 @@ public class PerformWorkout extends FragmentActivity {
 		
 		tvPercentDone = (TextView) this.findViewById(R.id.tvPerformWorkoutPercentageDone);
 		Log.d("Size", "ExercisesForWorkout: " + exercisesForWorkout.size());
-		int percentage = exerciseCounter / exercisesForWorkout.size();
-		tvPercentDone.setText(percentage + " % Workout Complete");
-		launchExercise();
+		if (exercisesForWorkout.size() == 0) {
+			TextView tvEmpty = new TextView(this);
+			LinearLayout llContainer = (LinearLayout) this.findViewById(R.id.llPerformWorkoutContainer);
+			tvEmpty.setText("No exercises in workout");
+			llContainer.addView(tvEmpty);
+		} 
+		else {
+			int percentage = exerciseCounter / exercisesForWorkout.size();
+			tvPercentDone.setText(percentage + " % Workout Complete");
+			launchExercise();
+		}
 
 	}
 	

@@ -10,8 +10,9 @@ import com.cwru.fragments.CalendarDayViewFragment;
 import com.cwru.fragments.CalendarFragment;
 import com.cwru.fragments.CalendarFragment.goToDayEventsListener;
 import com.cwru.fragments.CalendarFragment.returnDateListener;
+import com.cwru.fragments.WorkoutListingFragment.onWorkoutListingClickListener;
 
-public class CalendarActivity extends FragmentActivity implements returnDateListener, goToDayEventsListener {
+public class CalendarActivity extends FragmentActivity implements returnDateListener, goToDayEventsListener, onWorkoutListingClickListener {
 	private boolean returnDate;
 	
 
@@ -23,6 +24,7 @@ public class CalendarActivity extends FragmentActivity implements returnDateList
 		// Set Listener
 		CalendarFragment.setGetDateListener(this);
 		CalendarFragment.setGotToDayEventsListener(this);
+		CalendarDayViewFragment.setOnWorkoutListingClickListener(this);
 		
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
@@ -57,6 +59,13 @@ public class CalendarActivity extends FragmentActivity implements returnDateList
 		transaction.replace(R.id.flCalendarMainFrame, dayView);
 		transaction.commit();
 		
+	}
+
+	@Override
+	public void onWorkoutListingListenerClick(String workoutName) {
+		Intent intent = new Intent(this, PerformWorkout.class);
+		intent.putExtra("workoutName", workoutName);
+		startActivity(intent);		
 	}
 
 }
