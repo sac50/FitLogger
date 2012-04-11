@@ -7,12 +7,14 @@ import android.support.v4.app.FragmentTransaction;
 
 import com.cwru.R;
 import com.cwru.fragments.CalendarDayViewFragment;
+import com.cwru.fragments.CalendarDayViewFragment.scheduleWorkoutListener;
 import com.cwru.fragments.CalendarFragment;
 import com.cwru.fragments.CalendarFragment.goToDayEventsListener;
 import com.cwru.fragments.CalendarFragment.returnDateListener;
+import com.cwru.fragments.CalendarScheduleWorkoutFragment;
 import com.cwru.fragments.WorkoutListingFragment.onWorkoutListingClickListener;
 
-public class CalendarActivity extends FragmentActivity implements returnDateListener, goToDayEventsListener, onWorkoutListingClickListener {
+public class CalendarActivity extends FragmentActivity implements returnDateListener, goToDayEventsListener, onWorkoutListingClickListener, scheduleWorkoutListener {
 	private boolean returnDate;
 	
 
@@ -25,6 +27,7 @@ public class CalendarActivity extends FragmentActivity implements returnDateList
 		CalendarFragment.setGetDateListener(this);
 		CalendarFragment.setGotToDayEventsListener(this);
 		CalendarDayViewFragment.setOnWorkoutListingClickListener(this);
+		CalendarDayViewFragment.setScheduleWorkout(this);
 		
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
@@ -66,6 +69,16 @@ public class CalendarActivity extends FragmentActivity implements returnDateList
 		Intent intent = new Intent(this, PerformWorkout.class);
 		intent.putExtra("workoutName", workoutName);
 		startActivity(intent);		
+	}
+
+	@Override
+	public void scheduleWorkout() {
+		// TODO Auto-generated method stub
+		CalendarScheduleWorkoutFragment scheduleWorkout = new CalendarScheduleWorkoutFragment(this);
+		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+		transaction.replace(R.id.flCalendarMainFrame, scheduleWorkout);
+		transaction.commit();
+		
 	}
 
 }

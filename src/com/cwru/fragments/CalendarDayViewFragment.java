@@ -23,6 +23,7 @@ public class CalendarDayViewFragment extends ListFragment {
 	private String date;
 	private Context context;
 	private static onWorkoutListingClickListener listener;
+	private static scheduleWorkoutListener workoutScheduleListener;
 	
 	
 	public CalendarDayViewFragment(Context context, String date) {
@@ -53,7 +54,13 @@ public class CalendarDayViewFragment extends ListFragment {
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		String workoutName = (String) getListAdapter().getItem(position);
 		Log.d("Steve", "Workout Name: " + workoutName);
-		listener.onWorkoutListingListenerClick(workoutName);
+		// schedule workout
+		if(position == 0) {
+			workoutScheduleListener.scheduleWorkout();
+		}
+		else {
+			listener.onWorkoutListingListenerClick(workoutName);
+		}
 	}
 	
 	private boolean dateInPast() {
@@ -71,5 +78,13 @@ public class CalendarDayViewFragment extends ListFragment {
 	
 	public static void setOnWorkoutListingClickListener(onWorkoutListingClickListener listener) {
 		CalendarDayViewFragment.listener = listener;
+	}
+	
+	public interface scheduleWorkoutListener {
+		void scheduleWorkout();
+	}
+	
+	public static void setScheduleWorkout(scheduleWorkoutListener listener) {
+		CalendarDayViewFragment.workoutScheduleListener = listener;
 	}
 }
