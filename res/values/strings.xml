@@ -150,4 +150,8 @@
     </string-array>
     
     <string name="customGoalHint">Ex: find a workout partner!</string>
+    
+    
+    
+    <color name="white">#FFFFFF</color>
 </resources>

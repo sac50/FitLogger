@@ -1,64 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView  xmlns:android="http://schemas.android.com/apk/res/android"
-	android:id="@+id/svCreateWorkoutTab"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent" 
->	
-	
-	<LinearLayout 
-	    android:id="@+id/llCreateWorkoutInformationContainer"  
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <LinearLayout 
+	    android:id="@+id/llCalendarWorkoutScheduleContainer"  
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:orientation="vertical"
-	>       	    	
-	  	<TextView 	
-        	android:id="@+id/tvWorkoutNameLabel"
-        	android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"  
-        	android:text="Name:"
-        />
-        <EditText            
-        	android:id="@+id/etWorkoutName"
-        	android:layout_width="fill_parent"
-        	android:layout_height="wrap_content" 
-        	android:hint="Workout Name"
-        />	            
-        <TextView 
-        	android:id="@+id/tvWorkoutTypeLabel"
-        	android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"
- 			android:text="Type:"
-        />
-        <Spinner 
-	        android:id="@+id/spnWorkoutType"
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_weight="1"
-	        android:prompt="@string/workoutType"
-		/>
-	        
-	    <TextView 
-           	android:id="@+id/tvWorkoutRepeatsLabel"    
+	>  
+		 <TextView 
+           	android:id="@+id/tvCalendarWorkoutScheduleRepeatsLabel"    
            	android:layout_width="wrap_content"
            	android:layout_height="wrap_content"
            	android:layout_weight="1"
            	android:text="Repeats:"
         />
         <Spinner 
-          	android:id="@+id/spnWorkoutRepeatsWeek"
+          	android:id="@+id/spnCalendarWorkoutScheduleRepeatsWeek"
            	android:layout_width="fill_parent"
            	android:layout_height="wrap_content"
            	android:prompt="@string/workoutRepeats"    
         />	 
        
         <RadioGroup 
-            android:id="@+id/rgCreateWorkoutRepeatRadioButtons"
+            android:id="@+id/rgCalendarWorkoutScheduleRepeatRadioButtons"
         	android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
         	android:orientation="horizontal"
         >
             <RadioButton 
-            	android:id="@+id/rbCreateWorkoutNumOccurances"
+            	android:id="@+id/rbCalendarWorkoutScheduleNumOccurances"
             	android:layout_width="wrap_content"
             	android:layout_height="wrap_content"
             	android:text="Ends After"
@@ -66,7 +39,7 @@
             />
             
             <RadioButton 
-                android:id="@+id/rbCreateWorkoutEndOnDate"
+                android:id="@+id/rbCalendarWorkoutScheduleEndOnDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="On Date"
@@ -74,13 +47,13 @@
        	</RadioGroup>
        	
         <LinearLayout 
-        	android:id="@+id/llCreateWorkoutNumOccurances"
+        	android:id="@+id/llCalendarWorkoutScheduleNumOccurances"
         	android:layout_width="fill_parent"
         	android:layout_height="wrap_content"
         	android:orientation="horizontal"    
         >
             <TextView 	
-	        	android:id="@+id/tvCreateWorkoutNumOccurancesFirstLabel"
+	        	android:id="@+id/tvCalendarWorkoutScheduleNumOccurancesFirstLabel"
 	        	android:layout_width="wrap_content"
 	        	android:layout_height="wrap_content"
 	        	layout_weight="35"  
@@ -89,7 +62,7 @@
 	        	android:text="Ends After:"
 	        />
 	        <EditText            
-	        	android:id="@+id/etCreateWorkoutNumOccurances"
+	        	android:id="@+id/etCalendarWorkoutScheduleNumOccurances"
 	        	android:layout_width="wrap_content"
 	        	android:layout_height="wrap_content" 
 	        	android:layout_weight="35"
@@ -98,7 +71,7 @@
 	        	android:text="10"
 	        />	            
 	        <TextView 
-	        	android:id="@+id/tvCreateWorkoutNumOccurancesSecondLabel"
+	        	android:id="@+id/tvCalendarWorkoutScheduleNumOccurancesSecondLabel"
 	        	android:layout_width="wrap_content"
 	        	android:layout_height="wrap_content"
 	 			android:text="occurances"
@@ -107,21 +80,13 @@
         </LinearLayout>
         
         <Button 
-          	android:id="@+id/btnCreateWorkoutEndDate"
+          	android:id="@+id/btnCalendarWorkoutScheduleEndDate"
           	android:layout_width="fill_parent"
           	android:layout_height="wrap_content"  
           	android:background="@drawable/workout_date_entry"
           	android:text="Date"
           	android:visibility="gone"
         />
-        
-        <TableLayout 
-        	android:id="@+id/tlCreateWorkoutInformationCheckBoxTable"
-        	android:layout_width="fill_parent"
-        	android:layout_height="wrap_content"
-        	android:stretchColumns="*"
-        >
-       	</TableLayout>
-	    
-	</LinearLayout>
+    </LinearLayout>
+
 </ScrollView>
