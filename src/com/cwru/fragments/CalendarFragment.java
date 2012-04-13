@@ -220,9 +220,9 @@ public class CalendarFragment extends Fragment {
 			else {
 				// Date selected is in form mm/dd/yyyy
 				String dateToGo = convertMMDDYYYYtoYYYYMMDD(dateSelected);
+				Log.d("Steve", "Date Selected: " + dateSelected);
 				listenerGoToDayEvents.goToDayEvents(dateToGo);
 			}
-			Log.d("Steve", "Date Selected: " + dateSelected);
 		}
 	}
 	

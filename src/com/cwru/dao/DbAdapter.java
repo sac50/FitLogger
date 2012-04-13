@@ -97,7 +97,6 @@ public class DbAdapter {
 	
 	private static final String CREATE_EXERCISE_GOALS_TABLE =
 			"create table exercise_goals (id integer primary key autoincrement, " +
-<<<<<<< HEAD
 			"name text not null, is_cumulative int not null, is_completed int not null, " +
 			"mode integer not null, type integer not null, exercise_id integer, goal_one real, " +
 			"goal_two real, current_best_one real, current_best_two real, unit integer);";
@@ -315,10 +314,7 @@ public class DbAdapter {
 	 */
 	public void updateWorkoutInformation(Workout workout, String initialWorkoutName) {
 		String query = "update workouts " + 
-					   "set name = '" + workout.getName() + "', type = '" + workout.getType() + "', repeats = '" + workout.getRepeatWeeks() + "'," +
-					   "repeats_sunday = " + workout.getRepeatSunday() + ", repeats_monday = " + workout.getRepeatMonday() + ", repeats_tuesday = " + workout.getRepeatTuesday() + "," +
-					   "repeats_wednesday = " + workout.getRepeatWednesday() + ", repeats_thursday = " + workout.getRepeatThursday() + ", repeats_friday = " + workout.getRepeatFriday() + 
-					   ", repeats_saturday = " + workout.getRepeatSaturday() + " where name = '" + initialWorkoutName + "'";
+					   "set name = '" + workout.getName() + "', type = '" + workout.getType() + " where name = '" + initialWorkoutName + "'";
 		open();
 		db.execSQL(query);
 		close();
@@ -1927,6 +1923,19 @@ public class DbAdapter {
 		cursor.close();
 		close();
 		return workoutList;
+	}
+	
+	public boolean isWorkoutScheduled(String date, int workoutId) {
+		boolean isScheduled = false;
+		open();
+		String query = "select id from calendar where workout_id = " + workoutId + " and date = '" + date + "'";
+		Cursor cursor = db.rawQuery(query, null);
+		while (cursor.moveToNext()) {
+			isScheduled = true;
+		}
+		cursor.close();
+		close();
+		return isScheduled;
 	}
 	
 }

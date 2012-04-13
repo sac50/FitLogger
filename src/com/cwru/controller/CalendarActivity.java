@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 
 import com.cwru.R;
 import com.cwru.fragments.CalendarDayViewFragment;
@@ -15,7 +16,8 @@ import com.cwru.fragments.CalendarScheduleWorkoutFragment;
 import com.cwru.fragments.WorkoutListingFragment.onWorkoutListingClickListener;
 
 public class CalendarActivity extends FragmentActivity implements returnDateListener, goToDayEventsListener, onWorkoutListingClickListener, scheduleWorkoutListener {
-	private boolean returnDate;
+	private boolean returnDate = false;
+	private boolean returnWorkout = false;
 	
 
 	@Override
@@ -33,12 +35,9 @@ public class CalendarActivity extends FragmentActivity implements returnDateList
 		if (extras != null) {
 			if (extras.containsKey("RETURN-DATE")) {
 				returnDate = true;
-			} else {
-				returnDate = false;
 			}
-		} else {
-			returnDate = false;
 		}
+		
 		CalendarFragment calendar = new CalendarFragment(this, returnDate);
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		transaction.replace(R.id.flCalendarMainFrame, calendar);
@@ -60,6 +59,7 @@ public class CalendarActivity extends FragmentActivity implements returnDateList
 		CalendarDayViewFragment dayView = new CalendarDayViewFragment(this, date);
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		transaction.replace(R.id.flCalendarMainFrame, dayView);
+		Log.d("Steve", "Go To Days Events");
 		transaction.commit();
 		
 	}
@@ -72,9 +72,9 @@ public class CalendarActivity extends FragmentActivity implements returnDateList
 	}
 
 	@Override
-	public void scheduleWorkout() {
+	public void scheduleWorkout(String date) {
 		// TODO Auto-generated method stub
-		CalendarScheduleWorkoutFragment scheduleWorkout = new CalendarScheduleWorkoutFragment(this);
+		CalendarScheduleWorkoutFragment scheduleWorkout = new CalendarScheduleWorkoutFragment(this, date);
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		transaction.replace(R.id.flCalendarMainFrame, scheduleWorkout);
 		transaction.commit();

@@ -25,9 +25,17 @@ public class WorkoutListingFragment extends ListFragment {
 	private DbAdapter mDbHelper;
 	private int mode;
 	private static onWorkoutListingClickListener listener;
+	private static onReturnWorkoutListener listenerReturnWorkout;
+	private boolean returnWorkout;
 
 	public WorkoutListingFragment(){
-		
+		Log.d("Steve", "Empty Constructor");
+		returnWorkout = false;
+	}
+	
+	public WorkoutListingFragment(boolean returnWorkout) {
+		this.returnWorkout = returnWorkout;
+		Log.d("Steve", "Return Workout: " + returnWorkout);
 	}
 	
 	
@@ -56,8 +64,11 @@ public class WorkoutListingFragment extends ListFragment {
 	@Override 
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		String workoutName = (String) getListAdapter().getItem(position);
-		Log.d("Steve", "Workout Name: " + workoutName);
-		listener.onWorkoutListingListenerClick(workoutName);
+		if (returnWorkout) {
+			listenerReturnWorkout.onReturnWorkoutListenerClick(workoutName);
+		} else {
+			listener.onWorkoutListingListenerClick(workoutName);
+		}
 	}
 	
 	private void goToWorkoutWorkflow(String workoutName) {
@@ -65,8 +76,6 @@ public class WorkoutListingFragment extends ListFragment {
 		intent.putExtra("workoutName", workoutName);
 		this.getActivity().startActivity(intent);
 	}
-	
-	
 	
 	private void goToEditWorkoutInformation(String workoutName) {
 		EditWorkoutInformationFragment editWorkoutInformation = new EditWorkoutInformationFragment(workoutName, this.getActivity());
@@ -94,6 +103,14 @@ public class WorkoutListingFragment extends ListFragment {
 			Log.d("Steve", "Workout name " + workouts[i].getName());
 		}
 		return workoutList.toArray(new String [0]);
+	}
+	
+	public interface onReturnWorkoutListener {
+		void onReturnWorkoutListenerClick(String workoutName);
+	}
+	
+	public static void setOnReturnWorkoutListener(onReturnWorkoutListener listener) {
+		WorkoutListingFragment.listenerReturnWorkout = listener;
 	}
 	
 	public interface onWorkoutListingClickListener {

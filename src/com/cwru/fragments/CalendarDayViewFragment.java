@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.cwru.R;
 import com.cwru.dao.DbAdapter;
@@ -38,13 +39,24 @@ public class CalendarDayViewFragment extends ListFragment {
 			return null;
 		}		
 		Log.d("Steve", "WorkoutListingFragment");
-		View view = (LinearLayout) inflater.inflate(R.layout.workout_listings, container, false);
+		View view = (LinearLayout) inflater.inflate(R.layout.calendar_day_listing, container, false);
 		// Set Adapter
 		// Get List content
 		//String [] workouts = getWorkoutList();
 		ArrayList<String> workouts = new ArrayList<String>();
-		workouts.add("Schedule a workout...");
-		workouts.addAll(mDbHelper.getWorkoutsForDate(date));
+		if (!dateInPast()) {
+			Log.d("Steve", "Date IN Future");
+			workouts.add("Schedule a workout...");
+		}
+		else {
+			Log.d("Steve", "Date in PAST");
+		}
+		ArrayList<String> workoutsForDate = mDbHelper.getWorkoutsForDate(date);
+		if (workoutsForDate.size() == 0 && workouts.size() == 0) {
+			workouts.add("No Workouts Scheduled for Day");
+		} else {
+			workouts.addAll(workoutsForDate);
+		}
 		this.setListAdapter(new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_list_item_1, workouts));
 
 		return view;
@@ -55,8 +67,11 @@ public class CalendarDayViewFragment extends ListFragment {
 		String workoutName = (String) getListAdapter().getItem(position);
 		Log.d("Steve", "Workout Name: " + workoutName);
 		// schedule workout
-		if(position == 0) {
-			workoutScheduleListener.scheduleWorkout();
+		if (workoutName.equals("No Workouts Scheduled for Day")) {
+			// Do Nothing
+		}
+		else if(position == 0) {
+			workoutScheduleListener.scheduleWorkout(date);
 		}
 		else {
 			listener.onWorkoutListingListenerClick(workoutName);
@@ -69,10 +84,22 @@ public class CalendarDayViewFragment extends ListFragment {
 		int m = Integer.parseInt(dateSplit[1]);
 		int d = Integer.parseInt(dateSplit[2]);
 		
+		Log.d("Steve", "Y: " + y + " | M: " + m + " | D: " + d);
+		
+		
 		Calendar calendar = Calendar.getInstance();
-		if (calendar.get(Calendar.YEAR) < y &&(calendar.get(Calendar.MONTH) + 1) < m && calendar.get(Calendar.DAY_OF_MONTH) < d) {
-			return true;
-		}
+		int calY = calendar.get(Calendar.YEAR);
+		int calM = calendar.get(Calendar.MONTH) + 1;
+		int calD = calendar.get(Calendar.DAY_OF_MONTH);
+		Log.d("Steve", "Y: " + calY + " | M: " + calM + " | D: " + calD);
+		// past year
+		if (calY > y) { return true; }
+		// same year past month
+		else if (calY == y && calM > m) { return true; }
+		// same year same month past day
+		else if (calY == y && calM == m && calD > d) { return true; }
+		
+		// in future
 		return false;		
 	}
 	
@@ -81,7 +108,7 @@ public class CalendarDayViewFragment extends ListFragment {
 	}
 	
 	public interface scheduleWorkoutListener {
-		void scheduleWorkout();
+		void scheduleWorkout(String date);
 	}
 	
 	public static void setScheduleWorkout(scheduleWorkoutListener listener) {

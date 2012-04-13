@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView  xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/svCreateWorkoutTab"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent" 
+>	
+	
+	<LinearLayout 
+	    android:id="@+id/llCreateWorkoutInformationContainer"  
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical"
+	>       	    	
+	  	<TextView 	
+        	android:id="@+id/tvWorkoutNameLabel"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"  
+        	android:text="Name:"
+        />
+        <EditText            
+        	android:id="@+id/etWorkoutName"
+        	android:layout_width="fill_parent"
+        	android:layout_height="wrap_content" 
+        	android:hint="Workout Name"
+        />	            
+        <TextView 
+        	android:id="@+id/tvWorkoutTypeLabel"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+ 			android:text="Type:"
+        />
+        <Spinner 
+	        android:id="@+id/spnWorkoutType"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:prompt="@string/workoutType"
+		/>
+	        
+
+
+	    
+	</LinearLayout>
+</ScrollView>

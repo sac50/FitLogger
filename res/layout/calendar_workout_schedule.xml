@@ -10,6 +10,23 @@
 	    android:layout_height="wrap_content"
 	    android:orientation="vertical"
 	>  
+	
+         <TextView 
+         	android:id="@+id/tvCalendarWorkoutScheduleSelectWorkout"
+         	android:layout_width="fill_parent"
+         	android:layout_height="wrap_content"
+         	android:text="Select a Workout" 
+         />
+         
+        <Button 
+          	android:id="@+id/btnCalendarWorkoutScheduleGetWorkout"
+          	android:layout_width="fill_parent"
+          	android:layout_height="wrap_content"  
+          	android:background="@drawable/workout_date_entry"
+          	android:text="Click to Select a Workout"
+          	android:layout_marginBottom="10dip"
+        />
+         
 		 <TextView 
            	android:id="@+id/tvCalendarWorkoutScheduleRepeatsLabel"    
            	android:layout_width="wrap_content"
@@ -23,6 +40,23 @@
            	android:layout_height="wrap_content"
            	android:prompt="@string/workoutRepeats"    
         />	 
+        <TableLayout 
+        	android:id="@+id/tlCalendarWorkoutScheduleCheckBoxTable"
+        	android:layout_width="fill_parent"
+        	android:layout_height="wrap_content"
+        	android:stretchColumns="*"
+        >
+       	</TableLayout>
+        
+        <LinearLayout 
+            android:id="@+id/llCalendarWorkoutScheduleDayCheckboxContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+        >
+            
+        </LinearLayout>
+       
        
         <RadioGroup 
             android:id="@+id/rgCalendarWorkoutScheduleRepeatRadioButtons"
@@ -51,6 +85,7 @@
         	android:layout_width="fill_parent"
         	android:layout_height="wrap_content"
         	android:orientation="horizontal"    
+        	android:layout_marginBottom="10dip"
         >
             <TextView 	
 	        	android:id="@+id/tvCalendarWorkoutScheduleNumOccurancesFirstLabel"
@@ -86,6 +121,14 @@
           	android:background="@drawable/workout_date_entry"
           	android:text="Date"
           	android:visibility="gone"
+          	android:layout_marginBottom="10dip"
+        />
+               	
+        <Button 
+          	android:id="@+id/btnCalendarWorkoutScheduleWorkout"
+          	android:layout_width="fill_parent"
+          	android:layout_height="wrap_content"
+          	android:text="Schedule Workout"
         />
     </LinearLayout>
 
