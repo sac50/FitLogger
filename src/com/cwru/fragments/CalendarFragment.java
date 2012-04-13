@@ -9,6 +9,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,7 +36,8 @@ public class CalendarFragment extends Fragment {
 	private String dateWhereClause;
 	private static returnDateListener listenerReturnDate;
 	private static goToDayEventsListener listenerGoToDayEvents;
-
+	private DayOfWeekAdapter dowAdapter;
+	private Context context;
 	
 	private Calendar calendar;
 	
@@ -43,10 +45,18 @@ public class CalendarFragment extends Fragment {
 										   "September","October","November","December" };
 	
 	public CalendarFragment(Context context, boolean returnDate) {
+		this.context = context;
 		calendar = Calendar.getInstance();
 		this.returnDate = returnDate;
 		// Get Current Month
 		calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH));
+		dateWhereClause = "where ";
+	}
+	
+	public CalendarFragment(Context context, boolean returnDate, Calendar calendar) { 
+		this.context = context;
+		this.calendar = calendar;
+		this.returnDate = returnDate;
 		dateWhereClause = "where ";
 	}
 	
@@ -65,16 +75,48 @@ public class CalendarFragment extends Fragment {
 		gvDaysOfWeek = (GridView) view.findViewById(R.id.gvCalendarViewDaysOfWeekHeading);
 
 		
-		DayOfWeekAdapter dowAdapter = new DayOfWeekAdapter(this.getActivity());
+		dowAdapter = new DayOfWeekAdapter(this.getActivity());
 		gvDaysOfWeek.setAdapter(dowAdapter);
 		
-		tvMonth.setText(monthNames[calendar.get(Calendar.MONTH)]);
+		tvMonth.setText(monthNames[calendar.get(Calendar.MONTH)] + " " + calendar.get(Calendar.YEAR));
 		adapter = new GridCellAdapter(this.getActivity(), R.id.btnCalendarDayGridCell);
 		adapter.notifyDataSetChanged();
 		gvCalendar.setAdapter(adapter);
+		btnPrevMonth.setOnClickListener(prevMonthListener);
+		btnNextMonth.setOnClickListener(nextMonthListener);
 		
 		return view;
 	}
+	
+	View.OnClickListener nextMonthListener = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			// set to next month
+			Log.d("Steve", "Calendar before " + calendar.get(Calendar.MONTH));
+			// calendar already incremented in the getcalendararray
+			//calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) + 1);
+			Log.d("Steve", "Calendar incremented to " + calendar.get(Calendar.MONTH));
+			FragmentTransaction transaction = CalendarFragment.this.getFragmentManager().beginTransaction();
+			CalendarFragment calendarFragment = new CalendarFragment(context, returnDate, calendar);
+			transaction.replace(R.id.flCalendarMainFrame, calendarFragment);
+			transaction.commit();
+		}
+	};
+	
+	View.OnClickListener prevMonthListener = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			// set to next month
+			Log.d("Steve", "Calendar before " + calendar.get(Calendar.MONTH));
+			// calendar already incremented in the getcalendararray
+			calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) -2);
+			Log.d("Steve", "Calendar incremented to " + calendar.get(Calendar.MONTH));
+			FragmentTransaction transaction = CalendarFragment.this.getFragmentManager().beginTransaction();
+			CalendarFragment calendarFragment = new CalendarFragment(context, returnDate, calendar);
+			transaction.replace(R.id.flCalendarMainFrame, calendarFragment);
+			transaction.commit();
+		}
+	};
 	
 	public ArrayList<String> getCalendarArray() {
 		ArrayList<String> dates = new ArrayList<String>();
@@ -82,18 +124,22 @@ public class CalendarFragment extends Fragment {
 		// Set Day to first of month
 		int month = calendar.get(Calendar.MONTH);
 		int dom = calendar.get(Calendar.DAY_OF_MONTH);
+		Log.d("STEVE", "GET CALENAR ARRAY MONTH: " + month + " | YEAR: " + calendar.get(Calendar.YEAR));
 
 		calendar.set(Calendar.DAY_OF_MONTH, 1);
 		// Decrement until we hit sunday
 		while (calendar.get(Calendar.DAY_OF_WEEK) != 1) {
 			calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) - 1);
 		}
+		
+		Log.d("Steve", "Get Calendar ARRRRRRRRRRRRRRRRRRRRRRRAAAAAAAAAAAAAAAAAAAYYYYYYYYYYYYY");
+		Log.d("Steve", "month: " + month + " | calendar month: " + calendar.get(Calendar.MONTH));
+		
 		// Add prior month days
 		// Date String ==> DD-COLOR-MM-YY
 		if (month != calendar.get(Calendar.MONTH)) {
-			while (calendar.get(Calendar.MONTH) == month) {
+			while (calendar.get(Calendar.MONTH) != month) {
 				dates.add((calendar.get(Calendar.MONTH)+1) + "-GREY-" + calendar.get(Calendar.DAY_OF_MONTH) + "-" + calendar.get(Calendar.YEAR));
-
 				dateWhereClause += "date = '" + getDateInYearMonthForm(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)) + "' or ";
 				calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) + 1);
 			}
@@ -139,7 +185,7 @@ public class CalendarFragment extends Fragment {
 	}
 
 	public class GridCellAdapter extends BaseAdapter implements OnClickListener {
-		private final List<String> list;
+		private List<String> list;
 		private Button gridcell;
 		private final Context context;
 		private Hashtable<String, Boolean> workoutDateHash;
@@ -152,6 +198,7 @@ public class CalendarFragment extends Fragment {
 			this.context = context;
 			this.list = getCalendarArray();
 			this.workoutDateHash = mDbHelper.getWorkoutDatesForCalendar(dateWhereClause.substring(0, dateWhereClause.length() - 3));
+			Log.d("STEVE", "NEW ADAPTER FOR CALENDAR ----------------------------------------------------");
 
 		}
 
@@ -167,6 +214,10 @@ public class CalendarFragment extends Fragment {
 		@Override 
 		public long getItemId(int position) {
 			return position;
+		}
+		
+		public void updateList() { 
+			this.list = getCalendarArray();
 		}
 
 		@Override 
@@ -194,6 +245,7 @@ public class CalendarFragment extends Fragment {
 				gridcell.setBackgroundResource(R.drawable.calendar_bg_red);
 			}
 			gridcell.setTag(formatDate(month, day, year));
+			Log.d("STEVE", "GRIDCEL TAG: " + gridcell.getTag());
 			gridcell.setText(day);
 
 			Calendar cal = Calendar.getInstance();
