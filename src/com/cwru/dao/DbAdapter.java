@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Hashtable;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -108,6 +109,10 @@ public class DbAdapter {
 	private static final String CREATE_CUSTOM_GOALS_TABLE =
 			"create table custom_goals (id integer primary key autoincrement, " +
 			"name text not null, description text not null, is_completed int not null);";
+	
+	private static final String CREATE_CALENDAR_TABLE = 
+			"create table calendar (id integer primary key autoincrement, " + 
+			"date text not null, workout_id);";
 				
 	private static final String DATABASE_NAME = "FitLoggerData";
 	private static final String DATABASE_TABLE_WORKOUT = "workouts";
@@ -125,6 +130,7 @@ public class DbAdapter {
 	private static final String DATABASE_TABLE_EXERCISE_GOAL = "exercise_goals";
 	private static final String DATABASE_TABLE_BODY_GOAL = "body_goals";
 	private static final String DATABASE_TABLE_CUSTOM_GOAL = "custom_goals";
+	private static final String DATABASE_TABLE_CALENDAR = "calendar";
 	private static final int DATABASE_VERSION = 1;
 
 	private final Context mCtx;
@@ -152,6 +158,7 @@ public class DbAdapter {
 			db.execSQL(CREATE_EXERCISE_GOALS_TABLE);
 			db.execSQL(CREATE_BODY_GOALS_TABLE);
 			db.execSQL(CREATE_CUSTOM_GOALS_TABLE);
+			db.execSQL(CREATE_CALENDAR_TABLE);
 			Log.d("Steve", "DB CREATES");
 		}
 
@@ -193,7 +200,7 @@ public class DbAdapter {
 	 * Inserts row into the Workout table
 	 * @param workout
 	 */
-	public void createWorkout(Workout workout) {
+	public int createWorkout(Workout workout) {
 		open();
 		ContentValues initialValues = new ContentValues();
 		initialValues.put("name", workout.getName());
@@ -211,7 +218,15 @@ public class DbAdapter {
 		// comment defaulted to blank, gets set during a workout
 		initialValues.put("comment", "");
 		db.insert(DATABASE_TABLE_WORKOUT, null, initialValues);
+		String selectId = "select id from workouts where name = '" + workout.getName() + "'";
+		Cursor cursor = db.rawQuery(selectId, null);
+		int workoutId = 0;
+		while (cursor.moveToNext()) {
+			workoutId = cursor.getInt(cursor.getColumnIndex("id"));
+		}
+		cursor.close();
 		close();
+		return workoutId;
 	}
 	
 	/**
@@ -299,10 +314,7 @@ public class DbAdapter {
 	 */
 	public void updateWorkoutInformation(Workout workout, String initialWorkoutName) {
 		String query = "update workouts " + 
-					   "set name = '" + workout.getName() + "', type = '" + workout.getType() + "', repeats = '" + workout.getRepeatWeeks() + "'," +
-					   "repeats_sunday = " + workout.getRepeatSunday() + ", repeats_monday = " + workout.getRepeatMonday() + ", repeats_tuesday = " + workout.getRepeatTuesday() + "," +
-					   "repeats_wednesday = " + workout.getRepeatWednesday() + ", repeats_thursday = " + workout.getRepeatThursday() + ", repeats_friday = " + workout.getRepeatFriday() + 
-					   ", repeats_saturday = " + workout.getRepeatSaturday() + " where name = '" + initialWorkoutName + "'";
+					   "set name = '" + workout.getName() + "', type = '" + workout.getType() + " where name = '" + initialWorkoutName + "'";
 		open();
 		db.execSQL(query);
 		close();
@@ -1869,8 +1881,61 @@ public class DbAdapter {
 		return workoutDates.toArray(new String [0]);		
 	}
 	
+	public void createCalendarEntry(ArrayList<String> records) {
+			open();
+			Log.d("STEVE", "INSERTS");
+			for (int i = 0; i < records.size(); i++) {
+				Log.d("Steve", "QUERY: " + records.get(i));
+				db.execSQL(records.get(i));
+			}
+			close();
+	}
 	
+	public Hashtable<String, Boolean> getWorkoutDatesForCalendar(String whereClause) {
+		open();
+		Hashtable<String, Boolean> hash = new Hashtable<String, Boolean>();
+		String query = "select date from calendar " + whereClause;
+		Log.d("Steve", query);
+		Cursor cursor = db.rawQuery(query, null);
+		Log.d("STEVE", "DB QUERY---------------------------------------------------------");
+		while (cursor.moveToNext()) {
+			String date = cursor.getString(cursor.getColumnIndex("date"));
+			Log.d("Steve", "Date: " + date);
+			hash.put(date, true);
+		}
+		cursor.close();
+		close();
+		return hash;
+	}
 	
+	public ArrayList<String> getWorkoutsForDate(String date) {
+		ArrayList<String> workoutList = new ArrayList<String>();
+		// select distinct name, workouts.id from calendar join workouts on 
+		// calendar.workout_id = workouts.id and date = '2012/04/17'
+		String query = "select distinct name from calendar join workouts on " +
+					   "calendar.workout_id = workouts.id and date = '" + date + "'";
+		open();
+		Cursor cursor = db.rawQuery(query, null);
+		while (cursor.moveToNext()) {
+			String name = cursor.getString(cursor.getColumnIndex("name"));
+			workoutList.add(name);
+		}
+		cursor.close();
+		close();
+		return workoutList;
+	}
 	
+	public boolean isWorkoutScheduled(String date, int workoutId) {
+		boolean isScheduled = false;
+		open();
+		String query = "select id from calendar where workout_id = " + workoutId + " and date = '" + date + "'";
+		Cursor cursor = db.rawQuery(query, null);
+		while (cursor.moveToNext()) {
+			isScheduled = true;
+		}
+		cursor.close();
+		close();
+		return isScheduled;
+	}
 	
 }

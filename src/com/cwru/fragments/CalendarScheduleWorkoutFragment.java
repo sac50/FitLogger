@@ -6,8 +6,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -23,6 +22,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TableLayout;
@@ -31,19 +31,29 @@ import android.widget.TableRow;
 import com.cwru.R;
 import com.cwru.controller.CalendarActivity;
 import com.cwru.controller.HomeScreen;
+import com.cwru.controller.WorkoutListingActivity;
 import com.cwru.dao.DbAdapter;
-import com.cwru.model.Workout;
+import com.cwru.fragments.CalendarFragment.returnDateListener;
+import com.cwru.fragments.WorkoutListingFragment.onWorkoutListingClickListener;
 
-/**
- * 
- * @author sacrilley
- * This fragment handles entering information about the workout user creating
- *
- */
-public class CreateWorkoutInformationFragment extends Fragment {
-	private EditText etWorkoutName;
-	private Spinner spnWorkoutType;
-	private Spinner spnRepeatWeeks;
+public class CalendarScheduleWorkoutFragment extends Fragment {
+	private DbAdapter mDbHelper;
+	private String date;
+	private int month;
+	private int year;
+	private int day;
+	private Context context;
+	private static returnWorkoutListener listenerWorkoutReturn;
+	
+	private Spinner spnRepeatOptions;
+	private RadioGroup rgScheduleOptions;
+	private RadioButton rbNumOccurances;
+	private RadioButton rbScheduleByDate;
+	private LinearLayout llNumOccurancesContainer;
+	private EditText etNumOccurances;
+	private Button btnEndWorkoutDate;
+	private Button btnWorkoutSelector;
+	private Button btnCalendarWorkoutScheduleWorkout;
 	private CheckBox sunday;
 	private CheckBox monday;
 	private CheckBox tuesday;
@@ -51,28 +61,38 @@ public class CreateWorkoutInformationFragment extends Fragment {
 	private CheckBox thursday;
 	private CheckBox friday;
 	private CheckBox saturday;
-	private RadioButton rgNumOccurances;
-	private LinearLayout llNumOccurances;
-	private EditText etNumOccurances;
-	private RadioButton rgEndOnDate;
-	private Button btnEndOnDate;
-	private DbAdapter mDbHelper;
-	private static onGoToExerciseBankListener listener;
-
-	/**
-	 * UI View associated with the fragment
-	 */
+	
+	public CalendarScheduleWorkoutFragment(Context context, String date) {
+		this.context = context;
+		mDbHelper = new DbAdapter(context);
+		this.date = date;
+		String [] dateSplit = date.split("/");
+		month = Integer.parseInt(dateSplit[1]);
+		day = Integer.parseInt(dateSplit[2]);
+		year = Integer.parseInt(dateSplit[0]);
+	}
+		
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (container == null) {
-			return null;			
-		}
-		View view =  (ScrollView) inflater.inflate(R.layout.create_workout_information, container, false);
-		// Set DB Object
-		mDbHelper = new DbAdapter(this.getActivity());
-		/* Grab UI features */
-		etWorkoutName = (EditText) view.findViewById(R.id.etWorkoutName);
-		spnWorkoutType = (Spinner) view.findViewById(R.id.spnWorkoutType);
-	    spnRepeatWeeks = (Spinner) view.findViewById(R.id.spnWorkoutRepeatsWeek);
+			return null;
+		}		
+		Log.d("Steve", "WorkoutListingFragment");
+		View view = (ScrollView) inflater.inflate(R.layout.calendar_workout_schedule, container, false);
+
+		spnRepeatOptions = (Spinner) view.findViewById(R.id.spnCalendarWorkoutScheduleRepeatsWeek);
+		rgScheduleOptions = (RadioGroup) view.findViewById(R.id.rgCalendarWorkoutScheduleRepeatRadioButtons);
+		rbNumOccurances = (RadioButton) view.findViewById(R.id.rbCalendarWorkoutScheduleNumOccurances);
+		rbScheduleByDate = (RadioButton) view.findViewById(R.id.rbCalendarWorkoutScheduleEndOnDate);
+		llNumOccurancesContainer = (LinearLayout) view.findViewById(R.id.llCalendarWorkoutScheduleNumOccurances);
+		etNumOccurances = (EditText) view.findViewById(R.id.etCalendarWorkoutScheduleNumOccurances);
+		btnEndWorkoutDate = (Button) view.findViewById(R.id.btnCalendarWorkoutScheduleEndDate);
+		btnWorkoutSelector = (Button) view.findViewById(R.id.btnCalendarWorkoutScheduleGetWorkout);
+		btnCalendarWorkoutScheduleWorkout = (Button) view.findViewById(R.id.btnCalendarWorkoutScheduleWorkout);
+		
+		btnWorkoutSelector.setOnClickListener(getWorkoutListener);
+		btnEndWorkoutDate.setOnClickListener(getEndDateListener);
+		
 		sunday = new CheckBox(this.getActivity());
 		monday = new CheckBox(this.getActivity());
 		tuesday = new CheckBox(this.getActivity());
@@ -80,28 +100,13 @@ public class CreateWorkoutInformationFragment extends Fragment {
 		thursday = new CheckBox(this.getActivity());
 		friday = new CheckBox(this.getActivity());
 		saturday = new CheckBox(this.getActivity());
-		rgNumOccurances = (RadioButton) view.findViewById(R.id.rbCreateWorkoutNumOccurances);
-		llNumOccurances = (LinearLayout) view.findViewById(R.id.llCreateWorkoutNumOccurances);
-		etNumOccurances = (EditText) view.findViewById(R.id.etCreateWorkoutNumOccurances);
-		rgEndOnDate = (RadioButton) view.findViewById(R.id.rbCreateWorkoutEndOnDate);
-		btnEndOnDate = (Button) view.findViewById(R.id.btnCreateWorkoutEndDate);
 		
-		/* Set data for spinners type and repeat weeks */
-		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-	            this.getActivity(), R.array.workoutTypes, android.R.layout.simple_spinner_item);
-	    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-	    spnWorkoutType.setAdapter(adapter);
-	    
-	    adapter = ArrayAdapter.createFromResource(this.getActivity(), R.array.workoutRepeatWeeks, android.R.layout.simple_spinner_item);
-	    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-	    spnRepeatWeeks.setAdapter(adapter);
-	    
 		Configuration c = this.getResources().getConfiguration();
 		/* Lanscape View */
-		if (c.orientation == Configuration.ORIENTATION_LANDSCAPE || HomeScreen.isTablet) {
+		if (c.orientation == Configuration.ORIENTATION_LANDSCAPE) {
 			Log.d("Steve", "Horizontal1");
 			/* Place Checkboxes all in one row */
-			TableLayout tl = (TableLayout)  view.findViewById(R.id.tlCreateWorkoutInformationCheckBoxTable);
+			TableLayout tl = (TableLayout)  view.findViewById(R.id.tlCalendarWorkoutScheduleCheckBoxTable);
 			TableRow tr = new TableRow(this.getActivity());
 			tr.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 			
@@ -178,166 +183,122 @@ public class CreateWorkoutInformationFragment extends Fragment {
 			saturday.setTag("chkRepeatSaturday");
 			l2.addView(saturday);
 			
-			LinearLayout llcontainer = (LinearLayout) view.findViewById(R.id.llCreateWorkoutInformationContainer);
+			LinearLayout llcontainer = (LinearLayout) view.findViewById(R.id.llCalendarWorkoutScheduleDayCheckboxContainer);
 			llcontainer.addView(l1);
 			llcontainer.addView(l2);
 			
 		}
 		
-		// Button to Create Workout
-		Button button = new Button(this.getActivity());
-		button.setText("Create Workout");
-		button.setOnClickListener(createWorkoutListener);
-		rgNumOccurances.setOnClickListener(radioButtonListener);
-		rgEndOnDate.setOnClickListener(radioButtonListener);
-		btnEndOnDate.setOnClickListener(getEndDateListener);
-		Calendar calendar = Calendar.getInstance();
-		String currentDate = calendar.get(Calendar.MONTH) + "-" + calendar.get(Calendar.DAY_OF_MONTH) + "-" + calendar.get(Calendar.YEAR);
-		btnEndOnDate.setText(currentDate);
-		
-		LinearLayout ll = (LinearLayout) view.findViewById(R.id.llCreateWorkoutInformationContainer);
-		ll.addView(button);
+		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.getActivity(), R.array.workoutRepeatWeeks, android.R.layout.simple_spinner_item);
+	    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+	    spnRepeatOptions.setAdapter(adapter);
+	    
+	    rbNumOccurances.setOnClickListener(radioButtonListener);
+	    rbScheduleByDate.setOnClickListener(radioButtonListener);	    
+	    btnCalendarWorkoutScheduleWorkout.setOnClickListener(scheduleListener);
 		
 		return view;
 	}
 	
-	private boolean validateWorkoutName(String workoutName) {
-		return mDbHelper.workoutNameExist(workoutName);
-	}
-	
-	View.OnClickListener radioButtonListener = new View.OnClickListener() {
-		@Override
-		public void onClick(View v) {
-			// NumOccurances Checked
-			if (rgNumOccurances.isChecked()) {
-				llNumOccurances.setVisibility(LinearLayout.VISIBLE);
-				btnEndOnDate.setVisibility(Button.GONE);
-			} 
-			// Date Checked
-			else if (rgEndOnDate.isChecked()) {
-				llNumOccurances.setVisibility(LinearLayout.GONE);
-				btnEndOnDate.setVisibility(Button.VISIBLE);
-				
-			}
-		}
-	};
-	
 	View.OnClickListener getEndDateListener = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			Intent intent = new Intent(CreateWorkoutInformationFragment.this.getActivity(), CalendarActivity.class);
+			Intent intent = new Intent(CalendarScheduleWorkoutFragment.this.getActivity(), CalendarActivity.class);
 			intent.putExtra("RETURN-DATE", true);
-			startActivityForResult(intent,1);
+			startActivityForResult(intent,2);
+		}
+	};
+	
+	View.OnClickListener getWorkoutListener = new View.OnClickListener() {
+	
+		@Override
+		public void onClick(View v) {
+			Intent intent = new Intent(CalendarScheduleWorkoutFragment.this.getActivity(), WorkoutListingActivity.class);
+			intent.putExtra("RETURN-WORKOUT", true);
+			Log.d("Steve", "Get Workout =---------------------------");
+			startActivityForResult(intent,1);			
 		}
 	};
 	
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+		Log.d("STEVE", "REquest Code: " + requestCode);
+		Log.d("Steve", "On Result Return");
 		if (resultCode == 1 && requestCode == 1) {
+			Log.d("Steve", "inside if");
+			if (intent.hasExtra("RETURN-WORKOUT")) {
+				Log.d("Steve", "inside if2");				
+				btnWorkoutSelector.setText(intent.getExtras().getString("RETURN-WORKOUT"));
+			}
+		}
+		if (requestCode == 2) {
 			if (intent.hasExtra("DATE-SELECTED")) {
-				btnEndOnDate.setText(intent.getExtras().getString("DATE-SELECTED"));
+				btnEndWorkoutDate.setText(intent.getExtras().getString("DATE-SELECTED"));
 			}
 		}
 	}
 	
-	/**
-	 * Create Workout Button Click Listener
-	 */
-	View.OnClickListener createWorkoutListener = new View.OnClickListener() {
-		
+	public interface returnWorkoutListener {
+		void returnSelectedDate(String dateSelected);
+	}
+	
+	public static void setGetWorkoutListener(returnWorkoutListener listener) {
+		CalendarScheduleWorkoutFragment.listenerWorkoutReturn = listener;
+	}
+	
+	View.OnClickListener scheduleListener = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			// Get Workout Name
-			String workoutName = etWorkoutName.getText().toString();
-			/* if name exists already
-			 * alert error, must have unique name
-			 */
-			if (validateWorkoutName(workoutName)) {
-				AlertDialog.Builder builder = new AlertDialog.Builder(CreateWorkoutInformationFragment.this.getActivity());
-				builder.setMessage("Error: " + workoutName + " already exists as a workout name.  Please select a unique name for the workout");
-				builder.setNegativeButton("Ok", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.cancel();
-					}
-				});
-				AlertDialog alert = builder.create();
-				alert.show();
-			}
-			else {
-				// Get Workout Type
-				String workoutType = (String) spnWorkoutType.getSelectedItem();
-				// Get Repeat Weeks 
-				String workoutRepeatWeeks = (String) spnRepeatWeeks.getSelectedItem();
-				
-				String repeatDays = "";
-				
-				int repeatSunday = 1;
-				int repeatMonday = 1;
-				int repeatTuesday = 1;
-				int repeatWednesday = 1;
-				int repeatThursday = 1;
-				int repeatFriday = 1;
-				int repeatSaturday = 1;
-							
-				if (sunday.isChecked()) { repeatSunday = 0; }
-				if (monday.isChecked()) { repeatMonday = 0; }
-				if (tuesday.isChecked()) { repeatTuesday = 0; }
-				if (wednesday.isChecked()) { repeatWednesday = 0; }
-				if (thursday.isChecked()) { repeatThursday = 0; }
-				if (friday.isChecked()) { repeatFriday = 0; }
-				if (saturday.isChecked()) { repeatSaturday = 0; }
-				
-				String exerciseSequence = "";
-				Workout workoutToCreate = new Workout(workoutName, workoutType, exerciseSequence, workoutRepeatWeeks, 
-													  repeatSunday, repeatMonday, repeatTuesday, 
-													  repeatWednesday, repeatThursday, repeatFriday, repeatSaturday);
-				Log.d("Button", "Create Workout Clicked");
-				Log.d("Workout Name", workoutName);
-				Log.d("Workout Type", workoutType);
-				Log.d("Workout Repeat Weeks", workoutRepeatWeeks);
-				
-				/** TODO
-				 * Add workout repeat information to insert command
-				 */
-				/* Create Workout in the Database */
-				int workoutId = mDbHelper.createWorkout(workoutToCreate);
-				// if num occurances checked
-				if (rgNumOccurances.isChecked()) {
-					int numRepeats = Integer.parseInt(etNumOccurances.getText().toString());
-					createCalendarEntryNumOccurances(workoutId, workoutRepeatWeeks, repeatSunday, repeatMonday, repeatTuesday,
-							repeatWednesday, repeatThursday, repeatFriday, repeatSaturday, numRepeats);
-				} 
-				// if end date selected 
-				else if (rgEndOnDate.isChecked()) {
-					String endDate = btnEndOnDate.getText().toString();
-					createCalendarEntryByEndDate(workoutId, workoutRepeatWeeks, repeatSunday, repeatMonday, repeatTuesday,
-							repeatWednesday, repeatThursday, repeatFriday, repeatSaturday, endDate);					
-				}
-				
-				/** TODO
-				 * Change intent launch so tabbed implementation remains
-				 */
-				
-				listener.goToExerciseBank(workoutName);
-
-				
-				/* Launch intent to allow exercises to be added to workout and the sequence to be set */
-				/*
-				Intent intent = new Intent(CreateWorkoutInformationFragment.this.getActivity(), WorkoutExerciseListing.class);
-				intent.putExtra("WorkoutName", workoutName);
-				startActivity(intent);		
-				*/
+			
+			String workoutName = btnWorkoutSelector.getText().toString();
+			int workoutId = mDbHelper.getWorkoutIdFromName(workoutName);
+			// Get Repeat Weeks 
+			String workoutRepeatWeeks = (String) spnRepeatOptions.getSelectedItem();
+			
+			String repeatDays = "";
+			
+			int repeatSunday = 1;
+			int repeatMonday = 1;
+			int repeatTuesday = 1;
+			int repeatWednesday = 1;
+			int repeatThursday = 1;
+			int repeatFriday = 1;
+			int repeatSaturday = 1;
+						
+			if (sunday.isChecked()) { repeatSunday = 0; }
+			if (monday.isChecked()) { repeatMonday = 0; }
+			if (tuesday.isChecked()) { repeatTuesday = 0; }
+			if (wednesday.isChecked()) { repeatWednesday = 0; }
+			if (thursday.isChecked()) { repeatThursday = 0; }
+			if (friday.isChecked()) { repeatFriday = 0; }
+			if (saturday.isChecked()) { repeatSaturday = 0; }
+			
+			Log.d("Steve", "Num OCcur: " + rbNumOccurances.isChecked());
+			Log.d("Steve", "Schedule by Date: " + rbScheduleByDate.isChecked());
+			
+			if (rbNumOccurances.isChecked()) {
+				Log.d("Steve", "NUM OCCURANCES IS CHECKED");
+				int repeatNumber = Integer.parseInt(etNumOccurances.getText().toString());
+				createCalendarEntryNumOccurances(workoutId, workoutRepeatWeeks, repeatSunday, repeatMonday, repeatTuesday,
+												 repeatWednesday, repeatThursday, repeatFriday, repeatSaturday, repeatNumber);
+			} 
+			// Date Checked
+			else if (rbScheduleByDate.isChecked()) {
+					String endDate = btnEndWorkoutDate.getText().toString();
+					createCalendarEntryByEndDate(workoutId, workoutRepeatWeeks, repeatSunday, repeatMonday, repeatTuesday, 
+												 repeatWednesday, repeatThursday, repeatFriday, repeatSaturday, endDate);
 			}
 		}
 	};
-	
 	
 	public void createCalendarEntryNumOccurances(int workoutId, String repeats, int repeatSunday,
 			int repeatMonday, int repeatTuesday, int repeatWednesday, int repeatThursday,
 			int repeatFriday, int repeatSaturday, int numRepeats) {
 		ArrayList<String> records = new ArrayList<String>();
 		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.MONTH, (month -1));
+		calendar.set(Calendar.YEAR, year);
+		calendar.set(Calendar.DAY_OF_MONTH, day);
 		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
 		boolean insert = false;
 		Log.d("Steve", "=======================================================");
@@ -383,7 +344,12 @@ public class CreateWorkoutInformationFragment extends Fragment {
 					break;
 			}
 			
-			if (insert) {
+			// does date 
+			boolean dateScheduled = mDbHelper.isWorkoutScheduled(date, workoutId);
+			
+			if (insert && !dateScheduled) {
+				
+				// is that workout already scheduled on date?
 				String insertQuery = "insert into calendar (date, workout_id) values ('" + date + "'," + workoutId + ")";
 				records.add(insertQuery);
 				counter++;
@@ -429,6 +395,9 @@ public class CreateWorkoutInformationFragment extends Fragment {
 		
 		ArrayList<String> records = new ArrayList<String>();
 		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.MONTH, (month -1));
+		calendar.set(Calendar.YEAR, year);
+		calendar.set(Calendar.DAY_OF_MONTH, day);
 		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
 		boolean insert = false;
 		String date = dateFormat.format(calendar.getTime());
@@ -476,7 +445,8 @@ public class CreateWorkoutInformationFragment extends Fragment {
 			}
 			
 			Log.d("Steve", "Date : " + date + " | Insert: " + insert);
-			if (insert) {
+			boolean dateScheduled = mDbHelper.isWorkoutScheduled(date, workoutId);
+			if (insert && !dateScheduled) {
 				String insertQuery = "insert into calendar (date, workout_id) values ('" + date + "'," + workoutId + ")";
 				records.add(insertQuery);
 			}
@@ -532,14 +502,22 @@ public class CreateWorkoutInformationFragment extends Fragment {
 		}		
 		
 	}
-
-	public interface onGoToExerciseBankListener {
-		void goToExerciseBank(String workoutName);
-	}
 	
-	public static void setExerciseBankListener(onGoToExerciseBankListener listener) {
-		CreateWorkoutInformationFragment.listener = listener;
-	}
 	
-
+	View.OnClickListener radioButtonListener = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			// NumOccurances Checked
+			if (rbNumOccurances.isChecked()) {
+				llNumOccurancesContainer.setVisibility(LinearLayout.VISIBLE);
+				btnEndWorkoutDate.setVisibility(Button.GONE);
+			} 
+			// Date Checked
+			else if (rbScheduleByDate.isChecked()) {
+				llNumOccurancesContainer.setVisibility(LinearLayout.GONE);
+				btnEndWorkoutDate.setVisibility(Button.VISIBLE);
+				
+			}
+		}
+	};
 }
