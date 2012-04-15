@@ -8,6 +8,7 @@ import com.cwru.model.CustomGoal;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -59,17 +60,17 @@ public class CreateCustomGoalFragment extends Fragment{
 				CustomGoal goal = new CustomGoal(name, description, false);
 				mDbHelper.createCustomGoal(goal);
 				
+				FragmentManager manager = CreateCustomGoalFragment.this.getFragmentManager();
+				FragmentTransaction transaction = manager.beginTransaction();
+				CustomGoalBankFragment newFrag = new CustomGoalBankFragment();
+				
+				manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+				
 				if (HomeScreen.isTablet) {
-					FragmentTransaction transaction = CreateCustomGoalFragment.this.getFragmentManager().beginTransaction();
-					CustomGoalBankFragment newFrag = new CustomGoalBankFragment();
-					
 					transaction.replace(R.id.flGoalLeftFrame, newFrag);
 					transaction.remove(CreateCustomGoalFragment.this);
 					transaction.commit();
 				} else {
-					FragmentTransaction transaction = CreateCustomGoalFragment.this.getFragmentManager().beginTransaction();
-					CustomGoalBankFragment newFrag = new CustomGoalBankFragment();
-					
 					transaction.replace(R.id.flGoalMainFrame, newFrag);
 					transaction.commit();
 				}

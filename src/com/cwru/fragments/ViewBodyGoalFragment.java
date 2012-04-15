@@ -8,6 +8,7 @@ import com.cwru.model.BodyGoal;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -108,17 +109,17 @@ public class ViewBodyGoalFragment extends Fragment {
 			
 			mDbHelper.updateBodyGoal(goal);
 			
+			FragmentManager manager = ViewBodyGoalFragment.this.getFragmentManager();
+			FragmentTransaction transaction = manager.beginTransaction();
+			BodyGoalBankFragment newFrag = new BodyGoalBankFragment();
+			
+			manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+			
 			if (HomeScreen.isTablet) {
-				FragmentTransaction transaction = ViewBodyGoalFragment.this.getFragmentManager().beginTransaction();
-				BodyGoalBankFragment newFrag = new BodyGoalBankFragment();
-				
 				transaction.replace(R.id.flGoalLeftFrame, newFrag);
 				transaction.remove(ViewBodyGoalFragment.this);
 				transaction.commit();
 			} else {
-				FragmentTransaction transaction = ViewBodyGoalFragment.this.getFragmentManager().beginTransaction();
-				BodyGoalBankFragment newFrag = new BodyGoalBankFragment();
-				
 				transaction.replace(R.id.flGoalMainFrame, newFrag);
 				transaction.commit();
 			}
@@ -131,17 +132,17 @@ public class ViewBodyGoalFragment extends Fragment {
 		public void onClick(View v) {
 			mDbHelper.deleteBodyGoal(goal.getId());
 			
+			FragmentManager manager = ViewBodyGoalFragment.this.getFragmentManager();
+			FragmentTransaction transaction = manager.beginTransaction();
+			BodyGoalBankFragment newFrag = new BodyGoalBankFragment();
+			
+			manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+			
 			if (HomeScreen.isTablet) {
-				FragmentTransaction transaction = ViewBodyGoalFragment.this.getFragmentManager().beginTransaction();
-				BodyGoalBankFragment newFrag = new BodyGoalBankFragment();
-				
 				transaction.replace(R.id.flGoalLeftFrame, newFrag);
 				transaction.remove(ViewBodyGoalFragment.this);
 				transaction.commit();
 			} else {
-				FragmentTransaction transaction = ViewBodyGoalFragment.this.getFragmentManager().beginTransaction();
-				BodyGoalBankFragment newFrag = new BodyGoalBankFragment();
-				
 				transaction.replace(R.id.flGoalMainFrame, newFrag);
 				transaction.commit();
 			}

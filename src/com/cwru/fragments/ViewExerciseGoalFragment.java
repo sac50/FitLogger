@@ -13,6 +13,7 @@ import com.cwru.utils.MeasurementConversions;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -106,17 +107,17 @@ public class ViewExerciseGoalFragment extends Fragment {
 		public void onClick(View v) {
 			mDbHelper.deleteExerciseGoal(exGoal.getId());
 			
+			FragmentManager manager = ViewExerciseGoalFragment.this.getFragmentManager();
+			FragmentTransaction transaction = manager.beginTransaction();
+			ExerciseGoalBankFragment newFrag = new ExerciseGoalBankFragment();
+			
+			manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+			
 			if (HomeScreen.isTablet) {
-				FragmentTransaction transaction = ViewExerciseGoalFragment.this.getFragmentManager().beginTransaction();
-				ExerciseGoalBankFragment newFrag = new ExerciseGoalBankFragment();
-				
 				transaction.replace(R.id.flGoalLeftFrame, newFrag);
 				transaction.remove(ViewExerciseGoalFragment.this);
 				transaction.commit();
 			} else {
-				FragmentTransaction transaction = ViewExerciseGoalFragment.this.getFragmentManager().beginTransaction();
-				ExerciseGoalBankFragment newFrag = new ExerciseGoalBankFragment();
-				
 				transaction.replace(R.id.flGoalMainFrame, newFrag);
 				transaction.commit();
 			}

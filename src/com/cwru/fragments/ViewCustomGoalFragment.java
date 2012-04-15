@@ -7,6 +7,7 @@ import com.cwru.model.CustomGoal;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,17 +60,17 @@ public class ViewCustomGoalFragment extends Fragment {
 			goal.setIsCompleted(true);
 			mDbHelper.updateCustomGoal(goal);
 			
+			FragmentManager manager = ViewCustomGoalFragment.this.getFragmentManager();
+			FragmentTransaction transaction = manager.beginTransaction();
+			CustomGoalBankFragment newFrag = new CustomGoalBankFragment();
+			
+			manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+			
 			if (HomeScreen.isTablet) {
-				FragmentTransaction transaction = ViewCustomGoalFragment.this.getFragmentManager().beginTransaction();
-				CustomGoalBankFragment newFrag = new CustomGoalBankFragment();
-				
 				transaction.replace(R.id.flGoalLeftFrame, newFrag);
 				transaction.remove(ViewCustomGoalFragment.this);
 				transaction.commit();
 			} else {
-				FragmentTransaction transaction = ViewCustomGoalFragment.this.getFragmentManager().beginTransaction();
-				CustomGoalBankFragment newFrag = new CustomGoalBankFragment();
-				
 				transaction.replace(R.id.flGoalMainFrame, newFrag);
 				transaction.commit();
 			}
@@ -82,17 +83,17 @@ public class ViewCustomGoalFragment extends Fragment {
 		public void onClick(View v) {
 			mDbHelper.deleteCustomGoal(goal.getId());
 			
+			FragmentManager manager = ViewCustomGoalFragment.this.getFragmentManager();
+			FragmentTransaction transaction = manager.beginTransaction();
+			CustomGoalBankFragment newFrag = new CustomGoalBankFragment();
+			
+			manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+			
 			if (HomeScreen.isTablet) {
-				FragmentTransaction transaction = ViewCustomGoalFragment.this.getFragmentManager().beginTransaction();
-				CustomGoalBankFragment newFrag = new CustomGoalBankFragment();
-				
 				transaction.replace(R.id.flGoalLeftFrame, newFrag);
 				transaction.remove(ViewCustomGoalFragment.this);
 				transaction.commit();
 			} else {
-				FragmentTransaction transaction = ViewCustomGoalFragment.this.getFragmentManager().beginTransaction();
-				CustomGoalBankFragment newFrag = new CustomGoalBankFragment();
-				
 				transaction.replace(R.id.flGoalMainFrame, newFrag);
 				transaction.commit();
 			}

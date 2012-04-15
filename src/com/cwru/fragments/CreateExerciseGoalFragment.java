@@ -13,6 +13,7 @@ import com.cwru.model.Set;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.format.Time;
 import android.view.Gravity;
@@ -437,17 +438,18 @@ public class CreateExerciseGoalFragment extends Fragment {
 				}
 				break;
 			}
+			
+			FragmentManager manager = CreateExerciseGoalFragment.this.getFragmentManager();
+			FragmentTransaction transaction = manager.beginTransaction();
+			ExerciseGoalBankFragment newFrag = new ExerciseGoalBankFragment();
+			
+			manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+			
 			if (HomeScreen.isTablet) {
-				FragmentTransaction transaction = CreateExerciseGoalFragment.this.getFragmentManager().beginTransaction();
-				ExerciseGoalBankFragment newFrag = new ExerciseGoalBankFragment();
-				
 				transaction.replace(R.id.flGoalLeftFrame, newFrag);
 				transaction.remove(CreateExerciseGoalFragment.this);
 				transaction.commit();
 			} else {
-				FragmentTransaction transaction = CreateExerciseGoalFragment.this.getFragmentManager().beginTransaction();
-				ExerciseGoalBankFragment newFrag = new ExerciseGoalBankFragment();
-				
 				transaction.replace(R.id.flGoalMainFrame, newFrag);
 				transaction.commit();
 			}

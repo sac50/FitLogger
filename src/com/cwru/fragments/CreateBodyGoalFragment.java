@@ -8,6 +8,7 @@ import com.cwru.model.BodyGoal;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -85,17 +86,17 @@ public class CreateBodyGoalFragment extends Fragment {
 				double goal = Double.parseDouble(goalString);
 				mDbHelper.createBodyGoal(new BodyGoal(category, unit, started, started, goal, false));
 				
+				FragmentManager manager = CreateBodyGoalFragment.this.getFragmentManager();
+				FragmentTransaction transaction = manager.beginTransaction();
+				BodyGoalBankFragment newFrag = new BodyGoalBankFragment();
+				
+				manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+				
 				if (HomeScreen.isTablet) {
-					FragmentTransaction transaction = CreateBodyGoalFragment.this.getFragmentManager().beginTransaction();
-					BodyGoalBankFragment newFrag = new BodyGoalBankFragment();
-					
 					transaction.replace(R.id.flGoalLeftFrame, newFrag);
 					transaction.remove(CreateBodyGoalFragment.this);
 					transaction.commit();
 				} else {
-					FragmentTransaction transaction = CreateBodyGoalFragment.this.getFragmentManager().beginTransaction();
-					BodyGoalBankFragment newFrag = new BodyGoalBankFragment();
-					
 					transaction.replace(R.id.flGoalMainFrame, newFrag);
 					transaction.commit();
 				}
