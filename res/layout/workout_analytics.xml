@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/svWorkoutAnalytics"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+    
+    <LinearLayout
+        android:id="@+id/llWorkoutAnalytics"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+        
+        <WebView
+            android:id="@+id/wvWorkoutAnalytics"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+            
+        <!-- <TextView
+            android:id="@+id/tvLoading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="150dp"
+            android:layout_marginTop="150dp"
+            android:text="@string/loading" /> -->
+            
+        <RadioGroup
+            android:id="@+id/rgWorkoutAnalyticsSwitches"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/rbMonth"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/month" />
+
+            <RadioButton
+                android:id="@+id/rbThreeMonths"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:text="@string/threeMonths" />
+
+            <RadioButton
+                android:id="@+id/rbYear"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/year" />
+        </RadioGroup>
+        
+    </LinearLayout>
+    
+</ScrollView>

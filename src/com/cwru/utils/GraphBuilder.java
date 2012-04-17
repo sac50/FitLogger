@@ -9,19 +9,14 @@ import com.cwru.controller.HomeScreen;
 
 public class GraphBuilder {
 	HashMap<String, Integer> map;
-	String html;
-	String title;
 	
-	public GraphBuilder(HashMap<String, Integer> map, String title) {
+	public String buildHTML(HashMap<String, Integer> map, String title) {
 		this.map = map;
-		this.title = title;
-	}
-	
-	public String buildHTML() {
+		
 		int l = calcLongest();
 		int width = calcWidth(l * 7);
 		
-		html = "<html><body>" +
+		String html = "<html><body>" +
 			"<script type=\"text/javascript\" src=\"wz_jsgraphics.js\"></script>" +
 			"<script type=\"text/javascript\" src=\"line.js\">" +
 			"</script>";
@@ -33,14 +28,14 @@ public class GraphBuilder {
 			html = html + "<script type=\"text/javascript\">" +
 			"var g = new line_graph();";
 		
-		Iterator<Entry<String, Integer>> it = map.entrySet().iterator();
+		Iterator<Entry<String, Integer>> it = this.map.entrySet().iterator();
 		while (it.hasNext()) {
 			Map.Entry pairs = (Map.Entry)it.next();
 			html = html + "g.add('" + pairs.getKey() + "', " + pairs.getValue() + ");";
 		}
 		if (HomeScreen.isTablet) {
-			if (map.size() < 8 && l < 4) {
-				html = html + "g.render(\"lineCanvas\", \"" + title + "\", 450, " + 360 / map.size() + ");" +
+			if (this.map.size() < 8 && l < 4) {
+				html = html + "g.render(\"lineCanvas\", \"" + title + "\", 450, " + 360 / this.map.size() + ");" +
 						"</script></body></html>";
 			}
 			else {
@@ -48,8 +43,8 @@ public class GraphBuilder {
 						"</script></body></html>";
 			}
 		} else {
-			if (map.size() < 8 && l < 4) {
-				html = html + "g.render(\"lineCanvas\", \"" + title + "\", 250, " + 180 / map.size() + ");" +
+			if (this.map.size() < 8 && l < 4) {
+				html = html + "g.render(\"lineCanvas\", \"" + title + "\", 250, " + 180 / this.map.size() + ");" +
 						"</script></body></html>";
 			}
 			else {
