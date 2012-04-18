@@ -5,6 +5,7 @@ import java.util.Calendar;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.cwru.R;
+import com.cwru.controller.HomeScreen;
 import com.cwru.dao.DbAdapter;
 import com.cwru.fragments.WorkoutListingFragment.onWorkoutListingClickListener;
 
@@ -74,7 +76,16 @@ public class CalendarDayViewFragment extends ListFragment {
 			workoutScheduleListener.scheduleWorkout(date);
 		}
 		else {
-			listener.onWorkoutListingListenerClick(workoutName);
+			if (!dateInPast()) {
+				listener.onWorkoutListingListenerClick(workoutName);
+			}
+			else {
+				int workoutId = mDbHelper.getWorkoutIdFromName(workoutName);
+				WorkoutSummaryFragment workoutSummary = new WorkoutSummaryFragment(context,workoutId, date);
+				FragmentTransaction transaction = getFragmentManager().beginTransaction();
+				transaction.replace(R.id.flCalendarMainFrame, workoutSummary);
+				transaction.commit();
+			}
 		}
 	}
 	
