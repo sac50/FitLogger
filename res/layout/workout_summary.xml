@@ -17,6 +17,11 @@
     	    
 	/>
     
+    <TextView
+      	android:id="@+id/tvWorkoutSummaryNoWorkoutData"
+      	android:layout_width="match_parent"
+      	android:layout_height="wrap_content"  
+    />
     <TableLayout 	
 	    android:id="@+id/tlWorkoutSummaryTable"
        	android:layout_width="fill_parent"
@@ -25,13 +30,6 @@
     >
 	</TableLayout>
 	    
-	<TextView 
-       android:id="@+id/tvWorkoutSummaryWorkoutName1"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:text="HELLO"
-   	    
-    />
 </LinearLayout>
     
 </ScrollView>

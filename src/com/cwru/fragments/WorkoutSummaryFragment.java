@@ -56,6 +56,11 @@ public class WorkoutSummaryFragment extends Fragment {
 		tvWorkoutName = (TextView) view.findViewById(R.id.tvWorkoutSummaryWorkoutName);
 		tlWorkoutSummary = (TableLayout) view.findViewById(R.id.tlWorkoutSummaryTable);
 		
+		if (workoutResultList.size() == 0) { 
+			TextView tv = (TextView) view.findViewById(R.id.tvWorkoutSummaryNoWorkoutData);
+			tv.setText("No Workout Data Exists.");
+		}
+		
 		/* Show Workout Name */
 		tvWorkoutName.setText(workoutName);
 		Log.d("STeve", "Set Layout Name" + workoutName);
