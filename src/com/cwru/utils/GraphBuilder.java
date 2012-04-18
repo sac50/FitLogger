@@ -8,13 +8,14 @@ import java.util.Map.Entry;
 import com.cwru.controller.HomeScreen;
 
 public class GraphBuilder {
-	HashMap<String, Integer> map;
+	HashMap<Integer, Integer> map;
 	
-	public String buildHTML(HashMap<String, Integer> map, String title) {
+	public String buildHTML(HashMap<Integer, Integer> map, String title) {
 		this.map = map;
+		DateConverter converter = new DateConverter();
 		
 		int l = calcLongest();
-		int width = calcWidth(l * 7);
+		int width = calcWidth(l * 8);
 		
 		String html = "<html><body>" +
 			"<script type=\"text/javascript\" src=\"wz_jsgraphics.js\"></script>" +
@@ -28,10 +29,10 @@ public class GraphBuilder {
 			html = html + "<script type=\"text/javascript\">" +
 			"var g = new line_graph();";
 		
-		Iterator<Entry<String, Integer>> it = this.map.entrySet().iterator();
+		Iterator<Entry<Integer, Integer>> it = this.map.entrySet().iterator();
 		while (it.hasNext()) {
 			Map.Entry pairs = (Map.Entry)it.next();
-			html = html + "g.add('" + pairs.getKey() + "', " + pairs.getValue() + ");";
+			html = html + "g.add('" + converter.intDateToString(Integer.parseInt(pairs.getKey().toString())) + "', " + pairs.getValue() + ");";
 		}
 		if (HomeScreen.isTablet) {
 			if (this.map.size() < 8 && l < 4) {
@@ -64,11 +65,11 @@ public class GraphBuilder {
 	private int calcLongest() {
 		int longest = 2;
 		
-		Iterator<Entry<String, Integer>> it = map.entrySet().iterator();
+		Iterator<Entry<Integer, Integer>> it = map.entrySet().iterator();
 		while (it.hasNext()) {
 			Map.Entry pairs = (Map.Entry)it.next();
 			if (pairs.getKey().toString().length() > longest) {
-				longest = pairs.getKey().toString().length();
+				longest = pairs.getKey().toString().length() + 2;
 			}
 		}
 		

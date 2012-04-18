@@ -49,7 +49,7 @@ function line_graph()
  
  this.data      = new Array();
  this.x_name    = new Array();
- this.max       = -64000; //MAX INT
+ this.max       = 5; //MAX INT
 
  this.c_array = new Array();
  this.c_array[0] = new Array(255, 192, 95);
