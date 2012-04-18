@@ -11,6 +11,8 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,14 +29,12 @@ import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+import android.widget.Toast;
 
 import com.cwru.R;
 import com.cwru.controller.CalendarActivity;
-import com.cwru.controller.HomeScreen;
 import com.cwru.controller.WorkoutListingActivity;
 import com.cwru.dao.DbAdapter;
-import com.cwru.fragments.CalendarFragment.returnDateListener;
-import com.cwru.fragments.WorkoutListingFragment.onWorkoutListingClickListener;
 
 public class CalendarScheduleWorkoutFragment extends Fragment {
 	private DbAdapter mDbHelper;
@@ -288,6 +288,16 @@ public class CalendarScheduleWorkoutFragment extends Fragment {
 					createCalendarEntryByEndDate(workoutId, workoutRepeatWeeks, repeatSunday, repeatMonday, repeatTuesday, 
 												 repeatWednesday, repeatThursday, repeatFriday, repeatSaturday, endDate);
 			}
+					
+			boolean returnDate = false;
+			CalendarFragment calendar = new CalendarFragment(context, returnDate);
+			FragmentManager fm = getFragmentManager();
+			fm.popBackStack();
+			fm.popBackStack();
+			//fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+			FragmentTransaction transaction = getFragmentManager().beginTransaction();
+			transaction.replace(R.id.flCalendarMainFrame, calendar);
+			transaction.commit();
 		}
 	};
 	
