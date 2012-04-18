@@ -59,6 +59,7 @@ public class CalendarActivity extends FragmentActivity implements returnDateList
 		CalendarDayViewFragment dayView = new CalendarDayViewFragment(this, date);
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		transaction.replace(R.id.flCalendarMainFrame, dayView);
+		transaction.addToBackStack(null);
 		Log.d("Steve", "Go To Days Events");
 		transaction.commit();
 		
@@ -77,6 +78,7 @@ public class CalendarActivity extends FragmentActivity implements returnDateList
 		CalendarScheduleWorkoutFragment scheduleWorkout = new CalendarScheduleWorkoutFragment(this, date);
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		transaction.replace(R.id.flCalendarMainFrame, scheduleWorkout);
+		transaction.addToBackStack(null);
 		transaction.commit();
 		
 	}

@@ -42,6 +42,9 @@ public class CalendarDayViewFragment extends ListFragment {
 		}		
 		Log.d("Steve", "WorkoutListingFragment");
 		View view = (LinearLayout) inflater.inflate(R.layout.calendar_day_listing, container, false);
+		TextView tvDate = (TextView) view.findViewById(R.id.tvCalendarDayListingDateHeading);
+		String dateSplit[] = date.split("/");
+		tvDate.setText(dateSplit[1] + "/" + dateSplit[2] + "/" + dateSplit[0]);
 		// Set Adapter
 		// Get List content
 		//String [] workouts = getWorkoutList();
@@ -83,6 +86,7 @@ public class CalendarDayViewFragment extends ListFragment {
 				int workoutId = mDbHelper.getWorkoutIdFromName(workoutName);
 				WorkoutSummaryFragment workoutSummary = new WorkoutSummaryFragment(context,workoutId, date);
 				FragmentTransaction transaction = getFragmentManager().beginTransaction();
+				transaction.addToBackStack(null);
 				transaction.replace(R.id.flCalendarMainFrame, workoutSummary);
 				transaction.commit();
 			}
