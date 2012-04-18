@@ -41,10 +41,11 @@ public class WorkoutAnalyticsActivity extends Activity {
 		mDbHelper = new DbAdapter(this);
 		
 		setContentView(R.layout.workout_analytics);
+//		findViewById(R.id.llWorkoutAnalytics).setBackgroundColor(0xFFFFFFFF);
 		
 		view = (WebView) findViewById(R.id.wvWorkoutAnalytics);
 		view.getSettings().setJavaScriptEnabled(true);
-		view.setBackgroundColor(0xFF000000);
+		view.setBackgroundColor(0xFFFFFFFF);
 				
 		group = (RadioGroup) findViewById(R.id.rgWorkoutAnalyticsSwitches);
 		group.setOnCheckedChangeListener(groupListener);
@@ -63,9 +64,9 @@ public class WorkoutAnalyticsActivity extends Activity {
 		Date date = new Date();
 		int now = Integer.parseInt(sdf.format(date));
 		
-		HashMap<Integer, Integer> monthMap = new LinkedHashMap<Integer, Integer>();
-		HashMap<Integer, Integer> threeMonthMap = new LinkedHashMap<Integer, Integer>();
-		HashMap<Integer, Integer> yearMap = new LinkedHashMap<Integer, Integer>();
+		HashMap<Integer, Double> monthMap = new LinkedHashMap<Integer, Double>();
+		HashMap<Integer, Double> threeMonthMap = new LinkedHashMap<Integer, Double>();
+		HashMap<Integer, Double> yearMap = new LinkedHashMap<Integer, Double>();
 		
 		ArrayList<Integer> weekList = new ArrayList<Integer>();
 		ArrayList<Integer> monthList = new ArrayList<Integer>();
@@ -75,14 +76,14 @@ public class WorkoutAnalyticsActivity extends Activity {
 			
 			int j = Integer.parseInt(sdf.format(d));
 			if (i <= 4) {
-				monthMap.put(j, 0);
+				monthMap.put(j, 0.0);
 			}
-			threeMonthMap.put(j, 0);
+			threeMonthMap.put(j, 0.0);
 			weekList.add(j);
 			
 			d = new Date(current - ((long) i) * decrMonth);
 			j = Integer.parseInt(sdf.format(d));
-			yearMap.put(j, 0);
+			yearMap.put(j, 0.0);
 			monthList.add(j);
 		}
 		

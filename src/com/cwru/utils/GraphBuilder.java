@@ -8,9 +8,9 @@ import java.util.Map.Entry;
 import com.cwru.controller.HomeScreen;
 
 public class GraphBuilder {
-	HashMap<Integer, Integer> map;
+	HashMap<Integer, Double> map;
 	
-	public String buildHTML(HashMap<Integer, Integer> map, String title) {
+	public String buildHTML(HashMap<Integer, Double> map, String title) {
 		this.map = map;
 		DateConverter converter = new DateConverter();
 		
@@ -22,17 +22,21 @@ public class GraphBuilder {
 			"<script type=\"text/javascript\" src=\"line.js\">" +
 			"</script>";
 		if (HomeScreen.isTablet) {
-			html = html + "<div id=\"lineCanvas\" style=\"overflow: auto; position:relative;height:600px;width:" + width * 2 + "px;background-color:#000000\"></div>";
+			html = html + "<div id=\"lineCanvas\" style=\"overflow: auto; position:relative;height:600px;width:" + width * 2 + "px\"></div>";
 		} else {
-			html = html + "<div id=\"lineCanvas\" style=\"overflow: auto; position:relative;height:300px;width:" + width + "px;background-color:#000000\"></div>";
+			html = html + "<div id=\"lineCanvas\" style=\"overflow: auto; position:relative;height:300px;width:" + width + "px\"></div>";
 		}
 			html = html + "<script type=\"text/javascript\">" +
 			"var g = new line_graph();";
 		
-		Iterator<Entry<Integer, Integer>> it = this.map.entrySet().iterator();
+		Iterator<Entry<Integer, Double>> it = this.map.entrySet().iterator();
 		while (it.hasNext()) {
 			Map.Entry pairs = (Map.Entry)it.next();
-			html = html + "g.add('" + converter.intDateToString(Integer.parseInt(pairs.getKey().toString())) + "', " + pairs.getValue() + ");";
+			if (pairs.getKey().toString().length() == 8) {
+				html = html + "g.add('" + converter.intDateToString(Integer.parseInt(pairs.getKey().toString())) + "', " + pairs.getValue() + ");";
+			} else {
+				html = html + "g.add('" + pairs.getKey() + "', " + pairs.getValue() + ");";
+			}
 		}
 		if (HomeScreen.isTablet) {
 			if (this.map.size() < 8 && l < 4) {
@@ -65,7 +69,7 @@ public class GraphBuilder {
 	private int calcLongest() {
 		int longest = 2;
 		
-		Iterator<Entry<Integer, Integer>> it = map.entrySet().iterator();
+		Iterator<Entry<Integer, Double>> it = map.entrySet().iterator();
 		while (it.hasNext()) {
 			Map.Entry pairs = (Map.Entry)it.next();
 			if (pairs.getKey().toString().length() > longest) {

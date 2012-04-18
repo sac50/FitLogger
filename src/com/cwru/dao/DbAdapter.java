@@ -1725,7 +1725,7 @@ public class DbAdapter {
 	public ArrayList<WorkoutResult> getWorkoutResultsForExercise(int exerciseId) {
 		ArrayList<WorkoutResult> workoutResultList = new ArrayList<WorkoutResult>();
 		open();
-		String query = "select * from workout_result where exercise_id = " + exerciseId + " order by date desc";
+		String query = "select * from workout_result where exercise_id = " + exerciseId + " order by id desc";
 		Cursor cursor = db.rawQuery(query, null);
 		while (cursor.moveToNext()) {
 			int id = cursor.getInt(cursor.getColumnIndex("id"));
@@ -1828,7 +1828,7 @@ public class DbAdapter {
 	
 	public ArrayList<TimeResult> getTimeResultForWorkoutResult (int workoutResultId) {
 		open();
-		String query = "select * from time_result where workout_result_id = " + workoutResultId;
+		String query = "select * from time_result where workout_result_id = " + workoutResultId + " order by id desc";
 		ArrayList<TimeResult> timeResultList = new ArrayList<TimeResult>();
 		Cursor cursor = db.rawQuery(query, null);
 		while (cursor.moveToNext()) {

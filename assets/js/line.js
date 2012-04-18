@@ -96,11 +96,11 @@ function line_graph()
 
    // Draw markers
    var i;
-   jg.setColor("white");
+   jg.setColor("black");
    for(i = 1 ; i <= 5 ; i++)
      {
       jg.drawLine(0,Math.round((h/5*i)),rtmax+20,Math.round((h/5*i)));
-      var ff = Math.round(this.max - (this.max / 5 * i));
+      var ff = Math.round(this.max - ((this.max) / 5 * i));
       jg.drawString(ff+"",4,Math.round((h/5*i)-2));
      }
 
@@ -111,7 +111,7 @@ function line_graph()
 
    for(i = 0; i < this.data.length; i++)
       {
-       var ht1 = Math.round(this.data[i]*h/this.max);
+       var ht1 = Math.round(this.data[i]*h/(this.max));
 
        if(i >= 1)
          {
@@ -122,7 +122,7 @@ function line_graph()
        jg.setColor("red");
        jg.fillEllipse(sx-2, h-ht1-2, 5, 5);
 
-       jg.setColor("white");
+       jg.setColor("black");
        jg.drawString(this.x_name[i], sx, h);
 
        oldx = sx;
