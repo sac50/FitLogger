@@ -27,6 +27,7 @@ import com.cwru.model.Distance;
 import com.cwru.model.DistanceResult;
 import com.cwru.model.Exercise;
 import com.cwru.model.WorkoutResult;
+import com.cwru.model.goToHistoryListener;
 import com.cwru.model.goToNotesListener;
 import com.cwru.utils.MeasurementConversions;
 
@@ -51,6 +52,7 @@ public class WorkoutWorkflowDistanceFragment extends Fragment {
 	private TableLayout tlResults;
 	
 	public static goToNotesListener listenerNotes;
+	public static goToHistoryListener listenerHistory;
 
 	
 	public WorkoutWorkflowDistanceFragment (Exercise exercise, Context context, int workoutId) {
@@ -136,11 +138,7 @@ public class WorkoutWorkflowDistanceFragment extends Fragment {
 	View.OnClickListener historyButtonListener = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			ExerciseSummaryFragment exerciseSummary = new ExerciseSummaryFragment(context, exercise.getId()); 
-			FragmentTransaction transaction = getFragmentManager().beginTransaction();
-			transaction.replace(R.id.flPerformWorkoutMainFrame, exerciseSummary);
-			transaction.addToBackStack(null);
-			transaction.commit();
+			listenerHistory.goToExerciseHistory(exercise.getId());
 		}
 	};	
 	
@@ -224,5 +222,9 @@ public class WorkoutWorkflowDistanceFragment extends Fragment {
 	
 	public static void setGoToNotesListener(goToNotesListener listener) {
 		listenerNotes = listener;
+	}
+	
+	public static void setGoToHistoryListener(goToHistoryListener listener) {
+		listenerHistory = listener;
 	}
 }

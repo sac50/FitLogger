@@ -23,6 +23,7 @@ import com.cwru.model.Exercise;
 import com.cwru.model.Time;
 import com.cwru.model.TimeResult;
 import com.cwru.model.WorkoutResult;
+import com.cwru.model.goToHistoryListener;
 import com.cwru.model.goToNotesListener;
 
 public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
@@ -47,6 +48,7 @@ public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
 	private String pauseTime;
 	
 	public static goToNotesListener listenerNotes;
+	public static goToHistoryListener listenerHistory;
 	
 	public WorkoutWorkflowCountDownTimerFragment (Exercise exercise, Context context, int workoutId) {
 		this.context = context;
@@ -138,11 +140,7 @@ public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
 	View.OnClickListener historyButtonListener = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			ExerciseSummaryFragment exerciseSummary = new ExerciseSummaryFragment(context, exercise.getId()); 
-			FragmentTransaction transaction = getFragmentManager().beginTransaction();
-			transaction.replace(R.id.flPerformWorkoutMainFrame, exerciseSummary);
-			transaction.addToBackStack(null);
-			transaction.commit();
+			listenerHistory.goToExerciseHistory(exercise.getId());
 		}
 	};	
 	
@@ -239,5 +237,9 @@ public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
 	
 	public static void setGoToNotesListener(goToNotesListener listener) {
 		listenerNotes = listener;
+	}
+	
+	public static void setGoToHistoryListener(goToHistoryListener listener) {
+		listenerHistory = listener;
 	}
 }

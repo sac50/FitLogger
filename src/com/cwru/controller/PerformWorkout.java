@@ -26,6 +26,7 @@ import com.cwru.fragments.WorkoutWorkflowCountUpTimerFragment;
 import com.cwru.fragments.WorkoutWorkflowDistanceFragment;
 import com.cwru.fragments.WorkoutWorkflowIntervalFragment;
 import com.cwru.model.Exercise;
+import com.cwru.model.goToHistoryListener;
 import com.cwru.model.goToNotesListener;
 
 /**
@@ -36,7 +37,7 @@ import com.cwru.model.goToNotesListener;
  * so we'll have set fragment, cardio fragment and interval fragment
  *
  */
-public class PerformWorkout extends FragmentActivity implements goToNotesListener {
+public class PerformWorkout extends FragmentActivity implements goToNotesListener, goToHistoryListener {
 	private ArrayList<Exercise> exercisesForWorkout;
 	private DbAdapter mDbHelper;
 	private Exercise currentExercise;
@@ -117,6 +118,7 @@ public class PerformWorkout extends FragmentActivity implements goToNotesListene
 	private void launchSetExercise(Exercise exercise) {
 		WorkoutSetFragment workoutSet = new WorkoutSetFragment(exercise, this, workoutId);
 		WorkoutSetFragment.setGoToNotesListener(this);
+		WorkoutSetFragment.setGoToHistoryListener(this);
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		if (HomeScreen.isTablet) {
 		//	NotesFragment notes = new NotesFragment();
@@ -133,6 +135,7 @@ public class PerformWorkout extends FragmentActivity implements goToNotesListene
 	
 	private void launchCountdownTimeExercise(Exercise exercise) {
 		WorkoutWorkflowCountDownTimerFragment.setGoToNotesListener(this);
+		WorkoutWorkflowCountDownTimerFragment.setGoToHistoryListener(this);
 		WorkoutWorkflowCountDownTimerFragment workoutTimer = new WorkoutWorkflowCountDownTimerFragment(exercise, this, workoutId);
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		if (HomeScreen.isTablet) {
@@ -150,6 +153,7 @@ public class PerformWorkout extends FragmentActivity implements goToNotesListene
 	
 	private void launchCountupTimeExercise(Exercise exercise) {
 		WorkoutWorkflowCountUpTimerFragment.setGoToNotesListener(this);
+		WorkoutWorkflowCountUpTimerFragment.setGoToHistoryListener(this);
 		WorkoutWorkflowCountUpTimerFragment workoutTimer = new WorkoutWorkflowCountUpTimerFragment(exercise, this, workoutId);
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		if (HomeScreen.isTablet) {
@@ -167,6 +171,7 @@ public class PerformWorkout extends FragmentActivity implements goToNotesListene
 	
 	private void launchDistanceExercise(Exercise exercise) {
 		WorkoutWorkflowDistanceFragment.setGoToNotesListener(this);
+		WorkoutWorkflowDistanceFragment.setGoToHistoryListener(this);
 		WorkoutWorkflowDistanceFragment distance = new WorkoutWorkflowDistanceFragment(exercise, this, workoutId);
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		if (HomeScreen.isTablet) {
@@ -297,6 +302,13 @@ public class PerformWorkout extends FragmentActivity implements goToNotesListene
 	@Override
 	public void goToExerciseNote(int exerciseId) {
 		Intent intent = new Intent(this, NotesActivity.class);
+		intent.putExtra("EXERCISE-ID", exerciseId);
+		startActivity(intent);
+	}
+
+	@Override
+	public void goToExerciseHistory(int exerciseId) {
+		Intent intent = new Intent(this, ExerciseHistoryActivity.class);
 		intent.putExtra("EXERCISE-ID", exerciseId);
 		startActivity(intent);
 	}

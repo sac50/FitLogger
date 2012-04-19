@@ -1,7 +1,6 @@
 package com.cwru.fragments;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -29,6 +28,7 @@ import com.cwru.model.ExerciseGoal;
 import com.cwru.model.Set;
 import com.cwru.model.SetResult;
 import com.cwru.model.WorkoutResult;
+import com.cwru.model.goToHistoryListener;
 import com.cwru.model.goToNotesListener;
 
 public class WorkoutSetFragment extends Fragment {
@@ -49,6 +49,7 @@ public class WorkoutSetFragment extends Fragment {
 	private Button btnRecord;
 	
 	private static goToNotesListener listenerNotes;
+	private static goToHistoryListener listenerHistory;
 	
 	public WorkoutSetFragment(Exercise exercise, Context context, int workoutId) {
 		// Set Adapter
@@ -111,11 +112,7 @@ public class WorkoutSetFragment extends Fragment {
 	View.OnClickListener historyButtonListener = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			ExerciseSummaryFragment exerciseSummary = new ExerciseSummaryFragment(context, exercise.getId()); 
-			FragmentTransaction transaction = getFragmentManager().beginTransaction();
-			transaction.replace(R.id.flPerformWorkoutMainFrame, exerciseSummary);
-			transaction.addToBackStack(null);
-			transaction.commit();
+			listenerHistory.goToExerciseHistory(exercise.getId());
 		}
 	};	
 	
@@ -246,5 +243,9 @@ public class WorkoutSetFragment extends Fragment {
 	
 	public static void setGoToNotesListener(goToNotesListener listener) {
 		listenerNotes = listener;
+	}
+	
+	public static void setGoToHistoryListener(goToHistoryListener listener) {
+		listenerHistory = listener;
 	}
 }

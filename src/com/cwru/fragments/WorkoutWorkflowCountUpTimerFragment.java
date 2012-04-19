@@ -24,11 +24,11 @@ import android.widget.Toast;
 import com.cwru.R;
 import com.cwru.controller.HomeScreen;
 import com.cwru.dao.DbAdapter;
-import com.cwru.model.DistanceResult;
 import com.cwru.model.Exercise;
 import com.cwru.model.ExerciseGoal;
 import com.cwru.model.TimeResult;
 import com.cwru.model.WorkoutResult;
+import com.cwru.model.goToHistoryListener;
 import com.cwru.model.goToNotesListener;
 
 public class WorkoutWorkflowCountUpTimerFragment extends Fragment {
@@ -51,6 +51,7 @@ public class WorkoutWorkflowCountUpTimerFragment extends Fragment {
 	private TableLayout tlResultTable;
 	
 	public static goToNotesListener listenerNotes;
+	public static goToHistoryListener listenerHistory;
 
 	
 	public WorkoutWorkflowCountUpTimerFragment (Exercise exercise, Context context, int workoutId) {
@@ -119,11 +120,7 @@ public class WorkoutWorkflowCountUpTimerFragment extends Fragment {
 	View.OnClickListener historyButtonListener = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			ExerciseSummaryFragment exerciseSummary = new ExerciseSummaryFragment(context, exercise.getId()); 
-			FragmentTransaction transaction = getFragmentManager().beginTransaction();
-			transaction.replace(R.id.flPerformWorkoutMainFrame, exerciseSummary);
-			transaction.addToBackStack(null);
-			transaction.commit();
+			listenerHistory.goToExerciseHistory(exercise.getId());
 		}
 	};	
 	
@@ -232,6 +229,10 @@ public class WorkoutWorkflowCountUpTimerFragment extends Fragment {
 	
 	public static void setGoToNotesListener(goToNotesListener listener) {
 		listenerNotes = listener;
+	}
+	
+	public static void setGoToHistoryListener(goToHistoryListener listener) {
+		listenerHistory = listener;
 	}
 
 }
