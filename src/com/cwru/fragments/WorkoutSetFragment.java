@@ -1,12 +1,14 @@
 package com.cwru.fragments;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.Gravity;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,6 +56,7 @@ public class WorkoutSetFragment extends Fragment {
 		sets = mDbHelper.getSetsForExercise(exercise.getId()).toArray(new Set [0]);
 		setCounter = 0;
 		this.workoutId = workoutId;
+		this.context = context;
 		
 	}
 	@Override
@@ -72,8 +75,15 @@ public class WorkoutSetFragment extends Fragment {
 		
 		tvExerciseName.setText(exercise.getName());
 		tvSetsToDo.setText(sets.length + " Sets to Do");
-		etWeight.setText(sets[setCounter].getWeight() + "");
-		etReps.setText(sets[setCounter].getReps() + "");
+		if (setCounter < sets.length) { 
+			etWeight.setText(sets[setCounter].getWeight() + "");
+			etReps.setText(sets[setCounter].getReps() + "");
+		}
+		else {
+			etWeight.setText(sets[sets.length-1].getWeight() + "");
+			etReps.setText(sets[sets.length-1].getReps() + "");
+		}
+		
 		
 		
 		// if phone show notes and history button
@@ -83,6 +93,8 @@ public class WorkoutSetFragment extends Fragment {
 			Button btnNotes = new Button(this.getActivity());
 			btnHistory.setText("History");
 			btnNotes.setText("Notes");
+			btnHistory.setOnClickListener(historyButtonListener);
+			btnNotes.setOnClickListener(notesButtonListener);
 			
 			TableRow tr = new TableRow(WorkoutSetFragment.this.getActivity());
 			tr.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
@@ -95,6 +107,80 @@ public class WorkoutSetFragment extends Fragment {
 		return view;
 	}
 	
+	View.OnClickListener historyButtonListener = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			ExerciseSummaryFragment exerciseSummary = new ExerciseSummaryFragment(context, exercise.getId()); 
+			FragmentTransaction transaction = getFragmentManager().beginTransaction();
+			transaction.replace(R.id.flPerformWorkoutMainFrame, exerciseSummary);
+			transaction.addToBackStack(null);
+			transaction.commit();
+		}
+	};	
+	
+	View.OnClickListener notesButtonListener = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			NotesFragment notes = new NotesFragment(context, exercise.getId());
+			FragmentTransaction transaction = getFragmentManager().beginTransaction();
+			transaction.replace(R.id.flPerformWorkoutMainFrame, notes);
+			transaction.addToBackStack(null);
+			transaction.commit();
+		}
+	};
+	
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		// Get Date 
+		Calendar calendar = Calendar.getInstance();
+		String date = "" + calendar.get(Calendar.YEAR) + "/";
+		int month = calendar.get(Calendar.MONTH) + 1;
+		if (month < 10) { date += "0" + month + "/"; }
+		else { date += month; }
+		int day = calendar.get(Calendar.DAY_OF_MONTH);
+		if (day < 10) { date += "0" + day; }
+		else { date += day; }
+		ArrayList<SetResult> results = mDbHelper.getSetResultsForADay(date, workoutId, exercise.getId());
+		for (int i = 0; i < results.size(); i++) {
+			SetResult setResult = results.get(i);
+			if (workoutResultId < 0) {
+				workoutResultId = setResult.getWorkoutResultId();
+			}
+			
+			// increment setCounter
+			setCounter++;
+			
+		
+			// WorkoutResults (int workout_id, int exercise_id, int setNumber, int reps, double weight)
+			// If more sets, populate with pre determined value
+			if (setCounter < sets.length) { 
+				etWeight.setText(sets[setCounter].getWeight() + "");
+				etReps.setText(sets[setCounter].getReps() + "");
+			}
+			// Adds set to on screen log
+			TableRow tr = new TableRow(WorkoutSetFragment.this.getActivity());
+			tr.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+			TextView tvWeightRecord = new TextView(WorkoutSetFragment.this.getActivity());
+			TextView tvRepsRecord = new TextView(WorkoutSetFragment.this.getActivity());
+			tvWeightRecord.setText(setResult.getWeight() + " wt");
+			tvRepsRecord.setText(setResult.getReps() + " reps");
+			tr.addView(tvWeightRecord);
+			tr.addView(tvRepsRecord);
+
+			tlRepResults.addView(tr, new TableLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+			
+			// Decrease sets to do by 1.  if sets to do 0; 
+			int setsToDo = sets.length - setCounter;
+			if (setsToDo < 0) {
+				setsToDo = 0;
+			}
+			tvSetsToDo.setText(setsToDo + " Sets to Do");
+	
+		}
+		
+	}
 	View.OnClickListener recordSetListener = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {

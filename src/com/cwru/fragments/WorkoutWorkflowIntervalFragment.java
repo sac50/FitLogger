@@ -223,10 +223,10 @@ public class WorkoutWorkflowIntervalFragment extends Fragment {
 				WorkoutWorkflowIntervalFragment intervalFragment = new WorkoutWorkflowIntervalFragment(exercise, context, workoutId, intervalSetNum, intervalCycleNum, true, workoutResultId);
 				FragmentTransaction transaction = getFragmentManager().beginTransaction();
 				if (HomeScreen.isTablet) {
-					NotesFragment notes = new NotesFragment();
+					//NotesFragment notes = new NotesFragment();
 					HistoryFragment history = new HistoryFragment();
 					transaction.replace(R.id.flPerformWorkoutLeftFrame, intervalFragment);
-					transaction.replace(R.id.flPerformWorkoutRightTopFrame, notes);
+					//transaction.replace(R.id.flPerformWorkoutRightTopFrame, notes);
 					transaction.replace(R.id.flPerformWorkoutRightBottomFrame, history);
 				}
 				else {

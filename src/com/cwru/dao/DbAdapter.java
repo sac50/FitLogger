@@ -113,6 +113,10 @@ public class DbAdapter {
 	private static final String CREATE_CALENDAR_TABLE = 
 			"create table calendar (id integer primary key autoincrement, " + 
 			"date text not null, workout_id);";
+	
+	private static final String CREATE_NOTES_TABLE = 
+			"create table notes (id integer primary key autoincrement, " + 
+			"exercise_id integer, note text)";
 				
 	private static final String DATABASE_NAME = "FitLoggerData";
 	private static final String DATABASE_TABLE_WORKOUT = "workouts";
@@ -131,6 +135,7 @@ public class DbAdapter {
 	private static final String DATABASE_TABLE_BODY_GOAL = "body_goals";
 	private static final String DATABASE_TABLE_CUSTOM_GOAL = "custom_goals";
 	private static final String DATABASE_TABLE_CALENDAR = "calendar";
+	private static final String DATABASE_TABLE_NOTES = "notes";
 	private static final int DATABASE_VERSION = 1;
 
 	private final Context mCtx;
@@ -159,6 +164,7 @@ public class DbAdapter {
 			db.execSQL(CREATE_BODY_GOALS_TABLE);
 			db.execSQL(CREATE_CUSTOM_GOALS_TABLE);
 			db.execSQL(CREATE_CALENDAR_TABLE);
+			db.execSQL(CREATE_NOTES_TABLE);
 			Log.d("Steve", "DB CREATES");
 		}
 
@@ -1938,4 +1944,70 @@ public class DbAdapter {
 		return isScheduled;
 	}
 	
+	public ArrayList<SetResult> getSetResultsForADay(String date, int workoutId, int exerciseId) {
+		ArrayList<SetResult> results = new ArrayList<SetResult>();
+		open();
+		/*
+		 * select set_number, reps, weight from set_result join workout_result on workout_result.id = set_result.workout_result_id
+		 *  and workout_result.workout_id = 2 and workout_result.exercise_id = 1 and date = '2012/04/18';
+
+		 */
+		String query = "select workout_result_id, set_number, reps, weight from set_result join workout_result on workout_result.id = set_result.workout_result_id " +
+					   " and workout_result.workout_id = " + workoutId + " and workout_result.exercise_id = " + exerciseId + " and date = '" + date + "'";
+		Cursor cursor = db.rawQuery(query, null);
+		while (cursor.moveToNext()) {
+			int workoutResultId = cursor.getInt(cursor.getColumnIndex("workout_result_id"));
+			int set_number = cursor.getInt(cursor.getColumnIndex("set_number"));
+			int reps = cursor.getInt(cursor.getColumnIndex("reps"));
+			double weight = cursor.getDouble(cursor.getColumnIndex("weight"));
+			SetResult setResult = new SetResult(workoutResultId,set_number, reps, weight);
+			results.add(setResult);
+		}
+		cursor.close();		
+		close();
+		return results;
+	}
+	
+	public void insertNote(int exerciseId, String note) {
+		if (!noteExists(exerciseId)) {
+			open();
+			String query = "insert into notes (exercise_id, note) values (" + exerciseId + ", '" + note + "')";
+			db.execSQL(query);
+			close();
+		} else {
+			open();
+			String query = "update notes set note = '" + note + "' where exercise_id = " + exerciseId;
+			db.execSQL(query);
+			close();
+		}	
+	}
+	
+	public boolean noteExists(int exerciseId) {
+		open();
+		String query = "select id from notes where exercise_id = " + exerciseId;
+		Cursor cursor = db.rawQuery(query, null);
+		boolean exists = false;
+		while (cursor.moveToNext()) {
+			exists = true;
+		}
+		cursor.close();
+		close();
+		return exists;
+	}
+	
+	public String getNote(int exerciseId) {
+		if (noteExists(exerciseId)) {
+			open();
+			String note = "";
+			String query = "select note from notes where exercise_id = " + exerciseId;
+			Cursor cursor = db.rawQuery(query, null);
+			while (cursor.moveToNext()) {
+				note = cursor.getString(cursor.getColumnIndex("note"));
+			}
+			cursor.close();
+			close();
+			return note;
+		}
+		return null;
+	}
 }

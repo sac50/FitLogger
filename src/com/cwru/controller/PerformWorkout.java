@@ -117,10 +117,10 @@ public class PerformWorkout extends FragmentActivity {
 		WorkoutSetFragment workoutSet = new WorkoutSetFragment(exercise, this, workoutId);
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		if (HomeScreen.isTablet) {
-			NotesFragment notes = new NotesFragment();
+		//	NotesFragment notes = new NotesFragment();
 			HistoryFragment history = new HistoryFragment();
 			transaction.replace(R.id.flPerformWorkoutLeftFrame, workoutSet);
-			transaction.replace(R.id.flPerformWorkoutRightTopFrame, notes);
+			//transaction.replace(R.id.flPerformWorkoutRightTopFrame, notes);
 			transaction.replace(R.id.flPerformWorkoutRightBottomFrame, history);
 		}
 		else {
@@ -133,10 +133,10 @@ public class PerformWorkout extends FragmentActivity {
 		WorkoutWorkflowCountDownTimerFragment workoutTimer = new WorkoutWorkflowCountDownTimerFragment(exercise, this, workoutId);
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		if (HomeScreen.isTablet) {
-			NotesFragment notes = new NotesFragment();
+		//	NotesFragment notes = new NotesFragment();
 			HistoryFragment history = new HistoryFragment();
 			transaction.replace(R.id.flPerformWorkoutLeftFrame, workoutTimer);
-			transaction.replace(R.id.flPerformWorkoutRightTopFrame, notes);
+		//	transaction.replace(R.id.flPerformWorkoutRightTopFrame, notes);
 			transaction.replace(R.id.flPerformWorkoutRightBottomFrame, history);
 		}
 		else {
@@ -149,10 +149,10 @@ public class PerformWorkout extends FragmentActivity {
 		WorkoutWorkflowCountUpTimerFragment workoutTimer = new WorkoutWorkflowCountUpTimerFragment(exercise, this, workoutId);
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		if (HomeScreen.isTablet) {
-			NotesFragment notes = new NotesFragment();
+		//	NotesFragment notes = new NotesFragment();
 			HistoryFragment history = new HistoryFragment();
 			transaction.replace(R.id.flPerformWorkoutLeftFrame, workoutTimer);
-			transaction.replace(R.id.flPerformWorkoutRightTopFrame, notes);
+		//	transaction.replace(R.id.flPerformWorkoutRightTopFrame, notes);
 			transaction.replace(R.id.flPerformWorkoutRightBottomFrame, history);
 		}
 		else {
@@ -165,10 +165,10 @@ public class PerformWorkout extends FragmentActivity {
 		WorkoutWorkflowDistanceFragment distance = new WorkoutWorkflowDistanceFragment(exercise, this, workoutId);
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		if (HomeScreen.isTablet) {
-			NotesFragment notes = new NotesFragment();
+		//	NotesFragment notes = new NotesFragment();
 			HistoryFragment history = new HistoryFragment();
 			transaction.replace(R.id.flPerformWorkoutLeftFrame, distance);
-			transaction.replace(R.id.flPerformWorkoutRightTopFrame, notes);
+		//	transaction.replace(R.id.flPerformWorkoutRightTopFrame, notes);
 			transaction.replace(R.id.flPerformWorkoutRightBottomFrame, history);
 		}
 		else {

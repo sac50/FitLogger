@@ -42,6 +42,12 @@ public class SetResult {
 		this.weight = weight;
 	}
 	
+	public SetResult(int setNumber, int reps, double weight) {
+		this.setNumber = setNumber;
+		this.reps = reps;
+		this.weight = weight;
+	}
+	
 	/**
 	 * Getter for the id of the row in the set result table
 	 * @return
