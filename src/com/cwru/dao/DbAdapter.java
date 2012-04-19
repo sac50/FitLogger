@@ -1679,6 +1679,33 @@ public class DbAdapter {
 		close();
 	}
 	
+	/**
+	 * Returns all workout results
+	 * 
+	 * @return ArrayList<WorkoutResult> list
+	 */
+	public ArrayList<WorkoutResult> getAllWorkoutResults() {
+		ArrayList<WorkoutResult> list = new ArrayList<WorkoutResult>();
+		open();
+		String query = "select * from workout_result";
+		Cursor cursor = db.rawQuery(query, null);
+		while (cursor.moveToNext()) {
+			int id = cursor.getInt(cursor.getColumnIndex("id"));
+			int workout_id = cursor.getInt(cursor.getColumnIndex("workout_id"));
+			int exercise_id = cursor.getInt(cursor.getColumnIndex("exercise_id"));
+			String qDate = cursor.getString(cursor.getColumnIndex("date"));
+			int mode = getWorkoutResultMode(exercise_id);
+			Log.d("Steve", "=================================================");
+			Log.d("Steve", "Mode: " + mode);
+			WorkoutResult wr = new WorkoutResult(id, workout_id, exercise_id, qDate, mode);
+			wr = getExerciseResultForWorkoutResult(wr);
+			list.add(wr);			
+		}
+		cursor.close();
+		close();
+		return list;
+	}
+	
 	public ArrayList<WorkoutResult> getWorkoutResultForWorkout(int workoutId, String date) {
 		ArrayList<WorkoutResult> workoutResultList = new ArrayList<WorkoutResult>();
 		open();
@@ -1704,7 +1731,7 @@ public class DbAdapter {
 	public ArrayList<WorkoutResult> getWorkoutResultsForExercise(int exerciseId) {
 		ArrayList<WorkoutResult> workoutResultList = new ArrayList<WorkoutResult>();
 		open();
-		String query = "select * from workout_result where exercise_id = " + exerciseId + " order by date desc";
+		String query = "select * from workout_result where exercise_id = " + exerciseId + " order by id desc";
 		Cursor cursor = db.rawQuery(query, null);
 		while (cursor.moveToNext()) {
 			int id = cursor.getInt(cursor.getColumnIndex("id"));
@@ -1807,7 +1834,7 @@ public class DbAdapter {
 	
 	public ArrayList<TimeResult> getTimeResultForWorkoutResult (int workoutResultId) {
 		open();
-		String query = "select * from time_result where workout_result_id = " + workoutResultId;
+		String query = "select * from time_result where workout_result_id = " + workoutResultId + " order by id desc";
 		ArrayList<TimeResult> timeResultList = new ArrayList<TimeResult>();
 		Cursor cursor = db.rawQuery(query, null);
 		while (cursor.moveToNext()) {

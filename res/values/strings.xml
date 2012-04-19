@@ -151,6 +151,13 @@
     
     <string name="customGoalHint">Ex: find a workout partner!</string>
     
+    <string name="month">Month</string>
+    <string name="threeMonths">Three Months</string>
+    <string name="year">Year</string>
+    
+    <string name="weightOverTime">Weight Over Time</string>
+    <string name="repSpecific">Rep Specific</string>
+    <string name="generate">Generate</string>
     
     
     <color name="white">#FFFFFF</color>

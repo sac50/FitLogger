@@ -1,9 +1,13 @@
 package com.cwru.fragments;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+
 import com.cwru.R;
 import com.cwru.controller.HomeScreen;
 import com.cwru.dao.DbAdapter;
 import com.cwru.model.CustomGoal;
+import com.cwru.utils.GraphBuilder;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,6 +16,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -21,7 +26,7 @@ public class ViewCustomGoalFragment extends Fragment {
 	View view;
 	
 	/**
-	 * Constructor accepting an custom goal
+	 * Constructor accepting a custom goal
 	 * 
 	 * @param CustomGoal goal
 	 */

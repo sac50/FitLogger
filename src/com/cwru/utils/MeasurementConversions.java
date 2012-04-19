@@ -2,7 +2,7 @@ package com.cwru.utils;
 
 /**
  * Class to convert different units of measurement.
- * @author scrilley
+ * @author scrilley, lkissling
  *
  */
 public class MeasurementConversions {
