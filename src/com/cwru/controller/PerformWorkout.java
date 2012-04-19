@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.StringTokenizer;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
@@ -18,7 +19,6 @@ import android.widget.TextView;
 import com.cwru.R;
 import com.cwru.dao.DbAdapter;
 import com.cwru.fragments.HistoryFragment;
-import com.cwru.fragments.NotesFragment;
 import com.cwru.fragments.WorkoutSetFragment;
 import com.cwru.fragments.WorkoutSummaryFragment;
 import com.cwru.fragments.WorkoutWorkflowCountDownTimerFragment;
@@ -26,6 +26,7 @@ import com.cwru.fragments.WorkoutWorkflowCountUpTimerFragment;
 import com.cwru.fragments.WorkoutWorkflowDistanceFragment;
 import com.cwru.fragments.WorkoutWorkflowIntervalFragment;
 import com.cwru.model.Exercise;
+import com.cwru.model.goToNotesListener;
 
 /**
  * 
@@ -35,7 +36,7 @@ import com.cwru.model.Exercise;
  * so we'll have set fragment, cardio fragment and interval fragment
  *
  */
-public class PerformWorkout extends FragmentActivity {
+public class PerformWorkout extends FragmentActivity implements goToNotesListener {
 	private ArrayList<Exercise> exercisesForWorkout;
 	private DbAdapter mDbHelper;
 	private Exercise currentExercise;
@@ -115,6 +116,7 @@ public class PerformWorkout extends FragmentActivity {
 	
 	private void launchSetExercise(Exercise exercise) {
 		WorkoutSetFragment workoutSet = new WorkoutSetFragment(exercise, this, workoutId);
+		WorkoutSetFragment.setGoToNotesListener(this);
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		if (HomeScreen.isTablet) {
 		//	NotesFragment notes = new NotesFragment();
@@ -130,6 +132,7 @@ public class PerformWorkout extends FragmentActivity {
 	}
 	
 	private void launchCountdownTimeExercise(Exercise exercise) {
+		WorkoutWorkflowCountDownTimerFragment.setGoToNotesListener(this);
 		WorkoutWorkflowCountDownTimerFragment workoutTimer = new WorkoutWorkflowCountDownTimerFragment(exercise, this, workoutId);
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		if (HomeScreen.isTablet) {
@@ -146,6 +149,7 @@ public class PerformWorkout extends FragmentActivity {
 	}
 	
 	private void launchCountupTimeExercise(Exercise exercise) {
+		WorkoutWorkflowCountUpTimerFragment.setGoToNotesListener(this);
 		WorkoutWorkflowCountUpTimerFragment workoutTimer = new WorkoutWorkflowCountUpTimerFragment(exercise, this, workoutId);
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		if (HomeScreen.isTablet) {
@@ -162,6 +166,7 @@ public class PerformWorkout extends FragmentActivity {
 	}
 	
 	private void launchDistanceExercise(Exercise exercise) {
+		WorkoutWorkflowDistanceFragment.setGoToNotesListener(this);
 		WorkoutWorkflowDistanceFragment distance = new WorkoutWorkflowDistanceFragment(exercise, this, workoutId);
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		if (HomeScreen.isTablet) {
@@ -179,6 +184,7 @@ public class PerformWorkout extends FragmentActivity {
 	
 	private void launchIntervalExercise(Exercise exercise) {
 		// Get Intervals for Exercise
+		WorkoutWorkflowIntervalFragment.setGoToNotesListener(this);
 		exercise.setInterval(mDbHelper.getIntervalForExercise(exercise.getId()));
 		WorkoutWorkflowIntervalFragment interval = new WorkoutWorkflowIntervalFragment(exercise, this, workoutId,0);
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -286,5 +292,12 @@ public class PerformWorkout extends FragmentActivity {
 		} else {
 			btnNext.setText("Next");
 		}
+	}
+
+	@Override
+	public void goToExerciseNote(int exerciseId) {
+		Intent intent = new Intent(this, NotesActivity.class);
+		intent.putExtra("EXERCISE-ID", exerciseId);
+		startActivity(intent);
 	}
 }

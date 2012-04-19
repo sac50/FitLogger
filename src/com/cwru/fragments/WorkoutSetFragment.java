@@ -29,6 +29,7 @@ import com.cwru.model.ExerciseGoal;
 import com.cwru.model.Set;
 import com.cwru.model.SetResult;
 import com.cwru.model.WorkoutResult;
+import com.cwru.model.goToNotesListener;
 
 public class WorkoutSetFragment extends Fragment {
 	
@@ -47,7 +48,7 @@ public class WorkoutSetFragment extends Fragment {
 	private TableLayout tlRepResults;
 	private Button btnRecord;
 	
-	
+	private static goToNotesListener listenerNotes;
 	
 	public WorkoutSetFragment(Exercise exercise, Context context, int workoutId) {
 		// Set Adapter
@@ -121,11 +122,7 @@ public class WorkoutSetFragment extends Fragment {
 	View.OnClickListener notesButtonListener = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			NotesFragment notes = new NotesFragment(context, exercise.getId());
-			FragmentTransaction transaction = getFragmentManager().beginTransaction();
-			transaction.replace(R.id.flPerformWorkoutMainFrame, notes);
-			transaction.addToBackStack(null);
-			transaction.commit();
+			listenerNotes.goToExerciseNote(exercise.getId());
 		}
 	};
 	
@@ -134,6 +131,8 @@ public class WorkoutSetFragment extends Fragment {
 	public void onResume() {
 		super.onResume();
 		// Get Date 
+		/*
+		 * 
 		Calendar calendar = Calendar.getInstance();
 		String date = "" + calendar.get(Calendar.YEAR) + "/";
 		int month = calendar.get(Calendar.MONTH) + 1;
@@ -179,6 +178,7 @@ public class WorkoutSetFragment extends Fragment {
 			tvSetsToDo.setText(setsToDo + " Sets to Do");
 	
 		}
+		*/
 		
 	}
 	View.OnClickListener recordSetListener = new View.OnClickListener() {
@@ -243,4 +243,8 @@ public class WorkoutSetFragment extends Fragment {
 			tvSetsToDo.setText(setsToDo + " Sets to Do");
 		}
 	};
+	
+	public static void setGoToNotesListener(goToNotesListener listener) {
+		listenerNotes = listener;
+	}
 }

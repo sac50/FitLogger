@@ -3,6 +3,7 @@ package com.cwru.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +27,7 @@ import com.cwru.model.Distance;
 import com.cwru.model.DistanceResult;
 import com.cwru.model.Exercise;
 import com.cwru.model.WorkoutResult;
+import com.cwru.model.goToNotesListener;
 import com.cwru.utils.MeasurementConversions;
 
 /** TODO
@@ -34,6 +36,7 @@ import com.cwru.utils.MeasurementConversions;
  *
  */
 public class WorkoutWorkflowDistanceFragment extends Fragment {
+	private Context context;
 	private DbAdapter mDbHelper;
 	private Exercise exercise;
 	private Distance distance;
@@ -47,7 +50,11 @@ public class WorkoutWorkflowDistanceFragment extends Fragment {
 	private Button btnRecord;
 	private TableLayout tlResults;
 	
+	public static goToNotesListener listenerNotes;
+
+	
 	public WorkoutWorkflowDistanceFragment (Exercise exercise, Context context, int workoutId) {
+		this.context = context;
 		this.exercise = exercise;
 		mDbHelper = new DbAdapter(context);
 		distance = mDbHelper.getDistanceForExercise(exercise.getId());
@@ -113,6 +120,8 @@ public class WorkoutWorkflowDistanceFragment extends Fragment {
 			Button btnNotes = new Button(this.getActivity());
 			btnHistory.setText("History");
 			btnNotes.setText("Notes");
+			btnHistory.setOnClickListener(historyButtonListener);
+			btnNotes.setOnClickListener(notesButtonListener);
 			
 			TableRow tr = new TableRow(WorkoutWorkflowDistanceFragment.this.getActivity());
 			tr.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
@@ -123,6 +132,24 @@ public class WorkoutWorkflowDistanceFragment extends Fragment {
 		
 		return view;
 	}
+	
+	View.OnClickListener historyButtonListener = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			ExerciseSummaryFragment exerciseSummary = new ExerciseSummaryFragment(context, exercise.getId()); 
+			FragmentTransaction transaction = getFragmentManager().beginTransaction();
+			transaction.replace(R.id.flPerformWorkoutMainFrame, exerciseSummary);
+			transaction.addToBackStack(null);
+			transaction.commit();
+		}
+	};	
+	
+	View.OnClickListener notesButtonListener = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			listenerNotes.goToExerciseNote(exercise.getId());
+		}
+	};
 	
 	View.OnClickListener recordDistanceListener = new View.OnClickListener() {
 		@Override
@@ -193,5 +220,9 @@ public class WorkoutWorkflowDistanceFragment extends Fragment {
 		}
 		
 		return length;  //  Value is the same units as the default option as defined by user
+	}
+	
+	public static void setGoToNotesListener(goToNotesListener listener) {
+		listenerNotes = listener;
 	}
 }

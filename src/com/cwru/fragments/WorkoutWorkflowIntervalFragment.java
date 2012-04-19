@@ -27,6 +27,7 @@ import com.cwru.model.Interval;
 import com.cwru.model.IntervalResult;
 import com.cwru.model.IntervalSet;
 import com.cwru.model.WorkoutResult;
+import com.cwru.model.goToNotesListener;
 
 public class WorkoutWorkflowIntervalFragment extends Fragment {
 	private Exercise exercise;
@@ -61,6 +62,8 @@ public class WorkoutWorkflowIntervalFragment extends Fragment {
 	private TableLayout tlHistoryNotes;
 	private TextView tvNextIntervalLabel;
 	private TableLayout tlNextIntervalList; 
+	public static goToNotesListener listenerNotes;
+
 
 	
 	public WorkoutWorkflowIntervalFragment(Exercise exercise, Context context, int workoutId, int intervalSetNum) {
@@ -182,6 +185,24 @@ public class WorkoutWorkflowIntervalFragment extends Fragment {
 		return view;
 	}
 	
+	View.OnClickListener historyButtonListener = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			ExerciseSummaryFragment exerciseSummary = new ExerciseSummaryFragment(context, exercise.getId()); 
+			FragmentTransaction transaction = getFragmentManager().beginTransaction();
+			transaction.replace(R.id.flPerformWorkoutMainFrame, exerciseSummary);
+			transaction.addToBackStack(null);
+			transaction.commit();
+		}
+	};	
+	
+	View.OnClickListener notesButtonListener = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			listenerNotes.goToExerciseNote(exercise.getId());
+		}
+	};
+	
 	View.OnClickListener recordInterval = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
@@ -282,5 +303,9 @@ public class WorkoutWorkflowIntervalFragment extends Fragment {
 			}
 			seconds -= 1;		
 		}
+	}
+	
+	public static void setGoToNotesListener(goToNotesListener listener) {
+		listenerNotes = listener;
 	}
 }

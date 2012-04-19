@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -28,6 +29,7 @@ import com.cwru.model.Exercise;
 import com.cwru.model.ExerciseGoal;
 import com.cwru.model.TimeResult;
 import com.cwru.model.WorkoutResult;
+import com.cwru.model.goToNotesListener;
 
 public class WorkoutWorkflowCountUpTimerFragment extends Fragment {
 
@@ -47,6 +49,9 @@ public class WorkoutWorkflowCountUpTimerFragment extends Fragment {
 	private Button btnStartStop;
 	private Button btnRecord;
 	private TableLayout tlResultTable;
+	
+	public static goToNotesListener listenerNotes;
+
 	
 	public WorkoutWorkflowCountUpTimerFragment (Exercise exercise, Context context, int workoutId) {
 		this.exercise = exercise;
@@ -82,6 +87,8 @@ public class WorkoutWorkflowCountUpTimerFragment extends Fragment {
 			Button btnNotes = new Button(this.getActivity());
 			btnHistory.setText("History");
 			btnNotes.setText("Notes");
+			btnHistory.setOnClickListener(historyButtonListener);
+			btnNotes.setOnClickListener(notesButtonListener);
 			
 			TableRow tr = new TableRow(WorkoutWorkflowCountUpTimerFragment.this.getActivity());
 			tr.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
@@ -108,6 +115,24 @@ public class WorkoutWorkflowCountUpTimerFragment extends Fragment {
 		//chrTimer.setFormat("Formatted time (%s)");
 		return view;
 	}
+	
+	View.OnClickListener historyButtonListener = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			ExerciseSummaryFragment exerciseSummary = new ExerciseSummaryFragment(context, exercise.getId()); 
+			FragmentTransaction transaction = getFragmentManager().beginTransaction();
+			transaction.replace(R.id.flPerformWorkoutMainFrame, exerciseSummary);
+			transaction.addToBackStack(null);
+			transaction.commit();
+		}
+	};	
+	
+	View.OnClickListener notesButtonListener = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			listenerNotes.goToExerciseNote(exercise.getId());
+		}
+	};
 	
 	View.OnClickListener updateTimer = new View.OnClickListener() {
 		@Override
@@ -204,4 +229,9 @@ public class WorkoutWorkflowCountUpTimerFragment extends Fragment {
 			}
 		}
 	};
+	
+	public static void setGoToNotesListener(goToNotesListener listener) {
+		listenerNotes = listener;
+	}
+
 }

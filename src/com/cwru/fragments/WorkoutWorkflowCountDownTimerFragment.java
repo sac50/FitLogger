@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,8 +23,10 @@ import com.cwru.model.Exercise;
 import com.cwru.model.Time;
 import com.cwru.model.TimeResult;
 import com.cwru.model.WorkoutResult;
+import com.cwru.model.goToNotesListener;
 
 public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
+	private Context context;
 	private CountDownTimer start;
 	private DbAdapter mDbHelper;
 	private Exercise exercise;
@@ -41,7 +44,12 @@ public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
 	private Button btnStartStop;
 	private Button btnRecord;
 	
+	private String pauseTime;
+	
+	public static goToNotesListener listenerNotes;
+	
 	public WorkoutWorkflowCountDownTimerFragment (Exercise exercise, Context context, int workoutId) {
+		this.context = context;
 		mDbHelper = new DbAdapter(context);
 		this.exercise = exercise;
 		this.workoutId = workoutId;
@@ -80,6 +88,20 @@ public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
 	}
 	
 	@Override
+	public void onPause() {
+		super.onResume();
+		pauseTime = tvTimer.getText().toString();
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (pauseTime != null) {
+			tvTimer.setText(pauseTime);
+		}
+	}
+	
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (container == null) {
 			return null;
@@ -101,6 +123,8 @@ public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
 			Button btnNotes = new Button(this.getActivity());
 			btnHistory.setText("History");
 			btnNotes.setText("Notes");
+			btnHistory.setOnClickListener(historyButtonListener);
+			btnNotes.setOnClickListener(notesButtonListener);
 			
 			TableRow tr = new TableRow(WorkoutWorkflowCountDownTimerFragment.this.getActivity());
 			tr.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
@@ -110,6 +134,24 @@ public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
 		}
 		return view;
 	}
+	
+	View.OnClickListener historyButtonListener = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			ExerciseSummaryFragment exerciseSummary = new ExerciseSummaryFragment(context, exercise.getId()); 
+			FragmentTransaction transaction = getFragmentManager().beginTransaction();
+			transaction.replace(R.id.flPerformWorkoutMainFrame, exerciseSummary);
+			transaction.addToBackStack(null);
+			transaction.commit();
+		}
+	};	
+	
+	View.OnClickListener notesButtonListener = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			listenerNotes.goToExerciseNote(exercise.getId());
+		}
+	};
 	
 	View.OnClickListener updateTimer = new View.OnClickListener() {
 		@Override
@@ -193,5 +235,9 @@ public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
 			}
 			seconds -= 1;		
 		}
+	}
+	
+	public static void setGoToNotesListener(goToNotesListener listener) {
+		listenerNotes = listener;
 	}
 }
