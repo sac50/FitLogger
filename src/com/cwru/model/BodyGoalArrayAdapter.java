@@ -18,12 +18,23 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+/**
+ * 
+ * @author lkissling
+ *
+ */
 public class BodyGoalArrayAdapter extends ArrayAdapter<BodyGoal> {
 	private final List<BodyGoal> list;
 	private final Activity context;
 	private final ListFragment fragment;
 	private DbAdapter mDbHelper;
 	
+	/**
+	 * 
+	 * @param context
+	 * @param list
+	 * @param fragment
+	 */
 	public BodyGoalArrayAdapter(Activity context, List<BodyGoal> list, ListFragment fragment) {
 		super(context, R.layout.exercise_bank_row, list);
 		this.list = list;
@@ -32,12 +43,20 @@ public class BodyGoalArrayAdapter extends ArrayAdapter<BodyGoal> {
 		mDbHelper = new DbAdapter(context);
 	}
 	
+	/**
+	 * 
+	 * @author sacrilley
+	 *
+	 */
 	static class BodyGoalRow {
 		protected TextView textView;
 		protected TextView pos;
 	}
 	
 	@Override
+	/**
+	 * 
+	 */
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View view = null;
 		
@@ -68,6 +87,9 @@ public class BodyGoalArrayAdapter extends ArrayAdapter<BodyGoal> {
 		return view;
 	}
 	
+	/**
+	 * 
+	 */
 	View.OnClickListener bodyGoalListener = new View.OnClickListener() {
 		
 		@Override

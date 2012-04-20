@@ -137,5 +137,9 @@ public class IntervalResult {
 	 */
 	public void setUnits(String units) { this.units = units; }
 	
+	/**
+	 * 
+	 * @param name
+	 */
 	public void setName(String name) { this.name = name; }
 }

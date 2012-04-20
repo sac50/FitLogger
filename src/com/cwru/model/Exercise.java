@@ -81,28 +81,108 @@ public class Exercise implements Parcelable{
 		this.mode = mode;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public int getId() { return id; }
+	/**
+	 * 
+	 * @return
+	 */
 	public String getName() { return name; }
+	/**
+	 * 
+	 * @return
+	 */
 	public String getType() { return type; }
+	/**
+	 * 
+	 * @return
+	 */
 	public String getComment() { return comment; }
+	/**
+	 * 
+	 * @return
+	 */
 	public boolean getDeleted() { return deleted; }
+	/**
+	 * 
+	 * @return
+	 */
 	public ArrayList<Set> getSets() { return sets; }
+	/**
+	 * 
+	 * @return
+	 */
 	public Distance getDistance() { return distance; }
 //	public ArrayList<IntervalSet> getInterval() { return intervals; }
+	/**
+	 * 
+	 * @return
+	 */
 	public Interval getInterval() { return interval; }
+	/**
+	 * 
+	 * @return
+	 */
 	public Time getTime() { return time; }
+	/**
+	 * 
+	 * @return
+	 */
 	public int getMode() { return mode; }
 	
+	/**
+	 * 
+	 * @param id
+	 */
 	public void setId(int id) { this.id = id; }
+	/**
+	 * 
+	 * @param name
+	 */
 	public void setName(String name) { this.name = name; }
+	/**
+	 * 
+	 * @param type
+	 */
 	public void setType(String type) { this.type = type; }
+	/**
+	 * 
+	 * @param comment
+	 */
 	public void setComment(String comment) { this.comment = comment; }
+	/**
+	 * 
+	 * @param deleted
+	 */
 	public void setDeleted(boolean deleted) { this.deleted = deleted; }
+	/**
+	 * 
+	 * @param sets
+	 */
 	public void setSets(ArrayList<Set> sets) { this.sets = sets; }
+	/**
+	 * 
+	 * @param distance
+	 */
 	public void setDistance(Distance distance) { this.distance = distance; }
 //	public void setInterval(ArrayList<IntervalSet> intervals) { this.intervals = intervals; }
+	/**
+	 * 
+	 * @param interval
+	 */
 	public void setInterval(Interval interval) { this.interval = interval; }
+	/**
+	 * 
+	 * @param time
+	 */
 	public void setTime(Time time) { this.time = time; }
+	/**
+	 * 
+	 * @param mode
+	 */
 	public void setMode(int mode) { this.mode = mode; }
 	
 	@Override

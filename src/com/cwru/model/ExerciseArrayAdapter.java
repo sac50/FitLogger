@@ -15,13 +15,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-
+/**
+ * 
+ * @author lkissling
+ *
+ */
 public class ExerciseArrayAdapter extends ArrayAdapter<Exercise>{
 	private final List<Exercise> list;
 	private final Activity context;
 	private final ListFragment fragment;
 	private DbAdapter mDbHelper;
 	
+	/**
+	 * 
+	 * @param context
+	 * @param list
+	 * @param fragment
+	 */
 	public ExerciseArrayAdapter(Activity context, List<Exercise> list, ListFragment fragment) {
 		super(context, R.layout.exercise_bank_row, list);
 		this.context = context;
@@ -31,11 +41,19 @@ public class ExerciseArrayAdapter extends ArrayAdapter<Exercise>{
 
 	}
 	
+	/**
+	 * 
+	 * @author sacrilley
+	 *
+	 */
 	static class ExerciseRow {
 		protected TextView textView;
 	}
 	
 	@Override
+	/**
+	 * 
+	 */
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View view = null;
 		if (convertView == null) {
@@ -57,6 +75,9 @@ public class ExerciseArrayAdapter extends ArrayAdapter<Exercise>{
 		return view;
 	}
 	
+	/**
+	 * 
+	 */
 	View.OnClickListener editExerciseListener = new View.OnClickListener() {
 		
 		@Override

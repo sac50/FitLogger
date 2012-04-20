@@ -20,13 +20,23 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
+/**
+ * 
+ * @author lkissling
+ *
+ */
 public class ExerciseGoalArrayAdapter extends ArrayAdapter<ExerciseGoal> {
 	private final List<ExerciseGoal> list;
 	private final Activity context;
 	private final ListFragment fragment;
 	private DbAdapter mDbHelper;
 	
+	/**
+	 * 
+	 * @param context
+	 * @param list
+	 * @param fragment
+	 */
 	public ExerciseGoalArrayAdapter(Activity context, List<ExerciseGoal> list, ListFragment fragment) {
 		super(context, R.layout.exercise_bank_row, list);
 		this.list = list;
@@ -35,12 +45,20 @@ public class ExerciseGoalArrayAdapter extends ArrayAdapter<ExerciseGoal> {
 		mDbHelper = new DbAdapter(context);
 	}
 	
+	/**
+	 * 
+	 * @author lkissling
+	 *
+	 */
 	static class ExerciseGoalRow {
 		protected TextView textView;
 		protected TextView pos;
 	}
 	
 	@Override
+	/**
+	 * 
+	 */
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View view = null;
 		
@@ -70,6 +88,9 @@ public class ExerciseGoalArrayAdapter extends ArrayAdapter<ExerciseGoal> {
 		return view;
 	}
 	
+	/**
+	 * 
+	 */
 	View.OnClickListener exerciseGoalListener = new View.OnClickListener() {
 		
 		@Override

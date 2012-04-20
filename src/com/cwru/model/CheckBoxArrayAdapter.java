@@ -19,6 +19,11 @@ import com.cwru.controller.HomeScreen;
 import com.cwru.dao.DbAdapter;
 import com.cwru.fragments.ExerciseSequenceFragment;
 
+/**
+ * 
+ * @author sacrilley
+ *
+ */
 public class CheckBoxArrayAdapter extends ArrayAdapter<ExerciseBankRow> {
 	private final List<ExerciseBankRow> list;
 	private final Activity context;
@@ -26,6 +31,12 @@ public class CheckBoxArrayAdapter extends ArrayAdapter<ExerciseBankRow> {
 	private DbAdapter mDbHelper;
 
 	
+	/**
+	 * 
+	 * @param context
+	 * @param list
+	 * @param fragment
+	 */
 	public CheckBoxArrayAdapter(Activity context, List<ExerciseBankRow> list, ListFragment fragment) {
 		super(context, com.cwru.R.layout.exercise_bank_checkbox_row, list);
 		this.context = context;
@@ -35,12 +46,20 @@ public class CheckBoxArrayAdapter extends ArrayAdapter<ExerciseBankRow> {
 
 	}
 	
+	/**
+	 * 
+	 * @author sacrilley
+	 *
+	 */
 	static class CheckBoxRow {
 		protected TextView textView;
 		protected CheckBox checkBox;
 	}
 	
 	@Override
+	/**
+	 * 
+	 */
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View view = null;
 		if (convertView == null) {
@@ -68,7 +87,7 @@ public class CheckBoxArrayAdapter extends ArrayAdapter<ExerciseBankRow> {
 			
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				
+			
 				ExerciseBankRow ebRow = (ExerciseBankRow) row.checkBox.getTag();
 				int exerciseId = ebRow.getExerciseId();
 				String workoutName = ebRow.getWorkoutName();
