@@ -10,10 +10,18 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.TextView;
 
+/**
+ * Body Goal Activity.   Falls under the Body Goal tab under the Goals Module
+ * @author lkissling
+ *
+ */
 public class BodyGoalActivity extends FragmentActivity {
 	private TextView appTitleBar;
 
 	
+	/**
+	 * Sets the layout and launches the body goal bank fragment to the main frame
+	 */
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		

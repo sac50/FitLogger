@@ -9,6 +9,11 @@ import android.widget.TextView;
 
 import com.cwru.R;
 
+/**
+ * Activity to show all tabs under the Analytics module.
+ * @author lkissling
+ *
+ */
 public class AnalyticsActivity extends TabActivity {
 	private TabHost tabHost; // Activity TabHost
 	private TabHost.TabSpec tabSpec; // TabSpec to use for all tabs
@@ -16,6 +21,9 @@ public class AnalyticsActivity extends TabActivity {
 	private TextView appTitleBar;
 	
 	@Override
+	/**
+	 * Creates the tabs and sets the intents for each tab
+	 */
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.analytics_module);
@@ -44,6 +52,9 @@ public class AnalyticsActivity extends TabActivity {
 		tabHost.setCurrentTabByTag(lastTabTag);
 	}
 	
+	/**
+	 * Top title bar on click event handler.  Takes user back to home screen.  Resets back stack to clear history.
+	 */
 	View.OnClickListener goHomeListener = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
