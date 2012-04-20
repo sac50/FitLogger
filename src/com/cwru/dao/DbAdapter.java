@@ -40,113 +40,164 @@ import com.cwru.utils.MeasurementConversions;
 public class DbAdapter {
 	private DatabaseHelper dbHelper;
 	private SQLiteDatabase db;
+	
+	/** Tag String for Class.  Used for Logging	 */
 	private static final String TAG = "dbHelper";
 	
+	/** Workout Table database creation query */
 	private static final String CREATE_WORKOUTS_TABLE = 
 			"create table workouts (id integer primary key autoincrement, " +
 			"name text not null, type text not null, exercise_sequence text not null, " + 
 			"repeats text, repeats_sunday boolean, repeats_monday boolean, repeats_tuesday boolean, " + 
 			"repeats_wednesday boolean, repeats_thursday boolean, repeats_friday boolean, repeats_saturday boolean, comment text);";
 	
+	/** Exercise Table database creation query */
 	private static final String CREATE_EXERCISES_TABLE = 
 			"create table exercises (id integer primary key autoincrement, " + 
 			"name text not null, type text not null, comment text, deleted boolean not null);";
 	
+	/** Sets table database creation query */
 	private static final String CREATE_SETS_TABLE = 
 			"create table sets (id integer primary key autoincrement, " + 
 			"exercise_id integer not null, reps integer, weight real);";
 	
+	/** Set Result table database creation query */
 	private static final String CREATE_SET_RESULT_TABLE = 
 			"create table set_result (id integer primary key autoincrement, " + 
 			"workout_result_id integer, set_number integer, reps integer, weight real);";
 	
+	/** Distance table database creation query */
 	private static final String CREATE_DISTANCE_TABLE = 
 			"create table distance (id integer primary key autoincrement, " + 
 			"exercise_id integer not null, length real, units text);";
 	
+	/** Distance Result table database creation query */
 	private static final String CREATE_DISTANCE_RESULT_TABLE = 
 			"create table distance_result (id integer primary key autoincrement, " + 
 			"workout_result_id integer, length real, units text);";
 	
+	/** Time table database creation query */
 	private static final String CREATE_TIME_TABLE = 
 			"create table time (id integer primary key autoincrement, " + 
 			"exercise_id integer not null, length integer, units text);";
 	
+	/** Time Result table database creation query */
 	private static final String CREATE_TIME_RESULT_TABLE = 
 			"create table time_result (id integer primary key autoincrement, " + 
 			"workout_result_id integer, length integer, units text);";
 	
+	/** Interval Set table database creation query */
 	private static final String CREATE_INTERVAL_SETS_TABLE = 
 			"create table interval_sets (id integer primary key autoincrement, " + 
 			"interval_id integer not null, name text, length real, type text, units text);";
 	
+	/** Intervals table database creation query */
 	private static final String CREATE_INTERVALS_TABLE = 
 			"create table intervals ( id integer primary key autoincrement, " + 
 			"exercise_id integer, num_repeats integer);";
 	
+	/** Intervals Result table database creation query */
 	private static final String CREATE_INTERVALS_RESULT_TABLE = 
 			"create table interval_result ( id integer primary key autoincrement, " +
 			"workout_result_id integer, interval_id integer, " +
 			"interval_set_num integer, interval_set_id, " +
 			"length real, units text);";
 	
+	/** Workout Result table database creation query */
 	private static final String CREATE_WORKOUT_RESULT_TABLE = 
 			"create table workout_result (id integer primary key autoincrement, " + 
 			"workout_id integer not null, exercise_id integer not null, " + 
 			"date text not null);";
 	
+	/** Exercise Goals table database creation query */
 	private static final String CREATE_EXERCISE_GOALS_TABLE =
 			"create table exercise_goals (id integer primary key autoincrement, " +
 			"name text not null, is_cumulative int not null, is_completed int not null, " +
 			"mode integer not null, type integer not null, exercise_id integer, goal_one real, " +
 			"goal_two real, current_best_one real, current_best_two real, unit integer);";
 	
+	/** Body Goals table database creation query */
 	private static final String CREATE_BODY_GOALS_TABLE =
 			"create table body_goals (id integer primary key autoincrement, " +
 			"category text not null, unit text not null, started real not null, " +
 			"current real not null, goal real not null, is_completed integer not null);";
 	
+	/** Custom Goals table database creation query */
 	private static final String CREATE_CUSTOM_GOALS_TABLE =
 			"create table custom_goals (id integer primary key autoincrement, " +
 			"name text not null, description text not null, is_completed int not null);";
 	
+	/** Calendar table database creation query */
 	private static final String CREATE_CALENDAR_TABLE = 
 			"create table calendar (id integer primary key autoincrement, " + 
 			"date text not null, workout_id);";
 	
+	/** Notes table database creation query */
 	private static final String CREATE_NOTES_TABLE = 
 			"create table notes (id integer primary key autoincrement, " + 
 			"exercise_id integer, note text)";
 				
+	/** Name of database to house fitlogger data */
 	private static final String DATABASE_NAME = "FitLoggerData";
+	/** Workout table name */
 	private static final String DATABASE_TABLE_WORKOUT = "workouts";
+	/** Exercises table name */
 	private static final String DATABASE_TABLE_EXERCISE = "exercises";
+	/** Set table name */
 	private static final String DATABASE_TABLE_SET = "sets";
+	/** Distance table name */
 	private static final String DATABASE_TABLE_DISTANCE = "distance";
+	/** Time table name */
 	private static final String DATABASE_TABLE_TIME = "time";
+	/** Intervals table name */
 	private static final String DATABASE_TABLE_INTERVAL = "intervals";
+	/** Interval Sets table name */
 	private static final String DATABASE_TABLE_INTERVAL_SET = "interval_sets";
+	/** Workout Results table name */
 	private static final String DATABASE_TABLE_WORKOUT_RESULT = "workout_results";
+	/** Set Result table name */
 	private static final String DATABASE_TABLE_SET_RESULTS = "set_result";
+	/** Distance Result table name */
 	private static final String DATABASE_TABLE_DISTANCE_RESULT = "distance_result";
+	/** Time Result table name */
 	private static final String DATABASE_TABLE_TIME_RESULT = "time_result";
+	/** Intervals Result table name */
 	private static final String DATABASE_TABLE_INTERVAL_RESULT = "intervals_result";
+	/** Exercise Goal table name */
 	private static final String DATABASE_TABLE_EXERCISE_GOAL = "exercise_goals";
+	/** Body Goals table name */
 	private static final String DATABASE_TABLE_BODY_GOAL = "body_goals";
+	/** Custom Goals table name */
 	private static final String DATABASE_TABLE_CUSTOM_GOAL = "custom_goals";
+	/** Calendar table name */
 	private static final String DATABASE_TABLE_CALENDAR = "calendar";
+	/** Notes table name */
 	private static final String DATABASE_TABLE_NOTES = "notes";
+	/** Current version number of the FitLogger Database */
 	private static final int DATABASE_VERSION = 1;
 
+	/** Context provided from the application */
 	private final Context mCtx;
 
+	/**
+	 * Helper class to create the FitLogger Database and the tables belonging to it.
+	 * @author sacrilley
+	 * @author lkissling
+	 *
+	 */
 	private static class DatabaseHelper extends SQLiteOpenHelper {
-
+		/**
+		 * Constructor
+		 * @param context
+		 */
 		DatabaseHelper(Context context) {
 			super(context, DATABASE_NAME, null, DATABASE_VERSION);
 		}
 
 		@Override
+		/**
+		 * Database onCreate callback.  Executes the SQL statements to create the tables.
+		 */
 		public void onCreate(SQLiteDatabase db) {
 			db.execSQL(CREATE_WORKOUTS_TABLE);
 			db.execSQL(CREATE_EXERCISES_TABLE);
@@ -169,6 +220,9 @@ public class DbAdapter {
 		}
 
 		@Override
+		/**
+		 * Callback for code to be executed when the database version is upgraded
+		 */
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 			Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
 					+ newVersion + ", which will destroy all old data");
@@ -188,12 +242,20 @@ public class DbAdapter {
 		this.mCtx = ctx;
 	}
 
+	/**
+	 * Opens a connection to the FitLogger Database
+	 * @return
+	 * @throws SQLException
+	 */
 	public DbAdapter open() throws SQLException {
 		dbHelper = new DatabaseHelper(mCtx);
 		db = dbHelper.getWritableDatabase();	
 		return this;
 	}
 
+	/**
+	 * Closes a connection to the FitLogger Database
+	 */
 	public void close() {
 		dbHelper.close();
 		/** TODO 
@@ -285,6 +347,12 @@ public class DbAdapter {
 		return workout;
 	}
 	
+	/**
+	 * Gets the Workout associated with the id input.  Assignes id, name, type, exercise_sequence, repeats, repeats_sunday, 
+	 * repeats_monday, repeats_tuesday, repeats_wednesday, repeats_thursday, repeats_friday, repeats_saturday for the workout.
+	 * @param id
+	 * @return
+	 */
 	public Workout getWorkoutFromId(int id) {
 		open();
 		String query = "select * from workouts where id = " + id;
@@ -303,8 +371,6 @@ public class DbAdapter {
 			int rptThursday = cursor.getInt(cursor.getColumnIndex("repeats_thursday"));
 			int rptFriday = cursor.getInt(cursor.getColumnIndex("repeats_friday"));
 			int rptSaturday = cursor.getInt(cursor.getColumnIndex("repeats_sunday"));
-			Log.d("Su-" + rptSunday + " | Mo-" + rptMonday + " | Tu-" + rptTuesday + " | We-" + rptWednesday + " | Th-" + rptThursday, "");
-			Log.d("STEVE", "Su-" + rptSunday + " | Mo-" + rptMonday + " | Tu-" + rptTuesday + " | We-" + rptWednesday + " | Th-" + rptThursday);
 			workout = new Workout(workoutId, workoutName, workoutType, exerciseSequence, repeats, rptSunday, rptMonday, rptTuesday, rptWednesday,
 								  rptThursday, rptFriday, rptSaturday);
 		}
@@ -669,6 +735,10 @@ public class DbAdapter {
 		createIntervalSets(interval);
 	}
 	
+	/**
+	 * Inserts interval sets into the database referencing the interval input.
+	 * @param interval
+	 */
 	private void createIntervalSets(Interval interval) {
 		open();
 		ArrayList<IntervalSet> intervalSets = interval.getIntervalSets();
@@ -935,6 +1005,10 @@ public class DbAdapter {
 		close();
 	}
 	
+	/**
+	 * Queries the sets table to delete the row associated with the id.
+	 * @param setId
+	 */
 	public void deleteSet(int setId) {
 		open();
 		String query = "delete from sets where id = " + setId;
@@ -942,6 +1016,10 @@ public class DbAdapter {
 		close();
 	}
 	
+	/**
+	 * Queries the intervals table to delete the row associated with the interval set id input.
+	 * @param intervalSetId
+	 */
 	public void deleteIntervalSet(int intervalSetId) {
 		open();
 		String query = "delete from intervals where id = " + intervalSetId;
@@ -1706,6 +1784,12 @@ public class DbAdapter {
 		return list;
 	}
 	
+	/**
+	 * Returns an Array of Workout Results that are the results of a particular workout performed on a specific date.
+	 * @param workoutId
+	 * @param date
+	 * @return
+	 */
 	public ArrayList<WorkoutResult> getWorkoutResultForWorkout(int workoutId, String date) {
 		ArrayList<WorkoutResult> workoutResultList = new ArrayList<WorkoutResult>();
 		open();
@@ -1728,6 +1812,11 @@ public class DbAdapter {
 		return workoutResultList;
 	}
 	
+	/**
+	 * Returns the workout results that were recorded for a specfic exercise.
+	 * @param exerciseId
+	 * @return
+	 */
 	public ArrayList<WorkoutResult> getWorkoutResultsForExercise(int exerciseId) {
 		ArrayList<WorkoutResult> workoutResultList = new ArrayList<WorkoutResult>();
 		open();
@@ -1749,7 +1838,11 @@ public class DbAdapter {
 		
 	}
 	
-	// Assigns the exercise result to the array list for the exercise
+	/**
+	 * Assigns the exercise result to teh array list for the exercise
+	 * @param workoutResult
+	 * @return
+	 */
 	public WorkoutResult getExerciseResultForWorkoutResult (WorkoutResult workoutResult) {
 		WorkoutResult result = workoutResult;
 		int mode = workoutResult.getMode();
@@ -1774,6 +1867,11 @@ public class DbAdapter {
 		return result;
 	}
 	
+	/**
+	 * Gets the Set Result array that belongs to the workout result id
+	 * @param workoutResultId
+	 * @return
+	 */
 	public ArrayList<SetResult> getSetResultsForWorkoutResult(int workoutResultId) {
 		open();
 		ArrayList<SetResult> setResultList = new ArrayList<SetResult>();
@@ -1791,7 +1889,11 @@ public class DbAdapter {
 		return setResultList;
 	}
 	
-	
+	/**
+	 *  Gets the Interval Results that belong to the workout result  
+	 * @param workoutResultId
+	 * @return
+	 */
 	public ArrayList<IntervalResult> getIntervalResultForWorkoutResult(int workoutResultId) {
 		open();
 		ArrayList<IntervalResult> intervalResultList = new ArrayList<IntervalResult>();
@@ -1815,7 +1917,11 @@ public class DbAdapter {
 		return intervalResultList;
 	}
 	
-	
+	/**
+	 * Get a list of distance results that reference the workout result id.
+	 * @param workoutResultId
+	 * @return
+	 */
 	public ArrayList<DistanceResult> getDistanceResultForWorkoutResult(int workoutResultId) {
 		open();
 		String query = "select * from distance_result where workout_result_id = " + workoutResultId;
@@ -1832,6 +1938,11 @@ public class DbAdapter {
 		return distanceResultList;
 	}
 	
+	/**
+	 * Get a list of time results that reference the workout result id
+	 * @param workoutResultId
+	 * @return
+	 */
 	public ArrayList<TimeResult> getTimeResultForWorkoutResult (int workoutResultId) {
 		open();
 		String query = "select * from time_result where workout_result_id = " + workoutResultId + " order by id desc";
@@ -1848,6 +1959,11 @@ public class DbAdapter {
 		return timeResultList;		
 	}
 	
+	/**
+	 * Return the workout result mode of an exercise
+	 * @param exerciseId
+	 * @return
+	 */
 	public int getWorkoutResultMode(int exerciseId) {
 		open();
 		int mode = -1;
@@ -1900,6 +2016,11 @@ public class DbAdapter {
 //		return -1; // Error, exercise id not found
 	}
 	
+	/**
+	 * Returns an array of all dates that a workout was performed.
+	 * @param workoutId
+	 * @return
+	 */
 	public String [] getWorkoutDates (int workoutId) {
 		open();
 		String query = "select distinct date from workout_result where workout_id = " + workoutId + " order by date desc";
@@ -1914,6 +2035,11 @@ public class DbAdapter {
 		return workoutDates.toArray(new String [0]);		
 	}
 	
+	/**
+	 * Performs a series on insert queries into the calendar table.  It inserts the workouts that were scheduled. 
+	 * The queries were written in the application code.
+	 * @param records
+	 */
 	public void createCalendarEntry(ArrayList<String> records) {
 			open();
 			Log.d("STEVE", "INSERTS");
@@ -1924,6 +2050,12 @@ public class DbAdapter {
 			close();
 	}
 	
+	/**
+	 * Returns a Hashtable<"YYYY/MM/DD", BOOLEAN> that basically is used to determine if a particular 
+	 * date has a workout scheduled or not.
+	 * @param whereClause
+	 * @return
+	 */
 	public Hashtable<String, Boolean> getWorkoutDatesForCalendar(String whereClause) {
 		open();
 		Hashtable<String, Boolean> hash = new Hashtable<String, Boolean>();
@@ -1941,6 +2073,11 @@ public class DbAdapter {
 		return hash;
 	}
 	
+	/**
+	 * Returns a list of all workouts names that are scheduled on a particular date.
+	 * @param date
+	 * @return
+	 */
 	public ArrayList<String> getWorkoutsForDate(String date) {
 		ArrayList<String> workoutList = new ArrayList<String>();
 		// select distinct name, workouts.id from calendar join workouts on 
@@ -1958,6 +2095,12 @@ public class DbAdapter {
 		return workoutList;
 	}
 	
+	/**
+	 * Test to determine if a particular workout is scheduled on a date.
+	 * @param date
+	 * @param workoutId
+	 * @return
+	 */
 	public boolean isWorkoutScheduled(String date, int workoutId) {
 		boolean isScheduled = false;
 		open();
@@ -1971,6 +2114,13 @@ public class DbAdapter {
 		return isScheduled;
 	}
 	
+	/**
+	 * Returns the list of set results that were performed by a specific workout and exercise on a specific date
+	 * @param date
+	 * @param workoutId
+	 * @param exerciseId
+	 * @return
+	 */
 	public ArrayList<SetResult> getSetResultsForADay(String date, int workoutId, int exerciseId) {
 		ArrayList<SetResult> results = new ArrayList<SetResult>();
 		open();
@@ -1995,6 +2145,11 @@ public class DbAdapter {
 		return results;
 	}
 	
+	/**
+	 * Inserts or updates the note belonging to an exercise.
+	 * @param exerciseId
+	 * @param note
+	 */
 	public void insertNote(int exerciseId, String note) {
 		if (!noteExists(exerciseId)) {
 			open();
@@ -2009,6 +2164,11 @@ public class DbAdapter {
 		}	
 	}
 	
+	/**
+	 * Test to determine if an exercise has a note created for it.
+	 * @param exerciseId
+	 * @return
+	 */
 	public boolean noteExists(int exerciseId) {
 		open();
 		String query = "select id from notes where exercise_id = " + exerciseId;
@@ -2022,6 +2182,11 @@ public class DbAdapter {
 		return exists;
 	}
 	
+	/**
+	 * Returns the note that belongs to the exercise.
+	 * @param exerciseId
+	 * @return
+	 */
 	public String getNote(int exerciseId) {
 		if (noteExists(exerciseId)) {
 			open();
