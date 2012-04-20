@@ -10,11 +10,19 @@ import android.widget.TextView;
 import com.cwru.R;
 import com.cwru.fragments.ExerciseSummaryFragment;
 
+/**
+ * Activity to display exercise history
+ * @author sacrilley
+ *
+ */
 public class ExerciseHistoryActivity extends FragmentActivity {
 	private int exerciseId;
 	private TextView appTitleBar;
 	
 	@Override
+	/**
+	 * onCreate Callback.  Displays history for exercise.  The selected exercise is determined by id that is passed into the intent with key EXERCISE-ID
+	 */
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.history_exercise_activity);
@@ -35,6 +43,9 @@ public class ExerciseHistoryActivity extends FragmentActivity {
 		transaction.commit();	
 	}
 	
+	/**
+	 * Top title bar on click event handler.  Takes user back to home screen.  Resets back stack to clear history.
+	 */
 	View.OnClickListener goHomeListener = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {

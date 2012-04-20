@@ -12,8 +12,18 @@ import com.cwru.fragments.ExerciseListingFragment;
 import com.cwru.fragments.ExerciseListingFragment.onExerciseListingClickListener;
 import com.cwru.fragments.ExerciseSummaryFragment;
 
+/**
+ * Activity that is housed under the exercise tab under the history module.  
+ * Provides user with list of all exercises and allows them to be clicked and provides the history pertaining to the exercise
+ * @author sacrilley
+ *
+ */
 public class ExerciseHistory extends FragmentActivity implements onExerciseListingClickListener {
 	
+	@Override
+	/**
+	 * onCreate Callback.  Sets listeners and launches the exercise listing framgent
+	 */
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		// Set Listener
@@ -37,6 +47,9 @@ public class ExerciseHistory extends FragmentActivity implements onExerciseListi
 	}
 
 	@Override
+	/** 
+	 * Launches the exercise summary into the main frame after an exercise has been selected from the exercise listing fragment
+	 */
 	public void onExerciseListingListenerClick(int exerciseId) {
 		ExerciseSummaryFragment exerciseSummary = new ExerciseSummaryFragment(this, exerciseId);
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
