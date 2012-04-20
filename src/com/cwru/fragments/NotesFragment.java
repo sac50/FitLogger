@@ -15,6 +15,11 @@ import android.widget.Toast;
 import com.cwru.R;
 import com.cwru.dao.DbAdapter;
 
+/**
+ * 
+ * @author sacrilley
+ *
+ */
 public class NotesFragment extends Fragment {
 	private Context context;
 	private DbAdapter mDbHelper;
@@ -22,12 +27,20 @@ public class NotesFragment extends Fragment {
 	private EditText etNote;
 	private Button btnSubmit;
 	
+	/**
+	 * 
+	 * @param context
+	 * @param exerciseId
+	 */
 	public NotesFragment (Context context, int exerciseId) {
 		this.context = context;
 		this.exerciseId = exerciseId;
 		mDbHelper = new DbAdapter(context);
 	}
 	@Override
+	/**
+	 * 
+	 */
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (container == null) {
 			return null;
@@ -45,6 +58,9 @@ public class NotesFragment extends Fragment {
 		return view;
 	}
 	
+	/**
+	 * 
+	 */
 	View.OnClickListener storeNote = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {

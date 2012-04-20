@@ -21,6 +21,11 @@ import com.cwru.dao.DbAdapter;
 import com.cwru.fragments.ExerciseBankFragment.onGoToExerciseSequenceListener;
 import com.cwru.model.Workout;
 
+/**
+ * Fragment that displays the available workouts in a list
+ * @author sacrilley
+ *
+ */
 public class WorkoutListingFragment extends ListFragment {	
 	private DbAdapter mDbHelper;
 	private int mode;
@@ -28,11 +33,18 @@ public class WorkoutListingFragment extends ListFragment {
 	private static onReturnWorkoutListener listenerReturnWorkout;
 	private boolean returnWorkout;
 
+	/**
+	 * Empty Constructor
+	 */
 	public WorkoutListingFragment(){
 		Log.d("Steve", "Empty Constructor");
 		returnWorkout = false;
 	}
 	
+	/**
+	 * 
+	 * @param returnWorkout
+	 */
 	public WorkoutListingFragment(boolean returnWorkout) {
 		this.returnWorkout = returnWorkout;
 		Log.d("Steve", "Return Workout: " + returnWorkout);
@@ -40,6 +52,9 @@ public class WorkoutListingFragment extends ListFragment {
 	
 	
 	@Override
+	/**
+	 * 
+	 */
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (container == null) {
 			return null;
@@ -56,12 +71,18 @@ public class WorkoutListingFragment extends ListFragment {
 	}
 	
 	@Override
+	/**
+	 * 
+	 */
 	public void onResume() {
 		super.onResume();
 		this.setListAdapter(new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_list_item_1, getWorkoutList()));
 	}
 	
 	@Override 
+	/**
+	 * 
+	 */
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		String workoutName = (String) getListAdapter().getItem(position);
 		if (returnWorkout) {
@@ -71,12 +92,20 @@ public class WorkoutListingFragment extends ListFragment {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param workoutName
+	 */
 	private void goToWorkoutWorkflow(String workoutName) {
 		Intent intent = new Intent(this.getActivity(), PerformWorkout.class);
 		intent.putExtra("workoutName", workoutName);
 		this.getActivity().startActivity(intent);
 	}
 	
+	/**
+	 * 
+	 * @param workoutName
+	 */
 	private void goToEditWorkoutInformation(String workoutName) {
 		EditWorkoutInformationFragment editWorkoutInformation = new EditWorkoutInformationFragment(workoutName, this.getActivity());
 		editWorkoutInformation.setRetainInstance(true);
@@ -93,6 +122,10 @@ public class WorkoutListingFragment extends ListFragment {
 		}
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	private String [] getWorkoutList() {
 		Log.d("Steve", "getWorkoutList");
 		ArrayList<String> workoutList = new ArrayList<String>();
@@ -105,18 +138,36 @@ public class WorkoutListingFragment extends ListFragment {
 		return workoutList.toArray(new String [0]);
 	}
 	
+	/**
+	 * 
+	 * @author sacrilley
+	 *
+	 */
 	public interface onReturnWorkoutListener {
 		void onReturnWorkoutListenerClick(String workoutName);
 	}
 	
+	/**
+	 * 
+	 * @param listener
+	 */
 	public static void setOnReturnWorkoutListener(onReturnWorkoutListener listener) {
 		WorkoutListingFragment.listenerReturnWorkout = listener;
 	}
 	
+	/**
+	 * 
+	 * @author sacrilley
+	 *
+	 */
 	public interface onWorkoutListingClickListener {
 		void onWorkoutListingListenerClick(String workoutName);
 	}
 	
+	/**
+	 * 
+	 * @param listener
+	 */
 	public static void setOnWorkoutListingClickListener(onWorkoutListingClickListener listener) {
 		WorkoutListingFragment.listener = listener;
 	}

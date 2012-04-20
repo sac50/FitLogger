@@ -25,6 +25,11 @@ import com.cwru.R;
 import com.cwru.dao.DbAdapter;
 import com.cwru.model.DayOfWeekAdapter;
 
+/**
+ * 
+ * @author sacrilley
+ *
+ */
 public class CalendarFragment extends Fragment {
 	private Button btnPrevMonth;
 	private Button btnNextMonth;
@@ -44,6 +49,11 @@ public class CalendarFragment extends Fragment {
 	private static String [] monthNames = {"January", "February", "March", "April", "May", "June", "July", "August",
 										   "September","October","November","December" };
 	
+	/**
+	 * 
+	 * @param context
+	 * @param returnDate
+	 */
 	public CalendarFragment(Context context, boolean returnDate) {
 		this.context = context;
 		calendar = Calendar.getInstance();
@@ -53,6 +63,12 @@ public class CalendarFragment extends Fragment {
 		dateWhereClause = "where ";
 	}
 	
+	/**
+	 * 
+	 * @param context
+	 * @param returnDate
+	 * @param calendar
+	 */
 	public CalendarFragment(Context context, boolean returnDate, Calendar calendar) { 
 		this.context = context;
 		this.calendar = calendar;
@@ -61,6 +77,9 @@ public class CalendarFragment extends Fragment {
 	}
 	
 	@Override
+	/**
+	 * 
+	 */
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (container == null) {
 			return null;
@@ -88,6 +107,9 @@ public class CalendarFragment extends Fragment {
 		return view;
 	}
 	
+	/**
+	 * 
+	 */
 	View.OnClickListener nextMonthListener = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
@@ -104,6 +126,9 @@ public class CalendarFragment extends Fragment {
 		}
 	};
 	
+	/**
+	 * 
+	 */
 	View.OnClickListener prevMonthListener = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
@@ -119,6 +144,10 @@ public class CalendarFragment extends Fragment {
 		}
 	};
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public ArrayList<String> getCalendarArray() {
 		ArrayList<String> dates = new ArrayList<String>();
 		
@@ -168,6 +197,13 @@ public class CalendarFragment extends Fragment {
 		
 	}
 	
+	/**
+	 * 
+	 * @param year
+	 * @param month
+	 * @param day
+	 * @return
+	 */
 	public String getDateInYearMonthForm(int year, int month, int day) {
 		month += 1;
 		String date = year + "/";
@@ -179,6 +215,13 @@ public class CalendarFragment extends Fragment {
 		return date;
 	}
 	
+	/**
+	 * 
+	 * @param year
+	 * @param month
+	 * @param day
+	 * @return
+	 */
 	public String getDateInYearMonthFormCorrectMonth(int year, int month, int day) {
 		String date = year + "/";
 		if (month < 10) { date += "0" + month + "/"; }
@@ -189,6 +232,11 @@ public class CalendarFragment extends Fragment {
 		return date;
 	}
 
+	/**
+	 * 
+	 * @author sacrilley
+	 *
+	 */
 	public class GridCellAdapter extends BaseAdapter implements OnClickListener {
 		private List<String> list;
 		private Button gridcell;
@@ -196,6 +244,11 @@ public class CalendarFragment extends Fragment {
 		private Hashtable<String, Boolean> workoutDateHash;
 		private DbAdapter mDbHelper;
 		
+		/**
+		 * 
+		 * @param context
+		 * @param textViewResourceId
+		 */
 		public GridCellAdapter(Context context, int textViewResourceId)
 		{
 			super();
@@ -207,25 +260,40 @@ public class CalendarFragment extends Fragment {
 
 		}
 
+		/**
+		 * 
+		 */
 		public String getItem(int position) {
 			return list.get(position);
 		}
 
 		@Override
+		/**
+		 * 
+		 */
 		public int getCount() {
 			return list.size();
 		}
 
 		@Override 
+		/**
+		 * 
+		 */
 		public long getItemId(int position) {
 			return position;
 		}
 		
+		/**
+		 * 
+		 */
 		public void updateList() { 
 			this.list = getCalendarArray();
 		}
 
 		@Override 
+		/**
+		 * 
+		 */
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View row = convertView;
 			if (row == null) {
@@ -269,6 +337,9 @@ public class CalendarFragment extends Fragment {
 		}
 		
 		@Override
+		/**
+		 * 
+		 */
 		public void onClick(View view) {
 			String dateSelected = (String) view.getTag();
 			if (returnDate) {
@@ -283,21 +354,47 @@ public class CalendarFragment extends Fragment {
 		}
 	}
 	
+	/**
+	 * 
+	 * @author sacrilley
+	 *
+	 */
 	public interface returnDateListener {
 		void returnSelectedDate(String dateSelected);
 	}
 	
+	/**
+	 * 
+	 * @param listener
+	 */
 	public static void setGetDateListener(returnDateListener listener) {
 		CalendarFragment.listenerReturnDate = listener;
 	}
 	
+	/**
+	 * 
+	 * @author sacrilley
+	 *
+	 */
 	public interface goToDayEventsListener {
 		void goToDayEvents(String date);
 	}
 	
+	/**
+	 * 
+	 * @param listener
+	 */
 	public static void setGotToDayEventsListener( goToDayEventsListener listener) {
 		CalendarFragment.listenerGoToDayEvents = listener;
 	}
+	
+	/**
+	 * 
+	 * @param month
+	 * @param day
+	 * @param year
+	 * @return
+	 */
 	public String formatDate(String month, String day, String year) {
 		int m = Integer.parseInt(month);
 		int d = Integer.parseInt(day);
@@ -313,6 +410,11 @@ public class CalendarFragment extends Fragment {
 		return date;		
 	}
 	
+	/**
+	 * 
+	 * @param date
+	 * @return
+	 */
 	public String convertMMDDYYYYtoYYYYMMDD(String date) {
 		String [] dateSplit = date.split("/");
 		String dateOut = dateSplit[2] + "/" + dateSplit[0] + "/" + dateSplit[1];

@@ -24,16 +24,28 @@ import com.cwru.model.CheckBoxArrayAdapter;
 import com.cwru.model.Exercise;
 import com.cwru.model.ExerciseBankRow;
 
+/**
+ * 
+ * @author sacrilley
+ *
+ */
 public class ExerciseBankFragment extends ListFragment {
 	private DbAdapter mDbHelper;
 	private String workoutName;
 	private static onGoToExerciseSequenceListener listener;
 	
+	/**
+	 * Constructor
+	 * @param workoutName
+	 */
 	public ExerciseBankFragment (String workoutName) { 
 		this.workoutName = workoutName;
 	}
 
 	@Override
+	/**
+	 * 
+	 */
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (container == null) {
 			return null;
@@ -82,6 +94,10 @@ public class ExerciseBankFragment extends ListFragment {
 		
 	};
 	
+	/**
+	 * 
+	 * @return
+	 */
 	private List<ExerciseBankRow> getExerciseBankList() {
 		List<ExerciseBankRow> list = new ArrayList<ExerciseBankRow>();
 		Hashtable<Integer, Boolean> exercisesChecked = getCheckedExercises();
@@ -114,9 +130,10 @@ public class ExerciseBankFragment extends ListFragment {
 		return list;
 	}
 	
-	/*
+	/**
 	 * Hash table to get exercises that belong to workout
 	 * in the get exercise method we check for collisions to see if exercise should be marked checked on load
+	 * @return
 	 */
 	private Hashtable<Integer, Boolean> getCheckedExercises() {
 		Hashtable<Integer, Boolean> exercises = new Hashtable<Integer, Boolean> ();
@@ -134,14 +151,30 @@ public class ExerciseBankFragment extends ListFragment {
 		 */
 	}
 	
+	/**
+	 * 
+	 * @param exercise
+	 * @param workoutName
+	 * @param selectedStatus
+	 * @return
+	 */
 	private ExerciseBankRow get(Exercise exercise, String workoutName, boolean selectedStatus) {
 		return new ExerciseBankRow(exercise, workoutName, selectedStatus);
 	}
 	
+	/**
+	 * 
+	 * @author sacrilley
+	 *
+	 */
 	public interface onGoToExerciseSequenceListener {
 		void goToExerciseSequence(String workoutName);
 	}
 	
+	/**
+	 * 
+	 * @param listener
+	 */
 	public static void setExerciseSequenceListener(onGoToExerciseSequenceListener listener) {
 		ExerciseBankFragment.listener = listener;
 	}

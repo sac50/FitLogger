@@ -21,6 +21,11 @@ import com.cwru.controller.HomeScreen;
 import com.cwru.dao.DbAdapter;
 import com.cwru.fragments.WorkoutListingFragment.onWorkoutListingClickListener;
 
+/**
+ * 
+ * @author sacrilley
+ *
+ */
 public class CalendarDayViewFragment extends ListFragment {
 	private DbAdapter mDbHelper;
 	private String date;
@@ -29,6 +34,11 @@ public class CalendarDayViewFragment extends ListFragment {
 	private static scheduleWorkoutListener workoutScheduleListener;
 	
 	
+	/**
+	 * 
+	 * @param context
+	 * @param date
+	 */
 	public CalendarDayViewFragment(Context context, String date) {
 		this.date = date;
 		this.context = context;
@@ -36,6 +46,9 @@ public class CalendarDayViewFragment extends ListFragment {
 	}
 		
 	@Override
+	/**
+	 * 
+	 */
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (container == null) {
 			return null;
@@ -68,6 +81,9 @@ public class CalendarDayViewFragment extends ListFragment {
 	}
 	
 	@Override 
+	/**
+	 * 
+	 */
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		String workoutName = (String) getListAdapter().getItem(position);
 		Log.d("Steve", "Workout Name: " + workoutName);
@@ -93,6 +109,10 @@ public class CalendarDayViewFragment extends ListFragment {
 		}
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	private boolean dateInPast() {
 		String [] dateSplit = date.split("/");
 		int y = Integer.parseInt(dateSplit[0]);
@@ -118,14 +138,26 @@ public class CalendarDayViewFragment extends ListFragment {
 		return false;		
 	}
 	
+	/**
+	 * 
+	 * @param listener
+	 */
 	public static void setOnWorkoutListingClickListener(onWorkoutListingClickListener listener) {
 		CalendarDayViewFragment.listener = listener;
 	}
 	
+	/**
+	 * 
+	 * @author sacrilley
+	 *
+	 */
 	public interface scheduleWorkoutListener {
 		void scheduleWorkout(String date);
 	}
-	
+	/**
+	 * 
+	 * @param listener
+	 */
 	public static void setScheduleWorkout(scheduleWorkoutListener listener) {
 		CalendarDayViewFragment.workoutScheduleListener = listener;
 	}

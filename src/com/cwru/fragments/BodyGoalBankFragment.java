@@ -17,11 +17,19 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 
+/**
+ * 
+ * @author lkissling
+ *
+ */
 public class BodyGoalBankFragment extends ListFragment {
 	private DbAdapter mDbHelper;
 	private BodyGoalArrayAdapter allAdapter;
 	private BodyGoalArrayAdapter incompleteAdapter;
 	
+	/**
+	 * 
+	 */
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (container == null) {
 			return null;
@@ -56,6 +64,9 @@ public class BodyGoalBankFragment extends ListFragment {
 		return view;
 	}
 	
+	/**
+	 * 
+	 */
 CompoundButton.OnCheckedChangeListener listener = new CompoundButton.OnCheckedChangeListener() {
 		
 		@Override

@@ -34,6 +34,11 @@ import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+/**
+ * 
+ * @author lkissling
+ *
+ */
 public class ExerciseAnalyticsFragment extends Fragment {
 	DbAdapter mDbHelper;
 	Exercise ex;
@@ -56,6 +61,9 @@ public class ExerciseAnalyticsFragment extends Fragment {
 		this.ex = ex;
 	}
 	
+	/**
+	 * 
+	 */
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
 		if (container == null) {
 			return null;
@@ -92,6 +100,10 @@ public class ExerciseAnalyticsFragment extends Fragment {
 		return view;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	private String generateTimeHTML() {
 		String html = null;
 		HashMap<Integer, Double> map = new LinkedHashMap<Integer, Double>();
@@ -122,6 +134,10 @@ public class ExerciseAnalyticsFragment extends Fragment {
 		return html;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	private String generateDistanceHTML() {
 		String html = null;
 		HashMap<Integer, Double> map = new LinkedHashMap<Integer, Double>();
@@ -152,6 +168,10 @@ public class ExerciseAnalyticsFragment extends Fragment {
 		return html;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	private String initializeSetHTML() {
 		String html = null;
 		HashMap<Integer, Double> map = new LinkedHashMap<Integer, Double>();
@@ -217,6 +237,9 @@ public class ExerciseAnalyticsFragment extends Fragment {
 		return html;
 	}
 	
+	/**
+	 * 
+	 */
 	RadioGroup.OnCheckedChangeListener checkedListener = new RadioGroup.OnCheckedChangeListener() {
 		
 		@Override
@@ -235,6 +258,10 @@ public class ExerciseAnalyticsFragment extends Fragment {
 		}
 	};
 	
+	
+	/**
+	 * 
+	 */
 	View.OnClickListener generateListener = new View.OnClickListener() {
 		
 		@Override

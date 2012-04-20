@@ -19,10 +19,18 @@ import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
+/**
+ * 
+ * @author lkissling
+ *
+ */
 public class CreateCustomGoalFragment extends Fragment{
 	private DbAdapter mDbHelper;
 	private View view;
 	
+	/**
+	 * 
+	 */
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (container == null) {
 			return null;
@@ -37,6 +45,9 @@ public class CreateCustomGoalFragment extends Fragment{
 		return view;
 	}
 	
+	/**
+	 * 
+	 */
 	View.OnClickListener doneListener = new View.OnClickListener() {
 		
 		@Override

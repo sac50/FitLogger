@@ -19,11 +19,19 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+/**
+ * 
+ * @author lkissling
+ *
+ */
 public class ExerciseAnalyticsBankFragment extends ListFragment {
 	private DbAdapter mDbHelper;
 	ArrayList<Exercise> exercises;
 	
 	@Override
+	/**
+	 * 
+	 */
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (container == null) {
 			return null;
@@ -51,6 +59,9 @@ public class ExerciseAnalyticsBankFragment extends ListFragment {
 	}
 	
 	@Override 
+	/**
+	 * 
+	 */
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		FragmentTransaction transaction = this.getFragmentManager().beginTransaction();
 		ExerciseAnalyticsFragment newFrag = new ExerciseAnalyticsFragment(exercises.get(position));
@@ -66,6 +77,11 @@ public class ExerciseAnalyticsBankFragment extends ListFragment {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param exercises
+	 * @return
+	 */
 	private ArrayList<String> getExerciseNames(ArrayList<Exercise> exercises) {
 		ArrayList<String> strings = new ArrayList<String>();
 		for (Exercise ex : exercises) {

@@ -32,6 +32,11 @@ import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+/**
+ * 
+ * @author lkissling
+ *
+ */
 public class CreateExerciseGoalFragment extends Fragment {
 	private DbAdapter mDbHelper;
 	private ExerciseGoal exGoal;
@@ -51,6 +56,9 @@ public class CreateExerciseGoalFragment extends Fragment {
 	private RadioGroup distanceOrTime;
 	private CheckBox checkBox;
 	
+	/**
+	 * 
+	 */
 	private void init() {
 		checkBox = (CheckBox) topView.findViewById(R.id.cbCreateExerciseGoalCumulative);
 		checkBox.setOnCheckedChangeListener(cumulativeListener);
@@ -99,6 +107,9 @@ public class CreateExerciseGoalFragment extends Fragment {
 		typeSpinner.setOnItemSelectedListener(typeListener);
 	}
 	
+	/**
+	 * 
+	 */
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
 		if (container == null) {
 			return null;
@@ -155,6 +166,9 @@ public class CreateExerciseGoalFragment extends Fragment {
 		return topView;
 	}
 	
+	/**
+	 * 
+	 */
 	private void inflateCardio() {
 		exGoal.setType((int) typeSpinner.getSelectedItemId());
 		
@@ -175,6 +189,9 @@ public class CreateExerciseGoalFragment extends Fragment {
 
 	}
 	
+	/**
+	 * 
+	 */
 	CompoundButton.OnCheckedChangeListener cumulativeListener = new CompoundButton.OnCheckedChangeListener() {
 		
 		@Override
@@ -188,6 +205,9 @@ public class CreateExerciseGoalFragment extends Fragment {
 		}
 	};
 	
+	/**
+	 * 
+	 */
 	AdapterView.OnItemSelectedListener typeListener = new AdapterView.OnItemSelectedListener() {
 
 		@Override
@@ -248,6 +268,9 @@ public class CreateExerciseGoalFragment extends Fragment {
 		}
 	};
 	
+	/**
+	 * 
+	 */
 	AdapterView.OnItemSelectedListener exCardioListener = new AdapterView.OnItemSelectedListener() {
 
 		@Override
@@ -271,6 +294,9 @@ public class CreateExerciseGoalFragment extends Fragment {
 		}
 	};
 	
+	/**
+	 * 
+	 */
 	AdapterView.OnItemSelectedListener exStrengthListener = new AdapterView.OnItemSelectedListener() {
 
 		@Override
@@ -294,6 +320,9 @@ public class CreateExerciseGoalFragment extends Fragment {
 		}
 	};
 	
+	/**
+	 * 
+	 */
 	RadioGroup.OnCheckedChangeListener distanceOrTimeListener = new RadioGroup.OnCheckedChangeListener() {
 		
 		@Override
@@ -310,6 +339,9 @@ public class CreateExerciseGoalFragment extends Fragment {
 		}
 	};
 	
+	/**
+	 * 
+	 */
 	View.OnClickListener doneListener = new View.OnClickListener() {
 		
 		@Override

@@ -24,6 +24,11 @@ import com.cwru.utils.DragNDropListView;
 import com.cwru.utils.DropListener;
 import com.cwru.utils.RemoveListener;
 
+/**
+ * 
+ * @author sacrilley
+ *
+ */
 public class ExerciseSequenceFragment extends ListFragment {
 	private DbAdapter mDbHelper;
 //	private ArrayList<String> exerciseNameList = new ArrayList<String>(); // For List to Display to Screen
@@ -31,6 +36,10 @@ public class ExerciseSequenceFragment extends ListFragment {
 	public DragNDropAdapter adapter;
 	private String workoutName;
 	
+	/**
+	 * 
+	 * @param workoutName
+	 */
 	public ExerciseSequenceFragment(String workoutName) {
 		this.workoutName = workoutName;
 		/* Get exercise sequence for workout */
@@ -39,6 +48,9 @@ public class ExerciseSequenceFragment extends ListFragment {
 	}
 	
 	@Override
+	/**
+	 * 
+	 */
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d("onCreate", "Adpater created");
@@ -52,6 +64,9 @@ public class ExerciseSequenceFragment extends ListFragment {
 		initializeExerciseArray();
 	}
 	
+	/**
+	 * 
+	 */
 	private void initializeExerciseArray() {
 		// Get the exercise Sequence
 		String exerciseSequence = mDbHelper.getExerciseSequence(workoutName);
@@ -63,6 +78,9 @@ public class ExerciseSequenceFragment extends ListFragment {
 		}
 	}
 	@Override
+	/**
+	 * 
+	 */
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
@@ -83,6 +101,9 @@ public class ExerciseSequenceFragment extends ListFragment {
 		}
 	}
 	
+	/**
+	 * 
+	 */
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (container == null) {
 			return null;
@@ -94,6 +115,9 @@ public class ExerciseSequenceFragment extends ListFragment {
 		return view;
 	}
 	
+	/**
+	 * 
+	 */
 	private DropListener mDropListener = 
 			new DropListener() {
 	        public void onDrop(int from, int to) {
@@ -120,6 +144,9 @@ public class ExerciseSequenceFragment extends ListFragment {
 	        }
 	    };
 	    
+	    /**
+	     * 
+	     */
 	    private RemoveListener mRemoveListener =
 	        new RemoveListener() {
 	        public void onRemove(int which) {
@@ -131,6 +158,9 @@ public class ExerciseSequenceFragment extends ListFragment {
 	        }
 	    };
 	    
+	    /**
+	     * 
+	     */
 	    private DragListener mDragListener =
 	    	new DragListener() {
 
@@ -158,12 +188,20 @@ public class ExerciseSequenceFragment extends ListFragment {
 	    	
 	    };
 	    
+	    /**
+	     * 
+	     * @param exercise
+	     */
 	    public void addItems(Exercise exercise) {
 	    	Log.d("ExerciseSequenceFragment-addItems", exercise.getName());
 	    	exerciseList.add(exercise);
 	    	this.adapter.notifyDataSetChanged();
 	    }
 	    
+	    /**
+	     * 
+	     * @param exercise
+	     */
 	    public void removeItem(Exercise exercise) {
 	    	exerciseList.remove(exercise);
 	    	this.adapter.notifyDataSetChanged();

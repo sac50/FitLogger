@@ -32,6 +32,11 @@ import com.cwru.model.Set;
 import com.cwru.model.Time;
 import com.cwru.utils.AutoFillListener;
 
+/**
+ * 
+ * @author lkissling
+ *
+ */
 public class EditExerciseFragment extends Fragment {
 	private DbAdapter mDbHelper;
 	private LinearLayout view;
@@ -44,21 +49,33 @@ public class EditExerciseFragment extends Fragment {
 	private List<Integer> ids = new ArrayList<Integer>();
 	private AutoFillListener autoFillListener = new AutoFillListener();
 
+	/**
+	 * 
+	 */
 	public EditExerciseFragment() {
 
 	}
 
+	/**
+	 * 
+	 * @param ex
+	 */
 	public EditExerciseFragment(Exercise ex) {
 		this.ex = ex;
 	}
 
 	@Override
+	/**
+	 * 
+	 */
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mDbHelper = new DbAdapter(this.getActivity());
 
 	}
-
+	/**
+	 * 
+	 */
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
 		if (container == null) {
 			return null;
@@ -83,11 +100,23 @@ public class EditExerciseFragment extends Fragment {
 		return topView;
 	}
 
+	/**
+	 * 
+	 * @param parent
+	 * @param id
+	 * @param str
+	 */
 	private void setTextView(View parent, int id, String str) {
 		TextView tv = (TextView) parent.findViewById(id);
 		tv.setText(str);
 	}
 
+	/**
+	 * 
+	 * @param parent
+	 * @param id
+	 * @param ex
+	 */
 	private void setSubType(View parent, int id, Exercise ex) {
 		String str = "";
 		
@@ -142,6 +171,9 @@ public class EditExerciseFragment extends Fragment {
 		setTextView(parent, R.id.tvEditExerciseSubType, str);
 	}
 
+	/**
+	 * 
+	 */
 	private void populateDistance() {
 		distance = mDbHelper.getDistanceForExercise(ex.getId());
 		EditText exDistanceText = (EditText) view.findViewById(R.id.etEditExerciseDistance);
@@ -168,6 +200,9 @@ public class EditExerciseFragment extends Fragment {
 		});
 	}
 	
+	/**
+	 * 
+	 */
 	private void populateCountdown() {
 		time = mDbHelper.getTimeForExercise(ex.getId());
 		EditText exCountdownText = (EditText) view.findViewById(R.id.etEditExerciseCountdown);
@@ -194,6 +229,10 @@ public class EditExerciseFragment extends Fragment {
 		});
 	}
 	
+	/**
+	 * 
+	 * @param view
+	 */
 	private void populateIntervals(LinearLayout view) {
 		inflatedLayouts = new ArrayList<LinearLayout>();
 		LinearLayout inflatedLayout;
@@ -227,6 +266,9 @@ public class EditExerciseFragment extends Fragment {
 		setNum.setText(Integer.toString(interval.getNumRepeats()));
 	}
 	
+	/**
+	 * 
+	 */
 	private void defineIntervalButtons() {
 		Button add = (Button) view.findViewById(R.id.btnEditExerciseAddInterval);
 		add.setOnClickListener(new View.OnClickListener() {
@@ -262,6 +304,9 @@ public class EditExerciseFragment extends Fragment {
 		});
 	}
 	
+	/**
+	 * 
+	 */
 	private void defineIntervalSetButtons() {
 		Button add = (Button) setView.findViewById(R.id.btnEditExerciseAddIntervalSet);
 		add.setOnClickListener(new View.OnClickListener() {
@@ -294,6 +339,10 @@ public class EditExerciseFragment extends Fragment {
 		});
 	}
 	
+	/**
+	 * 
+	 * @param view
+	 */
 	private void populateSets(LinearLayout view) {
 		inflatedLayouts = new ArrayList<LinearLayout>();
 		LinearLayout inflatedLayout;
@@ -326,6 +375,9 @@ public class EditExerciseFragment extends Fragment {
 		autoFillListener.repsAutoFillListener(repsText, inflatedLayouts);
 	}
 	
+	/**
+	 * 
+	 */
 	TextWatcher repsAutoFillListener = new TextWatcher() {
 		@Override
 		public void afterTextChanged(
@@ -365,6 +417,9 @@ public class EditExerciseFragment extends Fragment {
 		}
 	};
 	
+	/**
+	 * 
+	 */
 	private void defineSetButtons() {
 		Button add = (Button) view.findViewById(R.id.btnEditExerciseAddSet);
 		add.setOnClickListener(new View.OnClickListener() {
@@ -410,6 +465,9 @@ public class EditExerciseFragment extends Fragment {
 		spinner.setAdapter(adapter);
 	}
 	
+	/**
+	 * 
+	 */
 	View.OnClickListener doneButtonListener = new View.OnClickListener() {
 		
 		@Override

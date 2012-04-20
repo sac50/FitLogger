@@ -21,11 +21,19 @@ import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+/**
+ * 
+ * @author lkissling
+ *
+ */
 public class CreateBodyGoalFragment extends Fragment {
 	private DbAdapter mDbHelper;
 	private View view;
 	private Spinner spinner;
 	
+	/**
+	 * 
+	 */
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (container == null) {
 			return null;
@@ -46,6 +54,9 @@ public class CreateBodyGoalFragment extends Fragment {
 		return view;
 	}
 	
+	/**
+	 * 
+	 */
 	View.OnClickListener listener = new View.OnClickListener() {
 		
 		@Override

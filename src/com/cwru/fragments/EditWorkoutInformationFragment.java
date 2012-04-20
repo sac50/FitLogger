@@ -28,7 +28,11 @@ import com.cwru.R;
 import com.cwru.controller.HomeScreen;
 import com.cwru.dao.DbAdapter;
 import com.cwru.model.Workout;
-
+/**
+ * 
+ * @author sacrilley
+ *
+ */
 public class EditWorkoutInformationFragment extends Fragment {
 	private EditText etWorkoutName;
 	private Spinner spnWorkoutType;
@@ -42,6 +46,11 @@ public class EditWorkoutInformationFragment extends Fragment {
 	private String storedWorkoutName;
 
 	
+	/**
+	 * 
+	 * @param workoutName
+	 * @param activity
+	 */
 	public EditWorkoutInformationFragment(String workoutName, Activity activity) { 
 		initialWorkoutName = workoutName;
 		storedWorkoutName = workoutName;
@@ -54,6 +63,9 @@ public class EditWorkoutInformationFragment extends Fragment {
 	}
 	
 	@Override
+	/**
+	 * 
+	 */
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (container == null) {
 			return null;
@@ -109,6 +121,11 @@ public class EditWorkoutInformationFragment extends Fragment {
 		return view;
 	}
 	
+	/**
+	 * 
+	 * @param workoutName
+	 * @return
+	 */
 	private boolean validateWorkoutName(String workoutName) {
 		return mDbHelper.workoutNameExist(workoutName);
 	}
@@ -193,10 +210,19 @@ public class EditWorkoutInformationFragment extends Fragment {
 		}
 	};
 	
+	/**
+	 * 
+	 * @author sacrilley
+	 *
+	 */
 	public interface onGoToExerciseBankListener {
 		void goToExerciseBank(String workoutName);
 	}
 	
+	/**
+	 * 
+	 * @param listener
+	 */
 	public static void setExerciseBankListener(onGoToExerciseBankListener listener) {
 		EditWorkoutInformationFragment.listener = listener;
 	}

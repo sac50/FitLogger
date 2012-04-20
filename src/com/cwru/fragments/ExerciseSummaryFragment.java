@@ -24,6 +24,11 @@ import com.cwru.model.SetResult;
 import com.cwru.model.TimeResult;
 import com.cwru.model.WorkoutResult;
 
+/**
+ * 
+ * @author sacrilley
+ *
+ */
 public class ExerciseSummaryFragment extends Fragment {
 	
 	private DbAdapter mDbHelper;
@@ -34,6 +39,11 @@ public class ExerciseSummaryFragment extends Fragment {
 	private TableLayout tlExerciseSummary;
 	String exerciseName;
 		
+	/**
+	 * 
+	 * @param context
+	 * @param exerciseId
+	 */
 	public ExerciseSummaryFragment (Context context, int exerciseId) {
 		mDbHelper = new DbAdapter(context);
 		this.exerciseId = exerciseId;
@@ -42,6 +52,9 @@ public class ExerciseSummaryFragment extends Fragment {
 	}
 	
 	@Override
+	/**
+	 * 
+	 */
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (container == null) {
 			return null;

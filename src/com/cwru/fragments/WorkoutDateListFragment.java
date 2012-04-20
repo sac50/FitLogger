@@ -15,17 +15,30 @@ import com.cwru.R;
 import com.cwru.dao.DbAdapter;
 import com.cwru.fragments.WorkoutListingFragment.onWorkoutListingClickListener;
 
+/**
+ * 
+ * @author sacrilley
+ *
+ */
 public class WorkoutDateListFragment extends ListFragment {
 	private DbAdapter mDbHelper;	
 	private int workoutId;
 	private static onWorkoutDateListingClickListener listener;
 	
+	/**
+	 * 
+	 * @param context
+	 * @param workoutName
+	 */
 	public WorkoutDateListFragment(Context context, String workoutName) { 
 		mDbHelper = new DbAdapter(context);
 		this.workoutId = mDbHelper.getWorkoutIdFromName(workoutName);
 	}
 	
 	@Override
+	/**
+	 * 
+	 */
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (container == null) {
 			return null;
@@ -39,25 +52,44 @@ public class WorkoutDateListFragment extends ListFragment {
 	}
 	
 	@Override
+	/**
+	 * 
+	 */
 	public void onResume() {
 		super.onResume();
 		this.setListAdapter(new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_list_item_1, getWorkoutDateList()));
 	}
 	
 	@Override 
+	/**
+	 * 
+	 */
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		String date = (String) getListAdapter().getItem(position);
 		listener.onWorkoutDateListingListenerClick(workoutId, date);
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	private String [] getWorkoutDateList() {
 		return mDbHelper.getWorkoutDates(workoutId);
 	}
 	
+	/**
+	 * 
+	 * @author sacrilley
+	 *
+	 */
 	public interface onWorkoutDateListingClickListener {
 		void onWorkoutDateListingListenerClick(int workoutId, String Date);
 	}
 	
+	/**
+	 * 
+	 * @param listener
+	 */
 	public static void setOnWorkoutDateListingClickListener(onWorkoutDateListingClickListener listener) {
 		WorkoutDateListFragment.listener = listener;
 	}

@@ -36,6 +36,11 @@ import com.cwru.controller.CalendarActivity;
 import com.cwru.controller.WorkoutListingActivity;
 import com.cwru.dao.DbAdapter;
 
+/**
+ * 
+ * @author sacrilley
+ *
+ */
 public class CalendarScheduleWorkoutFragment extends Fragment {
 	private DbAdapter mDbHelper;
 	private String date;
@@ -62,6 +67,11 @@ public class CalendarScheduleWorkoutFragment extends Fragment {
 	private CheckBox friday;
 	private CheckBox saturday;
 	
+	/**
+	 * 
+	 * @param context
+	 * @param date
+	 */
 	public CalendarScheduleWorkoutFragment(Context context, String date) {
 		this.context = context;
 		mDbHelper = new DbAdapter(context);
@@ -73,6 +83,9 @@ public class CalendarScheduleWorkoutFragment extends Fragment {
 	}
 		
 	@Override
+	/**
+	 * 
+	 */
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (container == null) {
 			return null;
@@ -200,6 +213,9 @@ public class CalendarScheduleWorkoutFragment extends Fragment {
 		return view;
 	}
 	
+	/**
+	 * 
+	 */
 	View.OnClickListener getEndDateListener = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
@@ -209,6 +225,9 @@ public class CalendarScheduleWorkoutFragment extends Fragment {
 		}
 	};
 	
+	/**
+	 * 
+	 */
 	View.OnClickListener getWorkoutListener = new View.OnClickListener() {
 	
 		@Override
@@ -221,6 +240,9 @@ public class CalendarScheduleWorkoutFragment extends Fragment {
 	};
 	
 	@Override
+	/**
+	 * 
+	 */
 	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		Log.d("STEVE", "REquest Code: " + requestCode);
 		Log.d("Steve", "On Result Return");
@@ -238,14 +260,26 @@ public class CalendarScheduleWorkoutFragment extends Fragment {
 		}
 	}
 	
+	/**
+	 * 
+	 * @author sacrilley
+	 *
+	 */
 	public interface returnWorkoutListener {
 		void returnSelectedDate(String dateSelected);
 	}
 	
+	/**
+	 * 
+	 * @param listener
+	 */
 	public static void setGetWorkoutListener(returnWorkoutListener listener) {
 		CalendarScheduleWorkoutFragment.listenerWorkoutReturn = listener;
 	}
 	
+	/**
+	 * 
+	 */
 	View.OnClickListener scheduleListener = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
@@ -301,6 +335,19 @@ public class CalendarScheduleWorkoutFragment extends Fragment {
 		}
 	};
 	
+	/**
+	 * 
+	 * @param workoutId
+	 * @param repeats
+	 * @param repeatSunday
+	 * @param repeatMonday
+	 * @param repeatTuesday
+	 * @param repeatWednesday
+	 * @param repeatThursday
+	 * @param repeatFriday
+	 * @param repeatSaturday
+	 * @param numRepeats
+	 */
 	public void createCalendarEntryNumOccurances(int workoutId, String repeats, int repeatSunday,
 			int repeatMonday, int repeatTuesday, int repeatWednesday, int repeatThursday,
 			int repeatFriday, int repeatSaturday, int numRepeats) {
@@ -396,6 +443,19 @@ public class CalendarScheduleWorkoutFragment extends Fragment {
 		
 	}
 	
+	/**
+	 * 
+	 * @param workoutId
+	 * @param repeats
+	 * @param repeatSunday
+	 * @param repeatMonday
+	 * @param repeatTuesday
+	 * @param repeatWednesday
+	 * @param repeatThursday
+	 * @param repeatFriday
+	 * @param repeatSaturday
+	 * @param untilDate
+	 */
 	public void createCalendarEntryByEndDate(int workoutId, String repeats, int repeatSunday,
 			int repeatMonday, int repeatTuesday, int repeatWednesday, int repeatThursday,
 			int repeatFriday, int repeatSaturday, String untilDate) {
@@ -492,6 +552,12 @@ public class CalendarScheduleWorkoutFragment extends Fragment {
 		
 	}
 	
+	/**
+	 * 
+	 * @param date1
+	 * @param date2
+	 * @return
+	 */
 	public boolean continueInDateAdd(String date1, String date2) {
 		String [] dt1 = date1.split("/");
 		String [] dt2 = date2.split("/");
@@ -513,7 +579,9 @@ public class CalendarScheduleWorkoutFragment extends Fragment {
 		
 	}
 	
-	
+	/**
+	 * 
+	 */
 	View.OnClickListener radioButtonListener = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {

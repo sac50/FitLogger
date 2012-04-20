@@ -201,10 +201,18 @@ public class CreateWorkoutInformationFragment extends Fragment {
 		return view;
 	}
 	
+	/**
+	 * 
+	 * @param workoutName
+	 * @return
+	 */
 	private boolean validateWorkoutName(String workoutName) {
 		return mDbHelper.workoutNameExist(workoutName);
 	}
 	
+	/**
+	 * 
+	 */
 	View.OnClickListener radioButtonListener = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
@@ -222,6 +230,9 @@ public class CreateWorkoutInformationFragment extends Fragment {
 		}
 	};
 	
+	/**
+	 * 
+	 */
 	View.OnClickListener getEndDateListener = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
@@ -232,6 +243,9 @@ public class CreateWorkoutInformationFragment extends Fragment {
 	};
 	
 	@Override
+	/**
+	 * 
+	 */
 	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		if (resultCode == 1 && requestCode == 1) {
 			if (intent.hasExtra("DATE-SELECTED")) {
@@ -333,6 +347,19 @@ public class CreateWorkoutInformationFragment extends Fragment {
 	};
 	
 	
+	/**
+	 * 
+	 * @param workoutId
+	 * @param repeats
+	 * @param repeatSunday
+	 * @param repeatMonday
+	 * @param repeatTuesday
+	 * @param repeatWednesday
+	 * @param repeatThursday
+	 * @param repeatFriday
+	 * @param repeatSaturday
+	 * @param numRepeats
+	 */
 	public void createCalendarEntryNumOccurances(int workoutId, String repeats, int repeatSunday,
 			int repeatMonday, int repeatTuesday, int repeatWednesday, int repeatThursday,
 			int repeatFriday, int repeatSaturday, int numRepeats) {
@@ -420,6 +447,19 @@ public class CreateWorkoutInformationFragment extends Fragment {
 		
 	}
 	
+	/**
+	 * 
+	 * @param workoutId
+	 * @param repeats
+	 * @param repeatSunday
+	 * @param repeatMonday
+	 * @param repeatTuesday
+	 * @param repeatWednesday
+	 * @param repeatThursday
+	 * @param repeatFriday
+	 * @param repeatSaturday
+	 * @param untilDate
+	 */
 	public void createCalendarEntryByEndDate(int workoutId, String repeats, int repeatSunday,
 			int repeatMonday, int repeatTuesday, int repeatWednesday, int repeatThursday,
 			int repeatFriday, int repeatSaturday, String untilDate) {
@@ -512,6 +552,12 @@ public class CreateWorkoutInformationFragment extends Fragment {
 		
 	}
 	
+	/**
+	 * 
+	 * @param date1
+	 * @param date2
+	 * @return
+	 */
 	public boolean continueInDateAdd(String date1, String date2) {
 		String [] dt1 = date1.split("/");
 		String [] dt2 = date2.split("/");
@@ -533,10 +579,19 @@ public class CreateWorkoutInformationFragment extends Fragment {
 		
 	}
 
+	/**
+	 * 
+	 * @author sacrilley
+	 *
+	 */
 	public interface onGoToExerciseBankListener {
 		void goToExerciseBank(String workoutName);
 	}
 	
+	/**
+	 * 
+	 * @param listener
+	 */
 	public static void setExerciseBankListener(onGoToExerciseBankListener listener) {
 		CreateWorkoutInformationFragment.listener = listener;
 	}

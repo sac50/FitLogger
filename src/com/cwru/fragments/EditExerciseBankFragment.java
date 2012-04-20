@@ -22,6 +22,11 @@ import com.cwru.dao.DbAdapter;
 import com.cwru.model.Exercise;
 import com.cwru.model.ExerciseArrayAdapter;
 
+/**
+ * 
+ * @author lkissling
+ *
+ */
 public class EditExerciseBankFragment extends ListFragment {
 	private DbAdapter mDbHelper;
 	

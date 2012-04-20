@@ -22,6 +22,11 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+/**
+ * 
+ * @author lkissling
+ *
+ */
 public class ViewExerciseGoalFragment extends Fragment {
 	private DbAdapter mDbHelper;
 	private ExerciseGoal exGoal;
@@ -36,6 +41,9 @@ public class ViewExerciseGoalFragment extends Fragment {
 		this.exGoal = exGoal;
 	}
 	
+	/**
+	 * 
+	 */
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
 		if (container == null) {
 			return null;
@@ -101,6 +109,9 @@ public class ViewExerciseGoalFragment extends Fragment {
 		return view;
 	}
 	
+	/**
+	 * 
+	 */
 	View.OnClickListener deleteListener = new View.OnClickListener() {
 		
 		@Override

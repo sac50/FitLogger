@@ -20,6 +20,11 @@ import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.TextView;
 
+/**
+ * 
+ * @author lkissling
+ *
+ */
 public class ViewCustomGoalFragment extends Fragment {
 	DbAdapter mDbHelper;
 	CustomGoal goal;
@@ -34,6 +39,10 @@ public class ViewCustomGoalFragment extends Fragment {
 		this.goal = goal;
 	}
 	
+	@Override
+	/**
+	 * 
+	 */
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
 		if (container == null) {
 			return null;
@@ -58,6 +67,9 @@ public class ViewCustomGoalFragment extends Fragment {
 		return view;
 	}
 	
+	/**
+	 * 
+	 */
 	View.OnClickListener completedListener = new View.OnClickListener() {
 		
 		@Override
@@ -82,6 +94,9 @@ public class ViewCustomGoalFragment extends Fragment {
 		}
 	};
 	
+	/**
+	 * 
+	 */
 	View.OnClickListener deleteListener = new View.OnClickListener() {
 		
 		@Override

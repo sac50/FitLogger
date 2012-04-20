@@ -20,6 +20,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * 
+ * @author lkissling
+ *
+ */
 public class ViewBodyGoalFragment extends Fragment {
 	DbAdapter mDbHelper;
 	BodyGoal goal;
@@ -35,6 +40,9 @@ public class ViewBodyGoalFragment extends Fragment {
 		this.goal = goal;
 	}
 	
+	/**
+	 * 
+	 */
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
 		if (container == null) {
 			return null;
@@ -81,6 +89,9 @@ public class ViewBodyGoalFragment extends Fragment {
 		return view;
 	}
 	
+	/**
+	 * 
+	 */
 	View.OnClickListener updateListener = new View.OnClickListener() {
 		
 		@Override
@@ -126,6 +137,9 @@ public class ViewBodyGoalFragment extends Fragment {
 		}
 	};
 	
+	/**
+	 * 
+	 */
 	View.OnClickListener deleteListener = new View.OnClickListener() {
 		
 		@Override

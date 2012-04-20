@@ -17,17 +17,28 @@ import com.cwru.dao.DbAdapter;
 import com.cwru.fragments.WorkoutListingFragment.onWorkoutListingClickListener;
 import com.cwru.model.Exercise;
 
+/**
+ * 
+ * @author sacrilley
+ *
+ */
 public class ExerciseListingFragment extends ListFragment {
 	private DbAdapter mDbHelper;
 	private int mode;
 	private static onExerciseListingClickListener listener;
 
+	/**
+	 * Empty Constructor
+	 */
 	public ExerciseListingFragment(){
 		
 	}
 	
 	
 	@Override
+	/**
+	 * 
+	 */
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (container == null) {
 			return null;
@@ -44,12 +55,18 @@ public class ExerciseListingFragment extends ListFragment {
 	}
 	
 	@Override
+	/**
+	 * 
+	 */
 	public void onResume() {
 		super.onResume();
 		this.setListAdapter(new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_list_item_1, getExerciseList()));
 	}
 	
 	@Override 
+	/**
+	 * 
+	 */
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		String exerciseName = (String) getListAdapter().getItem(position);
 		int exerciseId = mDbHelper.getExerciseFromName(exerciseName).getId();
@@ -57,6 +74,10 @@ public class ExerciseListingFragment extends ListFragment {
 		listener.onExerciseListingListenerClick(exerciseId);
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public String [] getExerciseList() {
 		ArrayList<Exercise> exerciseList = mDbHelper.getAllUndeletedExercises();
 		String [] exerciseNames = new String [exerciseList.size()];
@@ -66,11 +87,19 @@ public class ExerciseListingFragment extends ListFragment {
 		return exerciseNames;
 	}
 	
-	
+	/**
+	 * 
+	 * @author sacrilley
+	 *
+	 */
 	public interface onExerciseListingClickListener {
 		void onExerciseListingListenerClick(int exerciseName);
 	}
 	
+	/**
+	 * 
+	 * @param listener
+	 */
 	public static void setOnExerciseListingClickListener(onExerciseListingClickListener listener) {
 		ExerciseListingFragment.listener = listener;
 	}
