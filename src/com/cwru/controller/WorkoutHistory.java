@@ -14,8 +14,19 @@ import com.cwru.fragments.WorkoutListingFragment;
 import com.cwru.fragments.WorkoutListingFragment.onWorkoutListingClickListener;
 import com.cwru.fragments.WorkoutSummaryFragment;
 
+/**
+ * Activity that implements the Workout History Tab of the History Module.
+ * Provides the user with a list of workouts, then list of dates and then the summary 
+ * of the selected workout on the particular date
+ * @author sacrilley
+ *
+ */
 public class WorkoutHistory extends FragmentActivity implements onWorkoutListingClickListener, onWorkoutDateListingClickListener {
-		
+	
+	/**
+	 * onCreate Callback for the activity.
+	 * Loads the Workout Listing fragment into the main view
+	 */
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		// Set Listener
@@ -30,7 +41,9 @@ public class WorkoutHistory extends FragmentActivity implements onWorkoutListing
 		} 
 		// Phone
 		else {
+			// Create fragment to show listing of workouts and put in in main frame of layout
 			WorkoutListingFragment workoutListings = new WorkoutListingFragment();
+			// Add fragment to the back stack
 			workoutListings.setRetainInstance(true);
 			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 			transaction.replace(R.id.flWorkoutHistoryMainFrame, workoutListings, "workoutListings");
@@ -39,6 +52,11 @@ public class WorkoutHistory extends FragmentActivity implements onWorkoutListing
 	}
 
 	@Override
+	/**
+	 * Code to implement the onWorkoutListingClickListener interface.
+	 * Takes in the workout name provided and launches a fragment to provide 
+	 * the user with a list of all dates that the workout was performed.
+	 */
 	public void onWorkoutListingListenerClick(String workoutName) {
 		WorkoutDateListFragment workoutDateList = new WorkoutDateListFragment(this, workoutName);
 		workoutDateList.setRetainInstance(true);
@@ -49,6 +67,11 @@ public class WorkoutHistory extends FragmentActivity implements onWorkoutListing
 	}
 
 	@Override
+	/**
+	 * Code to implement the onWorkoutDateListingListener interface.
+	 * Takes in a workoutid and date and launches fragment to show the summary 
+	 * that displays the results of the workout
+	 */
 	public void onWorkoutDateListingListenerClick(int workoutId, String date) {
 		WorkoutSummaryFragment workoutSummary = new WorkoutSummaryFragment(this, workoutId, date);
 		workoutSummary.setRetainInstance(true);
