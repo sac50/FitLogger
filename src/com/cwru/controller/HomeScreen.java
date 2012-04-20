@@ -13,11 +13,19 @@ import android.widget.ListView;
 
 import com.cwru.R;
 
+/**
+ * Home Screen for Application.  Lists all available modules to the user
+ * @author sacrilley
+ *
+ */
 public class HomeScreen extends ListActivity {
 	
 	public static boolean isTablet;
 	
     @Override
+    /**
+     * On Create Callback.  Sets the List items and displays them to the user
+     */
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_screen);
@@ -64,6 +72,9 @@ public class HomeScreen extends ListActivity {
         });
     }
     
+    /**
+     * Function to set the flag for whether or not the screen size is large enough to support table functionality
+     */
     private void setTabletStatus() {
     	Display display = getWindowManager().getDefaultDisplay();
     	int width = display.getWidth();

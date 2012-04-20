@@ -10,11 +10,19 @@ import android.widget.TextView;
 import com.cwru.R;
 import com.cwru.fragments.NotesFragment;
 
+/**
+ * Activity to display user notes for exercises
+ * @author sacrilley
+ *
+ */
 public class NotesActivity extends FragmentActivity {
 	private int exerciseId;
 	private TextView appTitleBar;
 	
 	@Override
+	/**
+	 * onCreate callback.  Sets the layout and launches the initial fragment transaction to show note in main frame
+	 */
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.notes_activity_layout);
@@ -35,6 +43,9 @@ public class NotesActivity extends FragmentActivity {
 		transaction.commit();		
 	}
 	
+	/**
+	 * Top title bar on click event handler.  Takes user back to home screen.  Resets back stack to clear history.
+	 */
 	View.OnClickListener goHomeListener = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
