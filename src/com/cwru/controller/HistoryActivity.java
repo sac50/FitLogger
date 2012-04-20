@@ -9,6 +9,11 @@ import android.widget.TextView;
 
 import com.cwru.R;
 
+/**
+ * Activity to display the available history tabs to the user.
+ * @author sacrilley
+ *
+ */
 public class HistoryActivity extends TabActivity {
 	private TabHost tabHost; // Activity TabHost
 	private TabHost.TabSpec tabSpec; // TabSpec to use for all tabs
@@ -17,6 +22,9 @@ public class HistoryActivity extends TabActivity {
 	
 	
 	@Override
+	/**
+	 * onCreate Callback.  Sets up the tabs and sets workout history as the default selected tab
+	 */
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.workout_exercise_module);
@@ -46,6 +54,9 @@ public class HistoryActivity extends TabActivity {
 		
 	}
 	
+	/**
+	 * Top title bar on click event handler.  Takes user back to home screen.  Resets back stack to clear history.
+	 */
 	View.OnClickListener goHomeListener = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
