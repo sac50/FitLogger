@@ -29,6 +29,11 @@ import com.cwru.model.IntervalSet;
 import com.cwru.model.WorkoutResult;
 import com.cwru.model.goToNotesListener;
 
+/**
+ * Fragment to that records data relevant to an interal exercise.
+ * @author sacrilley
+ *
+ */
 public class WorkoutWorkflowIntervalFragment extends Fragment {
 	private Exercise exercise;
 	private Context context;
@@ -65,7 +70,13 @@ public class WorkoutWorkflowIntervalFragment extends Fragment {
 	public static goToNotesListener listenerNotes;
 
 
-	
+	/**
+	 * Constructor
+	 * @param exercise
+	 * @param context
+	 * @param workoutId
+	 * @param intervalSetNum
+	 */
 	public WorkoutWorkflowIntervalFragment(Exercise exercise, Context context, int workoutId, int intervalSetNum) {
 		mDbHelper = new DbAdapter(context);
 		this.exercise = exercise;
@@ -79,6 +90,16 @@ public class WorkoutWorkflowIntervalFragment extends Fragment {
 		stop = true;
 	}
 	
+	/**
+	 * Constructor
+	 * @param exercise
+	 * @param context
+	 * @param workoutId
+	 * @param intervalSetNum
+	 * @param intervalCycleNum
+	 * @param workoutResultCreated
+	 * @param workoutResultId
+	 */
 	public WorkoutWorkflowIntervalFragment(Exercise exercise, Context context, int workoutId, int intervalSetNum, int intervalCycleNum, boolean workoutResultCreated, int workoutResultId) {
 		mDbHelper = new DbAdapter(context);
 		this.exercise = exercise;
@@ -94,6 +115,9 @@ public class WorkoutWorkflowIntervalFragment extends Fragment {
 	}
 	
 	@Override
+	/**
+	 * Set Layout, set layout fields.
+	 */
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (container == null) {
 			return null;
@@ -185,24 +209,9 @@ public class WorkoutWorkflowIntervalFragment extends Fragment {
 		return view;
 	}
 	
-	View.OnClickListener historyButtonListener = new View.OnClickListener() {
-		@Override
-		public void onClick(View v) {
-			ExerciseSummaryFragment exerciseSummary = new ExerciseSummaryFragment(context, exercise.getId()); 
-			FragmentTransaction transaction = getFragmentManager().beginTransaction();
-			transaction.replace(R.id.flPerformWorkoutMainFrame, exerciseSummary);
-			transaction.addToBackStack(null);
-			transaction.commit();
-		}
-	};	
-	
-	View.OnClickListener notesButtonListener = new View.OnClickListener() {
-		@Override
-		public void onClick(View v) {
-			listenerNotes.goToExerciseNote(exercise.getId());
-		}
-	};
-	
+	/**
+	 * Respond to onclick event for the record button.  Insert results into the database for the interval
+	 */
 	View.OnClickListener recordInterval = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
@@ -236,10 +245,6 @@ public class WorkoutWorkflowIntervalFragment extends Fragment {
 				intervalSetNum++;
 			}
 			
-			Log.d("Steve", "--------------------------------------------------------");
-			Log.d("Steve", "IntervalSetNum: " + intervalSetNum);
-			Log.d("Steve", "IntervalCycleNum: " + intervalCycleNum);
-			
 			if (intervalSetNum <= interval.getNumRepeats()) {
 				WorkoutWorkflowIntervalFragment intervalFragment = new WorkoutWorkflowIntervalFragment(exercise, context, workoutId, intervalSetNum, intervalCycleNum, true, workoutResultId);
 				FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -266,6 +271,9 @@ public class WorkoutWorkflowIntervalFragment extends Fragment {
 
 	};
 	
+	/**
+	 * Listener to respond to the click of the start/stop button.  Changes text and pauses/starts the timer
+	 */
 	View.OnClickListener updateTimer = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
@@ -282,6 +290,10 @@ public class WorkoutWorkflowIntervalFragment extends Fragment {
 		}
 	};
 	
+	/**
+	 * Formats the time in a min:sec format
+	 * @return
+	 */
 	private String getFormatedTime() {
 		String time = "";
 		if (minutes < 10){ time += "0" + minutes + ":"; }
@@ -291,6 +303,9 @@ public class WorkoutWorkflowIntervalFragment extends Fragment {
 		return time;
 	}
 	
+	/**
+	 * Decrease the time by 1 second
+	 */
 	private void decreaseTime() {
 		// only update if stop is false
 		if (!complete) {
@@ -305,6 +320,10 @@ public class WorkoutWorkflowIntervalFragment extends Fragment {
 		}
 	}
 	
+	/**
+	 * Sets the goToNotesListener
+	 * @param listener
+	 */
 	public static void setGoToNotesListener(goToNotesListener listener) {
 		listenerNotes = listener;
 	}

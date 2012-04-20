@@ -31,6 +31,11 @@ import com.cwru.model.WorkoutResult;
 import com.cwru.model.goToHistoryListener;
 import com.cwru.model.goToNotesListener;
 
+/**
+ * Fragment to display ui and back-end functionality for Count up exercises
+ * @author sacrilley
+ *
+ */
 public class WorkoutWorkflowCountUpTimerFragment extends Fragment {
 
 	private Chronometer chrTimer;
@@ -54,6 +59,12 @@ public class WorkoutWorkflowCountUpTimerFragment extends Fragment {
 	public static goToHistoryListener listenerHistory;
 
 	
+	/**
+	 * Constructor
+	 * @param exercise
+	 * @param context
+	 * @param workoutId
+	 */
 	public WorkoutWorkflowCountUpTimerFragment (Exercise exercise, Context context, int workoutId) {
 		this.exercise = exercise;
 		Log.d("Steve", "ExerciseId: " + exercise.getId());
@@ -63,7 +74,11 @@ public class WorkoutWorkflowCountUpTimerFragment extends Fragment {
 		initializedTimer = false;
 		this.workoutId = workoutId;
 	}
+	
 	@Override
+	/**
+	 * Sets Layout and retrieves layout fields
+	 */
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (container == null) {
 			return null;
@@ -117,6 +132,9 @@ public class WorkoutWorkflowCountUpTimerFragment extends Fragment {
 		return view;
 	}
 	
+	/**
+	 * Listener when history is clicked.  Calls the activity that set the listener.  Launches exercise history for the current exercise
+	 */
 	View.OnClickListener historyButtonListener = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
@@ -124,6 +142,9 @@ public class WorkoutWorkflowCountUpTimerFragment extends Fragment {
 		}
 	};	
 	
+	/**
+	 * Listener when notes button is clicked.  Calls the activity that set the listener.  Launches the notes activity for the current exercise
+	 */
 	View.OnClickListener notesButtonListener = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
@@ -131,6 +152,9 @@ public class WorkoutWorkflowCountUpTimerFragment extends Fragment {
 		}
 	};
 	
+	/**
+	 * Listener that responds to the start stop button.  Starts/pauses the timer and changes button text
+	 */
 	View.OnClickListener updateTimer = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
@@ -158,6 +182,9 @@ public class WorkoutWorkflowCountUpTimerFragment extends Fragment {
 		}
 	};
 	
+	/**
+	 * Listener for the record button.  Records the exercise data in the database
+	 */
 	View.OnClickListener recordTime = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
@@ -227,10 +254,18 @@ public class WorkoutWorkflowCountUpTimerFragment extends Fragment {
 		}
 	};
 	
+	/**
+	 * 
+	 * @param listener
+	 */
 	public static void setGoToNotesListener(goToNotesListener listener) {
 		listenerNotes = listener;
 	}
 	
+	/**
+	 * 
+	 * @param listener
+	 */
 	public static void setGoToHistoryListener(goToHistoryListener listener) {
 		listenerHistory = listener;
 	}

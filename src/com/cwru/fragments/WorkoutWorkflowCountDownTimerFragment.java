@@ -26,6 +26,11 @@ import com.cwru.model.WorkoutResult;
 import com.cwru.model.goToHistoryListener;
 import com.cwru.model.goToNotesListener;
 
+/**
+ * Fragment that displays UI and backend functionality for Countdown Timer Exercise
+ * @author sacrilley
+ *
+ */
 public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
 	private Context context;
 	private CountDownTimer start;
@@ -50,6 +55,12 @@ public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
 	public static goToNotesListener listenerNotes;
 	public static goToHistoryListener listenerHistory;
 	
+	/**
+	 * Constructor
+	 * @param exercise
+	 * @param context
+	 * @param workoutId
+	 */
 	public WorkoutWorkflowCountDownTimerFragment (Exercise exercise, Context context, int workoutId) {
 		this.context = context;
 		mDbHelper = new DbAdapter(context);
@@ -90,12 +101,18 @@ public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
 	}
 	
 	@Override
+	/**
+	 * Stores the pause time, when the fragment receives the pause callback
+	 */
 	public void onPause() {
 		super.onResume();
 		pauseTime = tvTimer.getText().toString();
 	}
 	
 	@Override
+	/**
+	 * Set the text to that of the pauseTime when onresume callback executed
+	 */
 	public void onResume() {
 		super.onResume();
 		if (pauseTime != null) {
@@ -104,6 +121,9 @@ public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
 	}
 	
 	@Override
+	/**
+	 * Set Layout and retrieve layout fields
+	 */
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (container == null) {
 			return null;
@@ -137,6 +157,9 @@ public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
 		return view;
 	}
 	
+	/**
+	 * Listener when history is clicked.  Calls the activity that set the listener.  Launches exercise history for the current exercise
+	 */
 	View.OnClickListener historyButtonListener = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
@@ -144,6 +167,9 @@ public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
 		}
 	};	
 	
+	/**
+	 * Listener when notes button is clicked.  Calls the activity that set the listener.  Launches the notes activity for the current exercise
+	 */
 	View.OnClickListener notesButtonListener = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
@@ -151,6 +177,9 @@ public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
 		}
 	};
 	
+	/**
+	 * Listener to start/stop the timer and change the text on the button
+	 */
 	View.OnClickListener updateTimer = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
@@ -167,6 +196,9 @@ public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
 		}
 	};
 	
+	/**
+	 * Listener to record the user entered exercise data into the database
+	 */
 	View.OnClickListener recordTime = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
@@ -212,6 +244,10 @@ public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
 		}
 	};
 	
+	/**
+	 * Format the time into a mm:ss format
+	 * @return
+	 */
 	private String getFormatedTime() {
 		String time = "";
 		if (minutes < 10){ time += "0" + minutes + ":"; }
@@ -221,6 +257,9 @@ public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
 		return time;
 	}
 
+	/**
+	 * Decrease the time by 1 second
+	 */
 	private void decreaseTime() {
 		// only update if stop is false
 		if (!complete) {
@@ -235,10 +274,17 @@ public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
 		}
 	}
 	
+	/**
+	 * @param listener
+	 */
 	public static void setGoToNotesListener(goToNotesListener listener) {
 		listenerNotes = listener;
 	}
 	
+	/**
+	 * 
+	 * @param listener
+	 */
 	public static void setGoToHistoryListener(goToHistoryListener listener) {
 		listenerHistory = listener;
 	}

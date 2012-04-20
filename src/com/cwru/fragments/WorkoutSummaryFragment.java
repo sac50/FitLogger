@@ -23,7 +23,11 @@ import com.cwru.model.SetResult;
 import com.cwru.model.TimeResult;
 import com.cwru.model.WorkoutResult;
 
-
+/**
+ * Fragment to display the results of a workout
+ * @author sacrilley
+ *
+ */
 public class WorkoutSummaryFragment extends Fragment {
 
 	private DbAdapter mDbHelper;
@@ -36,16 +40,24 @@ public class WorkoutSummaryFragment extends Fragment {
 	private TextView tvWorkoutName;
 	
 	
-
+	/**
+	 * Constructor
+	 * @param context
+	 * @param workoutId
+	 * @param date
+	 */
 	public WorkoutSummaryFragment (Context context, int workoutId, String date) {
 		mDbHelper = new DbAdapter(context);
 		this.workoutId = workoutId;
 		this.date = date;
 		workoutName = mDbHelper.getWorkoutFromId(workoutId).getName();
 		workoutResultList = mDbHelper.getWorkoutResultForWorkout(workoutId, date);
-		
 	}
+	
 	@Override
+	/**
+	 * Set Layout and get layout fields
+	 */
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (container == null) {
 			return null;

@@ -31,6 +31,11 @@ import com.cwru.model.WorkoutResult;
 import com.cwru.model.goToHistoryListener;
 import com.cwru.model.goToNotesListener;
 
+/**
+ * UI Fragment to display the Set Exercise Data Entry
+ * @author sacrilley
+ *
+ */
 public class WorkoutSetFragment extends Fragment {
 	
 	private DbAdapter mDbHelper;
@@ -51,6 +56,12 @@ public class WorkoutSetFragment extends Fragment {
 	private static goToNotesListener listenerNotes;
 	private static goToHistoryListener listenerHistory;
 	
+	/**
+	 * Constructor
+	 * @param exercise
+	 * @param context
+	 * @param workoutId
+	 */
 	public WorkoutSetFragment(Exercise exercise, Context context, int workoutId) {
 		// Set Adapter
 		mDbHelper = new DbAdapter(context);
@@ -61,7 +72,11 @@ public class WorkoutSetFragment extends Fragment {
 		this.context = context;
 		
 	}
+	
 	@Override
+	/**
+	 * Set Layout and get layout fields
+	 */
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (container == null) {
 			return null;
@@ -109,6 +124,9 @@ public class WorkoutSetFragment extends Fragment {
 		return view;
 	}
 	
+	/**
+	 * Listener when history is clicked.  Calls the activity that set the listener.  Launches exercise history for the current exercise
+	 */
 	View.OnClickListener historyButtonListener = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
@@ -116,6 +134,9 @@ public class WorkoutSetFragment extends Fragment {
 		}
 	};	
 	
+	/**
+	 * Listener when notes button is clicked.  Calls the activity that set the listener.  Launches the notes activity for the current exercise
+	 */
 	View.OnClickListener notesButtonListener = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
@@ -178,6 +199,10 @@ public class WorkoutSetFragment extends Fragment {
 		*/
 		
 	}
+	
+	/**
+	 * Listener to record the set user entered data from user into the database
+	 */
 	View.OnClickListener recordSetListener = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
@@ -241,10 +266,18 @@ public class WorkoutSetFragment extends Fragment {
 		}
 	};
 	
+	/**
+	 * 
+	 * @param listener
+	 */
 	public static void setGoToNotesListener(goToNotesListener listener) {
 		listenerNotes = listener;
 	}
 	
+	/**
+	 * 
+	 * @param listener
+	 */
 	public static void setGoToHistoryListener(goToHistoryListener listener) {
 		listenerHistory = listener;
 	}

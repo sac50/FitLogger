@@ -31,8 +31,8 @@ import com.cwru.model.goToHistoryListener;
 import com.cwru.model.goToNotesListener;
 import com.cwru.utils.MeasurementConversions;
 
-/** TODO
- * SET THE DISTANCE TO DO TO CHANGE ON UNITS CHANGE, SO WRITE A CONVERSION
+/**
+ * Fragment that provides the interface and back-end support for a Distance based exercise
  * @author scrilley
  *
  */
@@ -54,7 +54,12 @@ public class WorkoutWorkflowDistanceFragment extends Fragment {
 	public static goToNotesListener listenerNotes;
 	public static goToHistoryListener listenerHistory;
 
-	
+	/**
+	 * Constructor
+	 * @param exercise
+	 * @param context
+	 * @param workoutId
+	 */
 	public WorkoutWorkflowDistanceFragment (Exercise exercise, Context context, int workoutId) {
 		this.context = context;
 		this.exercise = exercise;
@@ -65,6 +70,9 @@ public class WorkoutWorkflowDistanceFragment extends Fragment {
 	}
 		
 	@Override
+	/**
+	 * Set layout and layout fields
+	 */
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (container == null) {
 			return null;
@@ -135,6 +143,9 @@ public class WorkoutWorkflowDistanceFragment extends Fragment {
 		return view;
 	}
 	
+	/**
+	 * Listener when history is clicked.  Calls the activity that set the listener.  Launches exercise history for the current exercise
+	 */
 	View.OnClickListener historyButtonListener = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
@@ -142,6 +153,9 @@ public class WorkoutWorkflowDistanceFragment extends Fragment {
 		}
 	};	
 	
+	/**
+	 * Listener when notes button is clicked.  Calls the activity that set the listener.  Launches the notes activity for the current exercise
+	 */
 	View.OnClickListener notesButtonListener = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
@@ -149,6 +163,9 @@ public class WorkoutWorkflowDistanceFragment extends Fragment {
 		}
 	};
 	
+	/**
+	 * Records the values set by the user in the exercise
+	 */
 	View.OnClickListener recordDistanceListener = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
@@ -220,10 +237,17 @@ public class WorkoutWorkflowDistanceFragment extends Fragment {
 		return length;  //  Value is the same units as the default option as defined by user
 	}
 	
+	/**
+	 * @param listener
+	 */
 	public static void setGoToNotesListener(goToNotesListener listener) {
 		listenerNotes = listener;
 	}
 	
+	/**
+	 * 
+	 * @param listener
+	 */
 	public static void setGoToHistoryListener(goToHistoryListener listener) {
 		listenerHistory = listener;
 	}
