@@ -10,9 +10,17 @@ import android.widget.TextView;
 import com.cwru.R;
 import com.cwru.fragments.ExerciseGoalBankFragment;
 
+/**
+ * Activity to display Exercise goals.  Falls under the Exercise Goals tab under the Goals Module
+ * @author lkissling
+ *
+ */
 public class ExerciseGoalActivity extends FragmentActivity {
 	private TextView appTitleBar;
 	
+	/**
+	 * onCreate Callback.  Sets layout and launches the ExerciseGoalBank fragment to the main frame.
+	 */
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
