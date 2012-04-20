@@ -21,6 +21,12 @@ import com.cwru.model.WorkoutResult;
 import com.cwru.utils.DateConverter;
 import com.cwru.utils.GraphBuilder;
 
+/**
+ * Activity to display analytics for user workouts.  Utilizes a web view to present information to the user.
+ * Activity falls under the workout analytics tab under the analytics module.  
+ * @author lkissling
+ *
+ */
 public class WorkoutAnalyticsActivity extends Activity {
 	DbAdapter mDbHelper;
 	
@@ -36,6 +42,9 @@ public class WorkoutAnalyticsActivity extends Activity {
 	
 	
 	@Override
+	/**
+	 * onCreate callback.  Sets the layout and webview for the activity.  
+	 */
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mDbHelper = new DbAdapter(this);
@@ -141,6 +150,9 @@ public class WorkoutAnalyticsActivity extends Activity {
 //		view.loadDataWithBaseURL("file:///android_asset/js/", monthHTML, "text/html", "utf-8", null);
 	}
 	
+	/**
+	 * Listener to handle the onchecked changed events for the radio buttons that exist int the view
+	 */
 	RadioGroup.OnCheckedChangeListener groupListener = new RadioGroup.OnCheckedChangeListener() {
 		
 		@Override
