@@ -9,6 +9,11 @@ import android.widget.TextView;
 
 import com.cwru.R;
 
+/**
+ * Activity to display the available tabs that fall under goals. 
+ * @author lkissling
+ *
+ */
 public class GoalsActivity extends TabActivity {
 	private TabHost tabHost; // Activity TabHost
 	private TabHost.TabSpec tabSpec; // TabSpec to use for all tabs
@@ -16,6 +21,9 @@ public class GoalsActivity extends TabActivity {
 	private TextView appTitleBar;
 	
 	@Override
+	/**
+	 * onCreate Callback.  Creates and initialized goal tabs
+	 */
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.goals_module);
@@ -49,6 +57,9 @@ public class GoalsActivity extends TabActivity {
 		tabHost.setCurrentTabByTag(lastTabTag);
 	}
 	
+	/**
+	 * Top title bar on click event handler.  Takes user back to home screen.  Resets back stack to clear history.
+	 */
 	View.OnClickListener goHomeListener = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
