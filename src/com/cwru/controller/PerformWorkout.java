@@ -30,6 +30,8 @@ import com.cwru.model.goToHistoryListener;
 import com.cwru.model.goToNotesListener;
 
 /**
+ * Activity to handle the execution of a user defined workout.  Contains a mainframe which shows the exercise specific data.
+ * Contains next and prev buttons for exercise navigation within the workout.
  * 
  * @author sacrilley
  * 
@@ -49,6 +51,9 @@ public class PerformWorkout extends FragmentActivity implements goToNotesListene
 	private TextView appTitleBar;
 	
 	@Override
+	/**
+	 * oncreate Callback.  Sets the layout for the activity and the text for the top bar of window.
+	 */
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.perform_workout);
@@ -81,6 +86,9 @@ public class PerformWorkout extends FragmentActivity implements goToNotesListene
 
 	}
 	
+	/**
+	 * Launches the exercise currently to be done to the main frame layout in the activity layout
+	 */
 	private void launchExercise() {
 		if (exercisesForWorkout.size() < 0) {
 			/** 
@@ -119,6 +127,10 @@ public class PerformWorkout extends FragmentActivity implements goToNotesListene
 		}
 	}
 	
+	/**
+	 * Performs fragment transaction to show set based exercise in main frame
+	 * @param exercise
+	 */
 	private void launchSetExercise(Exercise exercise) {
 		WorkoutSetFragment workoutSet = new WorkoutSetFragment(exercise, this, workoutId);
 		WorkoutSetFragment.setGoToNotesListener(this);
@@ -137,6 +149,10 @@ public class PerformWorkout extends FragmentActivity implements goToNotesListene
 		transaction.commit();
 	}
 	
+	/**
+	 * Performs fragment transaction to show countdown timer based exercise in main frame.
+	 * @param exercise
+	 */
 	private void launchCountdownTimeExercise(Exercise exercise) {
 		WorkoutWorkflowCountDownTimerFragment.setGoToNotesListener(this);
 		WorkoutWorkflowCountDownTimerFragment.setGoToHistoryListener(this);
@@ -155,6 +171,10 @@ public class PerformWorkout extends FragmentActivity implements goToNotesListene
 		transaction.commit();
 	}
 	
+	/**
+	 * Performs fragment transaction to show countup timer based exercise in main frame.
+	 * @param exercise
+	 */
 	private void launchCountupTimeExercise(Exercise exercise) {
 		WorkoutWorkflowCountUpTimerFragment.setGoToNotesListener(this);
 		WorkoutWorkflowCountUpTimerFragment.setGoToHistoryListener(this);
@@ -173,6 +193,10 @@ public class PerformWorkout extends FragmentActivity implements goToNotesListene
 		transaction.commit();
 	}
 	
+	/**
+	 * Performs fragment transaction to show distance based exercise in main frame
+	 * @param exercise
+	 */
 	private void launchDistanceExercise(Exercise exercise) {
 		WorkoutWorkflowDistanceFragment.setGoToNotesListener(this);
 		WorkoutWorkflowDistanceFragment.setGoToHistoryListener(this);
@@ -191,6 +215,10 @@ public class PerformWorkout extends FragmentActivity implements goToNotesListene
 		transaction.commit();
 	}
 	
+	/**
+	 * Performs fragment transaction to show interval based exercise main frame
+	 * @param exercise
+	 */
 	private void launchIntervalExercise(Exercise exercise) {
 		// Get Intervals for Exercise
 		WorkoutWorkflowIntervalFragment.setGoToNotesListener(this);
@@ -207,7 +235,8 @@ public class PerformWorkout extends FragmentActivity implements goToNotesListene
 	}
 	
 	/**
-	 * TODO Sets array will go to the workoutset fragment
+	 * Gets the exercises belonging to the selected workout
+	 * @param workoutName
 	 */
 	public void getExercisesForWorkout (String workoutName) {
 		exercisesForWorkout = new ArrayList<Exercise>();
@@ -220,6 +249,9 @@ public class PerformWorkout extends FragmentActivity implements goToNotesListene
 		}
 	}
 	
+	/**
+	 * Listener responding to the click of the next exercise button.  Loads the next exercise into the main frame.
+	 */
 	View.OnClickListener nextExercise = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
@@ -267,6 +299,9 @@ public class PerformWorkout extends FragmentActivity implements goToNotesListene
 		}
 	};
 	
+	/**
+	 * Listener responding to the click of the previous exercise button.  Loads the previous exercise into the main frame
+	 */
 	View.OnClickListener prevExercise = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
@@ -289,6 +324,9 @@ public class PerformWorkout extends FragmentActivity implements goToNotesListene
 		}
 	};
 	
+	/**
+	 * Function to display appropriate text for the naviagation buttons depending on what exercise index where are currently at
+	 */
 	private void updateButtonText() {
 		if (exerciseCounter == 0) {
 			btnPrevious.setText("Begin");
@@ -304,6 +342,9 @@ public class PerformWorkout extends FragmentActivity implements goToNotesListene
 	}
 
 	@Override
+	/**
+	 * Launches Activity to display the user note for the activity
+	 */
 	public void goToExerciseNote(int exerciseId) {
 		Intent intent = new Intent(this, NotesActivity.class);
 		intent.putExtra("EXERCISE-ID", exerciseId);
@@ -311,12 +352,18 @@ public class PerformWorkout extends FragmentActivity implements goToNotesListene
 	}
 
 	@Override
+	/**
+	 * Launches the activity to display the exercise history for the activity
+	 */
 	public void goToExerciseHistory(int exerciseId) {
 		Intent intent = new Intent(this, ExerciseHistoryActivity.class);
 		intent.putExtra("EXERCISE-ID", exerciseId);
 		startActivity(intent);
 	}
 	
+	/**
+	 * Top title bar on click event handler.  Takes user back to home screen.  Resets back stack to clear history.
+	 */
 	View.OnClickListener goHomeListener = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
