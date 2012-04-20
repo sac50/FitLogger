@@ -10,6 +10,12 @@ import android.widget.TextView;
 import com.cwru.R;
 
 
+/**
+ * Activity to house the Create Edit Workouts and Exercises Module.
+ * Implements a Tab Layout to allow each to be done.  Default tab is create workout.
+ * @author sacrilley
+ *
+ */
 public class CreateEditTabActivity  extends TabActivity {
 	
 	private TabHost tabHost; // Activity TabHost
@@ -20,6 +26,9 @@ public class CreateEditTabActivity  extends TabActivity {
 	
 	
 	@Override
+	/**
+	 * Sets the layout and intents to be executed when each tab is clicked
+	 */
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.workout_exercise_module);
@@ -59,6 +68,9 @@ public class CreateEditTabActivity  extends TabActivity {
 		
 	}
 
+	/**
+	 * Top title bar on click event handler.  Takes user back to home screen.  Resets back stack to clear history.
+	 */
 	View.OnClickListener goHomeListener = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {

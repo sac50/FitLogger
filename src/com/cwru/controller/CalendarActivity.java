@@ -17,12 +17,21 @@ import com.cwru.fragments.CalendarFragment.returnDateListener;
 import com.cwru.fragments.CalendarScheduleWorkoutFragment;
 import com.cwru.fragments.WorkoutListingFragment.onWorkoutListingClickListener;
 
+/**
+ * Activity to implement a calendar.  Creates a main frame from which calendar related fragments
+ * are loaded to.
+ * @author sacrilley
+ *
+ */
 public class CalendarActivity extends FragmentActivity implements returnDateListener, goToDayEventsListener, onWorkoutListingClickListener, scheduleWorkoutListener {
 	private boolean returnDate = false;
 	private boolean returnWorkout = false;
 	private TextView appTitleBar;
 
 	@Override
+	/**
+	 * Sets the listeneres for the activity and loads the calendar fragment
+	 */
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.calendar);
@@ -51,6 +60,9 @@ public class CalendarActivity extends FragmentActivity implements returnDateList
 	}
 
 	@Override
+	/**
+	 * Finishes the activity and puts the date selected in the intent under key DATE-SELECTED
+	 */
 	public void returnSelectedDate(String dateSelected) {
 		Intent intent = new Intent();
 		intent.putExtra("DATE-SELECTED", dateSelected);
@@ -59,6 +71,9 @@ public class CalendarActivity extends FragmentActivity implements returnDateList
 	}
 
 	@Override
+	/**
+	 * Replaces main frame with calendar day view fragment to show day specific events
+	 */
 	public void goToDayEvents(String date) {
 		// TODO Auto-generated method stub
 		CalendarDayViewFragment dayView = new CalendarDayViewFragment(this, date);
@@ -71,6 +86,10 @@ public class CalendarActivity extends FragmentActivity implements returnDateList
 	}
 
 	@Override
+	/**
+	 * Takes a workout selected and launches the perform workout intent to allow user to 
+	 * start workout.  Launches the Workout Workflow Module
+	 */
 	public void onWorkoutListingListenerClick(String workoutName) {
 		Intent intent = new Intent(this, PerformWorkout.class);
 		intent.putExtra("workoutName", workoutName);
@@ -78,6 +97,9 @@ public class CalendarActivity extends FragmentActivity implements returnDateList
 	}
 
 	@Override
+	/**
+	 * Replaces main frame with fragment to allowing workout scheduling 
+	 */
 	public void scheduleWorkout(String date) {
 		// TODO Auto-generated method stub
 		CalendarScheduleWorkoutFragment scheduleWorkout = new CalendarScheduleWorkoutFragment(this, date);
@@ -88,6 +110,9 @@ public class CalendarActivity extends FragmentActivity implements returnDateList
 		
 	}
 	
+	/**
+	 * Top title bar on click event handler.  Takes user back to home screen.  Resets back stack to clear history.
+	 */
 	View.OnClickListener goHomeListener = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
