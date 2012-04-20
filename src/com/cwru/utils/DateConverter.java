@@ -2,6 +2,11 @@ package com.cwru.utils;
 
 import java.util.GregorianCalendar;
 
+/**
+ * 
+ * @author lkissling
+ *
+ */
 public class DateConverter {
 	
 	/**
