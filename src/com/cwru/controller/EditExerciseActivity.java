@@ -12,8 +12,17 @@ import com.cwru.R;
 import com.cwru.fragments.EditExerciseBankFragment;
 import com.cwru.fragments.EditExerciseFragment;
 
+/**
+ * Activity to perform editing of exercises.  Launches the edit exercise bank fragment
+ * @author lkissling
+ *
+ */
 public class EditExerciseActivity extends FragmentActivity {
 
+	@Override
+	/**
+	 * On Create Callback.  Sets layout for the tab and launches the edit exercise bank fragment
+	 */
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.edit_exercise_tab);
@@ -25,13 +34,11 @@ public class EditExerciseActivity extends FragmentActivity {
 			transaction.add(R.id.flEditExerciseLeftFrame, exBank);
 			transaction.add(R.id.flEditExerciseRightFrame, exExer);
 			transaction.commit();
-			Log.d("STEVE", "TABLET NOT PHONE");
 		} else {
 			EditExerciseBankFragment exBank = new EditExerciseBankFragment();
 			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 			transaction.add(R.id.flEditExerciseMainFrame, exBank);
 			transaction.commit();
-			Log.d("Fragment Commited", "FrAGMENT");
 		}
 	}
 	
@@ -46,13 +53,11 @@ public class EditExerciseActivity extends FragmentActivity {
 			transaction.add(R.id.flEditExerciseLeftFrame, exBank);
 			transaction.add(R.id.flEditExerciseRightFrame, exExer);
 			transaction.commitAllowingStateLoss();
-			Log.d("STEVE", "TABLET NOT PHONE");
 		} else {
 			EditExerciseBankFragment exBank = new EditExerciseBankFragment();
 			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 			transaction.add(R.id.flEditExerciseMainFrame, exBank);
 			transaction.commitAllowingStateLoss();
-			Log.d("Fragment Commited", "FrAGMENT");
 		}
 	}
 
