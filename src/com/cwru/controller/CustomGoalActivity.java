@@ -10,9 +10,17 @@ import android.widget.TextView;
 import com.cwru.R;
 import com.cwru.fragments.CustomGoalBankFragment;
 
+/**
+ * Activity to show user custom goals.  Falls under the custom goal tab under the goals module
+ * @author sacrilley
+ *
+ */
 public class CustomGoalActivity extends FragmentActivity {
 	private TextView appTitleBar;
 	
+	/**
+	 * on create callback.  Sets layout and launches the CustomGoalBankFragment to the main frame
+	 */
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
