@@ -12,16 +12,27 @@ import com.cwru.R;
 import com.cwru.fragments.ExerciseBankFragment;
 import com.cwru.fragments.ExerciseSequenceFragment;
 
+/**
+ * Activity that displays all exercises in a list view to the user.
+ * @author sacrilley
+ *
+ */
 public class WorkoutExerciseListing extends FragmentActivity {
-	
+	/** TextView for the Application Title Bar that when clicked takes user to the Home Screenn */
 	private TextView appTitleBar;
 
 	@Override
+	/**
+	 * onCreate Callback.  Sets the layout and all listeners.  Loads the Exercise Bank
+	 * Fragment and puts it in the main frame
+	 */
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.workout_exercise_listing);
 		
+		// Get the Title bar from layout
 		appTitleBar = (TextView) this.findViewById(R.id.tvWorkoutExerciseListingAppTitleBar);
+		// Set title bar listener
 		appTitleBar.setOnClickListener(goHomeListener);
 		
 		String workoutName = "";
@@ -57,6 +68,9 @@ public class WorkoutExerciseListing extends FragmentActivity {
 		}
 	}
 	
+	/**
+	 * Listener to direct user to home screen.  Resets application back stack on click.
+	 */
 	View.OnClickListener goHomeListener = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
