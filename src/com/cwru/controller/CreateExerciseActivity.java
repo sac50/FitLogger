@@ -31,6 +31,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * Activity to handle Custom user exercise creation
+ * @author lkissling
+ *
+ */
 public class CreateExerciseActivity extends FragmentActivity {
 	DbAdapter mDbHelper;
 	EditText mNameText;
@@ -47,7 +52,9 @@ public class CreateExerciseActivity extends FragmentActivity {
 	Spinner typeSpinner;
 	Spinner subTypeSpinner;
 	Exercise ex = new Exercise();
-
+	/**
+	 * onCreate Callback. 
+	 */
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mDbHelper = new DbAdapter(this);
