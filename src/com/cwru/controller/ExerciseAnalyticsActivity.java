@@ -10,8 +10,17 @@ import android.widget.TextView;
 import com.cwru.R;
 import com.cwru.fragments.ExerciseAnalyticsBankFragment;
 
+/**
+ * Activity to dispaly analytics regarding exercises.  Falls under the exercise tab under the
+ * analytics module
+ * @author lkissling
+ *
+ */
 public class ExerciseAnalyticsActivity extends FragmentActivity {
 	
+	/**
+	 * onCreate Callback.  Sets the layout and launches the ExerrciseAnalytics Bank fragment to the main frame
+	 */
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
