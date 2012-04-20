@@ -17,8 +17,18 @@ import com.cwru.fragments.ExerciseSequenceFragment;
 import com.cwru.fragments.WorkoutListingFragment;
 import com.cwru.fragments.WorkoutListingFragment.onWorkoutListingClickListener;
 
+/**
+ * Activity to allow user to edit a workout.  Launches the WorkoutListing fragment initially, then the resulting fragments
+ * to edit information pertaining to the workout.
+ * @author sacrilley
+ *
+ */
 public class EditWorkoutActivity extends FragmentActivity implements onGoToExerciseSequenceListener, onGoToExerciseBankListener, onWorkoutListingClickListener {
 		
+	@Override
+	/**
+	 * onCreate Callback.  Sets layout and listeners.  Launches the workout listing fragment to the main frame
+	 */
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		// Set Listener
@@ -54,6 +64,9 @@ public class EditWorkoutActivity extends FragmentActivity implements onGoToExerc
 	}
 	
 	@Override
+	/**
+	 * Listener which replaces the main frame with the exercise sequence fragment
+	 */
 	public void goToExerciseSequence(String workoutName) {
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		ExerciseSequenceFragment esequence = new ExerciseSequenceFragment(workoutName);
@@ -63,8 +76,10 @@ public class EditWorkoutActivity extends FragmentActivity implements onGoToExerc
 	}
 
 	@Override
+	/**
+	 * Listener which replaces the main frame with the exercise bank fragment
+	 */
 	public void goToExerciseBank(String workoutName) {
-		Log.d("Steve", "000000000000000000000000000000000000000000000000000000000000000000000000");
 		/* Tablet - Show split pane of exercise bank and exercise sequence */
 		if (HomeScreen.isTablet) {
 			ExerciseBankFragment ebank = new ExerciseBankFragment(workoutName);
@@ -86,6 +101,9 @@ public class EditWorkoutActivity extends FragmentActivity implements onGoToExerc
 	}
 
 	@Override
+	/**
+	 * Listener which replaces the main frame with the edit workout information fragment
+	 */
 	public void onWorkoutListingListenerClick(String workoutName) {
 		// TODO Auto-generated method stub
 		EditWorkoutInformationFragment editWorkoutInformation = new EditWorkoutInformationFragment(workoutName, this);
