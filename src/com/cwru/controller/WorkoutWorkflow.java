@@ -18,7 +18,7 @@ import com.cwru.fragments.WorkoutListingFragment.onWorkoutListingClickListener;
  *
  */
 public class WorkoutWorkflow extends FragmentActivity implements onWorkoutListingClickListener {	
-	/** TextView for the Application Title Bar that when clicked takes user to the Home Screenn */
+	/** TextView for the Application Title Bar that when clicked takes user to the Home Screen */
 	private TextView appTitleBar;
 	
 	@Override
