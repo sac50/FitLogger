@@ -5,22 +5,25 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
 import com.cwru.R;
 import com.cwru.fragments.CreateWorkoutInformationFragment;
-import com.cwru.fragments.ExerciseSequenceFragment;
 import com.cwru.fragments.CreateWorkoutInformationFragment.onGoToExerciseBankListener;
 import com.cwru.fragments.ExerciseBankFragment;
 import com.cwru.fragments.ExerciseBankFragment.onGoToExerciseSequenceListener;
+import com.cwru.fragments.ExerciseSequenceFragment;
 
 public class CreateWorkoutActivity extends FragmentActivity implements onGoToExerciseSequenceListener, onGoToExerciseBankListener{
-	
+			
 		public void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.create_workout_tab);	
 			// Set Listener
 			CreateWorkoutInformationFragment.setExerciseBankListener(this);
 			ExerciseBankFragment.setExerciseSequenceListener(this);
+			
 		
 			if (HomeScreen.isTablet) {
 				CreateWorkoutInformationFragment information = new CreateWorkoutInformationFragment();
@@ -69,5 +72,6 @@ public class CreateWorkoutActivity extends FragmentActivity implements onGoToExe
 				transaction.commit();
 			}
 		}
+		
 			
 }

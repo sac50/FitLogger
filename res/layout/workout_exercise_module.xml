@@ -8,6 +8,17 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:padding="5dp">
+        
+        <TextView 
+      		android:id="@+id/tvWorkoutExerciseModuleAppTitleBar"
+      		android:layout_width="match_parent"
+      		android:layout_height="wrap_content"
+      		android:text="FitLogger"
+      		android:gravity="center"
+      		android:background="@drawable/shape1test"  
+      		android:paddingTop="5sp"
+      		android:paddingBottom="5sp"
+    	/>
         <TabWidget
             android:id="@android:id/tabs"
             android:layout_width="fill_parent"

@@ -1,21 +1,29 @@
 package com.cwru.controller;
 
-import android.net.Uri;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
 import com.cwru.R;
 import com.cwru.fragments.ExerciseBankFragment;
 import com.cwru.fragments.ExerciseSequenceFragment;
 
 public class WorkoutExerciseListing extends FragmentActivity {
+	
+	private TextView appTitleBar;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.workout_exercise_listing);
+		
+		appTitleBar = (TextView) this.findViewById(R.id.tvWorkoutExerciseListingAppTitleBar);
+		appTitleBar.setOnClickListener(goHomeListener);
+		
 		String workoutName = "";
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
@@ -48,5 +56,14 @@ public class WorkoutExerciseListing extends FragmentActivity {
 			transaction.commit();
 		}
 	}
+	
+	View.OnClickListener goHomeListener = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			Intent intent = new Intent(WorkoutExerciseListing.this, HomeScreen.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+		}
+	};
 
 }

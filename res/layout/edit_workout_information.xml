@@ -5,6 +5,7 @@
     android:orientation="vertical" 
     android:baselineAligned="false">
     
+    
     <FrameLayout 
 	    android:id="@+id/flEditWorkoutInformationMainFrame"
 		android:layout_width="match_parent"

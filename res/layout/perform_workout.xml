@@ -10,6 +10,17 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
     >
+    
+        <TextView 
+      		android:id="@+id/tvPerformWorkoutAppTitleBar"
+      		android:layout_width="match_parent"
+      		android:layout_height="wrap_content"
+      		android:text="FitLogger"
+      		android:gravity="center"
+      		android:background="@drawable/shape1test"  
+      		android:paddingTop="5sp"
+      		android:paddingBottom="5sp"
+    	/>
 	    <LinearLayout 
 			android:id="@+id/llWorkoutWorkflowSetTopBar"
 			android:layout_width="match_parent"

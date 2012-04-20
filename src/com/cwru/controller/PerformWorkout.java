@@ -46,6 +46,7 @@ public class PerformWorkout extends FragmentActivity implements goToNotesListene
 	private Button btnNext;
 	private TextView tvPercentDone;
 	private int workoutId;
+	private TextView appTitleBar;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -60,6 +61,9 @@ public class PerformWorkout extends FragmentActivity implements goToNotesListene
 		btnPrevious.setOnClickListener(prevExercise);
 		btnNext = (Button) this.findViewById(R.id.btnPerformWorkoutNext);
 		btnNext.setOnClickListener(nextExercise);
+		
+		appTitleBar = (TextView) this.findViewById(R.id.tvPerformWorkoutAppTitleBar);
+		appTitleBar.setOnClickListener(goHomeListener);
 		
 		tvPercentDone = (TextView) this.findViewById(R.id.tvPerformWorkoutPercentageDone);
 		Log.d("Size", "ExercisesForWorkout: " + exercisesForWorkout.size());
@@ -312,4 +316,13 @@ public class PerformWorkout extends FragmentActivity implements goToNotesListene
 		intent.putExtra("EXERCISE-ID", exerciseId);
 		startActivity(intent);
 	}
+	
+	View.OnClickListener goHomeListener = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			Intent intent = new Intent(PerformWorkout.this, HomeScreen.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+		}
+	};
 }

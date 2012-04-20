@@ -1,9 +1,12 @@
 package com.cwru.controller;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
 import com.cwru.R;
 import com.cwru.fragments.EditWorkoutInformationFragment;
@@ -15,7 +18,7 @@ import com.cwru.fragments.WorkoutListingFragment;
 import com.cwru.fragments.WorkoutListingFragment.onWorkoutListingClickListener;
 
 public class EditWorkoutActivity extends FragmentActivity implements onGoToExerciseSequenceListener, onGoToExerciseBankListener, onWorkoutListingClickListener {
-
+		
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		// Set Listener

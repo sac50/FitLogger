@@ -6,6 +6,17 @@
     android:id="@+id/llWorkoutExerciseListingContainer" 
     android:baselineAligned="false" >    
     
+    <TextView 
+      	android:id="@+id/tvWorkoutExerciseListingAppTitleBar"
+      	android:layout_width="match_parent"
+      	android:layout_height="wrap_content"
+      	android:text="FitLogger"
+      	android:gravity="center"
+      	android:background="@drawable/shape1test"  
+      	android:paddingTop="5sp"
+      	android:paddingBottom="5sp"
+    />
+    
    	<FrameLayout 
 	    android:id="@+id/flWorkoutExerciseListingMainFrame"
 		android:layout_width="match_parent"

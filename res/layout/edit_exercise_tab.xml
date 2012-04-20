@@ -4,6 +4,7 @@
     android:layout_height="fill_parent"
     android:id="@+id/LLEditExerciseTabContainter"
     android:orientation="vertical" >
+
     
     <FrameLayout
         android:id="@+id/flEditExerciseMainFrame"

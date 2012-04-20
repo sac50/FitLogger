@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical" 
     android:baselineAligned="false">
-    
+
     <FrameLayout 
 	    android:id="@+id/flAnalyticsMainFrame"
 		android:layout_width="match_parent"

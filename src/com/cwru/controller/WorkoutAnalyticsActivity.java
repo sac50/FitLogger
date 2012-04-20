@@ -6,21 +6,20 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.webkit.WebView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.TextView;
+
 import com.cwru.R;
 import com.cwru.dao.DbAdapter;
 import com.cwru.model.WorkoutResult;
 import com.cwru.utils.DateConverter;
 import com.cwru.utils.GraphBuilder;
-
-import android.app.Activity;
-import android.os.Bundle;
-import android.view.View;
-import android.webkit.WebView;
-import android.widget.CompoundButton;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.TextView;
-import android.widget.ToggleButton;
 
 public class WorkoutAnalyticsActivity extends Activity {
 	DbAdapter mDbHelper;
@@ -35,6 +34,7 @@ public class WorkoutAnalyticsActivity extends Activity {
 	String threeMonthHTML;
 	String yearHTML;
 	
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -42,6 +42,7 @@ public class WorkoutAnalyticsActivity extends Activity {
 		
 		setContentView(R.layout.workout_analytics);
 //		findViewById(R.id.llWorkoutAnalytics).setBackgroundColor(0xFFFFFFFF);
+		
 		
 		view = (WebView) findViewById(R.id.wvWorkoutAnalytics);
 		view.getSettings().setJavaScriptEnabled(true);
@@ -158,4 +159,5 @@ public class WorkoutAnalyticsActivity extends Activity {
 			}
 		}
 	};
+	
 }

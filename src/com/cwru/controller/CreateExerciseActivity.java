@@ -14,6 +14,7 @@ import com.cwru.model.Time;
 import com.cwru.utils.AutoFillListener;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
@@ -54,7 +55,7 @@ public class CreateExerciseActivity extends FragmentActivity {
 		TextView textView = new TextView(this);
 		textView.setText("Create Exercise Tab");
 		setContentView(R.layout.create_exercise_tab);
-
+		
 		// Exercise name
 		mNameText = (EditText) findViewById(R.id.etCreateExerciseName);
 
@@ -619,4 +620,5 @@ public class CreateExerciseActivity extends FragmentActivity {
 			inflatedLayouts.remove(position);
 		}
 	}
+	
 }

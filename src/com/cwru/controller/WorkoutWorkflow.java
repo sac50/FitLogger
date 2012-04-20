@@ -5,18 +5,25 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
 import com.cwru.R;
 import com.cwru.fragments.WorkoutListingFragment;
 import com.cwru.fragments.WorkoutListingFragment.onWorkoutListingClickListener;
 
 public class WorkoutWorkflow extends FragmentActivity implements onWorkoutListingClickListener {	
+	private TextView appTitleBar;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.workout_workflow);
 		// Set Fragment Listeners
 		WorkoutListingFragment.setOnWorkoutListingClickListener(this);
+		
+		appTitleBar = (TextView) this.findViewById(R.id.tvWorkoutWorkflowAppTitleBar);
+		appTitleBar.setOnClickListener(goHomeListener);
 		
 		WorkoutListingFragment workouts = new WorkoutListingFragment();
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -25,6 +32,15 @@ public class WorkoutWorkflow extends FragmentActivity implements onWorkoutListin
 		Log.d("Steve", "Workout onCreate call");
 		
 	}
+	
+	View.OnClickListener goHomeListener = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			Intent intent = new Intent(WorkoutWorkflow.this, HomeScreen.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+		}
+	};
 
 	@Override
 	public void onWorkoutListingListenerClick(String workoutName) {

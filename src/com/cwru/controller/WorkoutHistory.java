@@ -1,8 +1,11 @@
 package com.cwru.controller;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.view.View;
+import android.widget.TextView;
 
 import com.cwru.R;
 import com.cwru.fragments.WorkoutDateListFragment;
@@ -12,6 +15,7 @@ import com.cwru.fragments.WorkoutListingFragment.onWorkoutListingClickListener;
 import com.cwru.fragments.WorkoutSummaryFragment;
 
 public class WorkoutHistory extends FragmentActivity implements onWorkoutListingClickListener, onWorkoutDateListingClickListener {
+		
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		// Set Listener
@@ -53,4 +57,5 @@ public class WorkoutHistory extends FragmentActivity implements onWorkoutListing
 		transaction.replace(R.id.flWorkoutHistoryMainFrame, workoutSummary);
 		transaction.commit();
 	}
+
 }
