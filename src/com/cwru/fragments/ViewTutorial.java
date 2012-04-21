@@ -10,6 +10,12 @@ import android.view.ViewGroup;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+/**
+ * Fragment class displays tutorial text
+ * 
+ * @author lkissling
+ *
+ */
 public class ViewTutorial extends Fragment {
 	String str;
 	View view;

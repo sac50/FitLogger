@@ -16,6 +16,12 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+/**
+ * Fragment class lists items for which a tutorial is available.
+ * 
+ * @author lkissling
+ *
+ */
 public class TutorialBankFragment extends ListFragment {
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
