@@ -10,6 +10,7 @@
         	<item> History</item>
         	<item> Analytics</item>
         	<item> Calendar </item>
+        	<item> Tutorial </item>
     </string-array>
 
     <string name="workoutName">Workout Name</string>
@@ -159,6 +160,16 @@
     <string name="repSpecific">Rep Specific</string>
     <string name="generate">Generate</string>
     
+    <string-array name="tutorial_modules">
+       		<item> Exercises</item>
+       		<item> Workouts</item>
+        	<item> Start a Workout</item>
+        	<item> Create/Edit Workout</item>
+        	<item> Goals</item>
+        	<item> History</item>
+        	<item> Analytics</item>
+        	<item> Calendar </item>
+    </string-array>
     
     <color name="white">#FFFFFF</color>
 </resources>

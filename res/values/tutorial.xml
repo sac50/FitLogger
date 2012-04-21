@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="exercise"><b>Exercise</b>: An exercise is a specific physical activity that FitLogger allows you to define in multiple ways. Exercises are primarily split into two classifications: Strength and Cardio. These can be categorized further if desired (e.g.: Cardio-Run, Strength-Chest). Multiple types of exercises can be created:
+
+\n \n- <b>Countdown Timer</b>: A numerical time clarified by a unit of time (e.g. seconds, minutes)
+
+\n \n- <b>Countup Timer</b>: An exercise that will last an unspecified amount of time.
+
+\n \n- <b>Distance</b>: A numerical distance clarified by a unit of measurement (e.g. mile, yards). 
+
+\n \n- <b>Interval</b>: Time and/or distance-based intervals can be set up in a sequence and repeated. Ex: sprint 100 yards, rest 30 seconds, repeat five times.
+
+\n \n- <b>Set</b>: An exercise with a sequence of sets that are defined by a weight and number of reps. Each set’s weight and reps can be individually specified, and a set-based exercise can have up to 10 sets.</string>
+
+<string name="workout"><b>Workout</b>: A collection of exercises with a user-defined ordering. A workout also contains information about the scheduling of that workout. Days that the workout should be scheduled for can be defined, as can the number of desired repetitions of the workout over time or a date on which the workout should stop being automatically scheduled.</string>
+
+<string name="createEdit"><b>Create/Edit</b>: This interface allows you to create and edit both workouts and exercises. These functions are split between four tabs located at the top of the screen.</string>
+
+<string name="createExercise"><b>Create Exercise</b>: By filling out the relevant information in this interface you can create an exercise. Each exercise must have a unique name that you enter in the text box at the top. Select from the “Cardio” and “Strength” checkboxes to choose which one best fits your intended exercise. This selection impacts the types and sub-types of exercise you can create.
+
+\n \nSelecting “Cardio” allows you to select types of cardio exercises such as “run” or “swim,” and also allows you to specify the exercise as a distance, time or interval sub-type. Selecting “Strength” allows you to specify a part of your body such as “Biceps” or “Chest.” and define the sub-type as set-based or time-based. The types and sub-types appear in drop down menus below the checkboxes.
+
+\n \nUpon selection of a sub-type, the appropriate input boxes and menus will appear at the bottom of the screen. Once you have filled in the necessary information, select the “Done” button to create your exercise. If you are missing any necessary information, you will be informed of what’s required.</string>
+
+<string name="editExercise"><b>Edit Exercise</b>: Upon selection of the Edit Exercise tab, you will be presented with a list of all the exercises you have created. Selecting an exercise will allow you to view the information regarding that exercise. So that your exercise history and goals tracking remain logical, you are not allowed to edit the name, type or sub-type of a created exercise. 
+
+\n \nYou are, however, able to change the information regarding the intended execution of an exercise. For example, you can change a five mile run into a 10 kilometer run, or a bench press exercise with three sets at 150 pounds into one with five sets at 140 pounds. 
+
+\n \nSelect the “Done” button to finish editing your exercise. If any necessary information is missing, you will be informed on how to correct this.</string>
+
+<string name="createWorkout"><b>Create Workout</b>: By filling out the relevant information in this interface, you can build a workout. Each workout must have a unqiue name that you enter in the text box at the top. A drop down menu below the name indicates what kind of workout you are creating. 
+
+\n \nAll other information on this screen impacts the scheduling of the workout. The second drop down menu indicates how often you want the workout to repeat. Buttons below this indicate when you want the workout to stop being scheduled. 
+
+\n \nChecking the “Ends After” button allows you to define how many times you wish the workout to occur. The “On Date” allows you to set a specific date on the calendar when you want the workout to stop occurring. 
+
+\n \nBelow this are checkboxes for what days of the week you want your workout scheduled.
+
+\n \nOnce you have the information laid out as desired, press the “Create Workout” button to create the workout and be directed to an interface where you can determine which exercises to include in the workout. Check the boxes of your desired exercises, and press the “Order Exercises for Workout” button to determine the order in which you want to perform the exercises.
+
+\n \nTo order your exercises, simply drag and drop them until you reach your desired order. Once you have done so, you may exit the Create Workout interface and the order will be saved.</string>
+<string name="editWorkout"><b>Edit Workout</b>: In the Edit Workout interface, you can change the name and type of your workout by altering the relevant information and selecting the “Update Workout” button. You may also update the exercises and exercise ordering by pressing the “Update Exercises and Exercise Ordering” button. Selecting which exercises you wish to perform in a workout, and the order in which you wish to perform them, works the same way in both the Create and Edit Workout tabs.</string>
+
+<string name="startWorkout"><b>Start A Workout</b>: This interface allows a user to log the progress of their workout in real time. Upon clicking Start A Workout, you can select a workout from the list of workouts that you have created.
+\n \nThe “Prev” and “Next” buttons at the top can be used to access the different exercises within the workout. To see the history or notes for a specific exercise, click on the respective “History” or “Notes” button.
+\n \nFor time-based exercises, a timer is presented and can be started with the “Start” button. This timer will reflect what you have defined in the exercise: a count up timer will count up until you pause or record the time, and a countdown timer will count down from the time specified in the exercise. The timer can be paused with the “Pause” button, and the time is recorded via the “Record” button.
+\n \nFor other kinds of exercises, expected results will pre-fill text boxes that you can edit with actual results. Once the information presented represents your actual results, you can press the “Record” button to log the results.
+\n \nOnce you have reached the end of a workout, the “ Finish” button will bring you to a summary of your workout’s results. The back button can be used to exit the workout.</string>
+
+<string name="goals">    <b>Goals</b>: This interface allows for the creation viewing, and updating of goals. Select the desired type of goal from the tabs at the top. Each type has a “+ Add Goal” button, a list of existing goals, as well as a “Show Completed” checkbox that adds completed goals to the list.
+\n \n    <b>Exercise Goals</b>: Goals that are related to a specific exercise or set of exercises and that are automatically updated with a  user’s progress towards completing that goal. To create a new Exercise Goal, click “+ Add Goal” on the Exercise Goals tab.
+\n    Insert a goal summary (e.g. “Run a marathon”) in the appropriate text box, and specify whether the goal should be cumulative or not. A cumulative goal will add together all progress towards a goal to determine total progress, while a non-cumulative goal will only record the current best completion of an exercise.
+\n    Specify whether the goal is for a Cardio or Strength exercise. If it’s a Cardio exercise, the goal can relate to a type of exercise (e.g. “Run” or “Swim”) or a specific exercise the user has created. If the goal is tracking a generic type of exercise, it will update when any exercise that matches that type is performed. In this case, pecify whether it should track distance or time and fill out the appropriate information. If you desire an exercise specific goal, select “Exercise Specific” from the drop down menu and choose your exercise from the second drop down.
+\n    If you create a goal for a Strength exercise, you can only link it to a specific type, no generic Strength type is provided. Fill out the appropriate information given the exercise for which you are creating the goal.
+\n    If you wish to view your progress on an  Exercise Goal, select the goal from the list. From here you can also delete the goal if you so choose.	
+\n \n    <b>Body Goals</b>: Goals that relate to your own body. Here you can specify a category for your goal (e.g. “Body Weight”) as well as starting and goal numbers for that goal. You can select what unit best reflect your goal from the drop down.
+\n    You can view and update your progress on a body goal by selecting it from the list. This will show where you started and what your goal is, and you can update the information by altering the text box for “Current” and pressing the “Update” button. You can also delete the goal using the “Delete” button.
+\n \n    <b>Custom Goals</b>: A catch-all interface for goals that do not fit in with Exercise or Body goals. When creating a Custom Goal, simply specify a goal summary (e.g. “find a workout partner”) and any further description of the goal you may have, and press the “Done” button.
+\n    To view your custom goal, select the goal from the list of Custom Goals. Here you can mark the goal as completed with the “Completed” button, or delete it with the “Delete” button.</string>
+
+<string name="history"><b>History</b>: This interface allows for the viewing of workout and exercise history, which are split into separate tabs. Simply click on the workout or exercise whose history you wish to view. Workout history will appear as a list of dates. Clicking on the date displays the results for the workout performed on that day.</string>
+
+<string name="analytics"><b>Analytics</b>: This interface presents various interesting aspects of your history in graphical format. It is split into two tabs: Workout Analytics and Exercise Analytics. In Workout Analytics, you can view different graphs by selecting from the three checkboxes at the bottom: “Month,” “Three Months,” and “Year.”
+\n \nThe first two show how many workouts you have performed per week for the past month and three months respectively. “Year” shows how many workouts you have performed per month for the past year. A month is defined as 30 days for consistency along the graph.
+\n \nUpon selection of the Exercise Analytics tab, a list of all non-interval exercises that you have created is displayed. Select your desired exercise to view it’s related graph or graphs. Time and distance exercises will show recent (up to 50) results from that exercise in chronological order.
+\n \nSelection of a set-based exercise from the list will allow you to choose what kind of data you’d like to view via checkboxes at the top: “Weight Over Time” and “Rep Specific.” “Weight Over Time” shows the combined weight lifted each week for the past three months. 
+\n \n“Rep Specific” will prompt you to enter a specific amount of reps. Press the “Generate” button to generate a graph related to that amount of reps. This graph generates recent (up to 50) results of a set for that exercise in which you did the number of reps specified. This allows you to graphically see how you’ve progressed at a specific set-based exercise.</string>
+
+<string name="calendar"><b>Calendar</b>: FitLogger’s calendar allows you to view you to keep track of your workout schedule. You can navigate through the months by pressing the “Prev” and 
+\n \n“Next” buttons located at the top. Days on which you either performed a workout or have future workouts planned will appear in red, and the current day will be highlighted yellow. By selecting a day in the past you can view that day’s workout history.
+\n \nBy selecting the current or future days, you can schedule a workout or perform an already scheduled workout. Choosing to schedule a workout will bring you to a screen similar to the Create Workout interface. Click the “Select a Workout” button and choose a workout from your list of created workouts. Then, you can choose on what time frame you want it to repeat, which days you want the workout scheduled for, and when the workout schedule should end. Press “Schedule Workout” to finish the scheduling process.</string>
+</resources>
