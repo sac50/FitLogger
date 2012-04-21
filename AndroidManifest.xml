@@ -44,6 +44,7 @@
    		<activity android:name=".controller.WorkoutListingActivity" android:configChanges="orientation|keyboardHidden" />
     	<activity android:name=".controller.NotesActivity" android:configChanges="orientation|keyboardHidden" />
     	<activity android:name=".controller.ExerciseHistoryActivity" android:configChanges="orientation|keyboardHidden" />
+    	<activity android:name=".controller.TutorialActivity" android:configChanges="orientation|keyboardHidden" />
     </application>
 
 </manifest>

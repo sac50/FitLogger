@@ -67,6 +67,9 @@ public class HomeScreen extends ListActivity {
 				else if (position == 5) { 
 					Intent intent = new Intent(HomeScreen.this, CalendarActivity.class);
 					startActivity(intent);
+				} else if (position == 6) {
+					Intent intent = new Intent(HomeScreen.this, TutorialActivity.class);
+					startActivity(intent);
 				}
 			}        	
         });
