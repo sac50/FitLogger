@@ -4,6 +4,19 @@
     android:layout_height="match_parent"
     android:orientation="vertical" 
     android:baselineAligned="false">
+    
+        
+    <TextView 
+      	android:id="@+id/tvTutorialInformationAppTitleBar"
+      	android:layout_width="match_parent"
+      	android:layout_height="wrap_content"
+      	android:text="FitLogger Tutorial"
+      	android:textColor="#FFFFFF"
+      	android:gravity="center"
+      	android:background="@drawable/shape1test"  
+      	android:paddingTop="5sp"
+      	android:paddingBottom="5sp"
+    />
 
     <FrameLayout 
 	    android:id="@+id/flTutorialMainFrame"

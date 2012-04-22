@@ -3,17 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
-    <TextView 
-      	android:id="@+id/tvHomeScreenAppTitleBar"
-      	android:layout_width="match_parent"
-      	android:layout_height="wrap_content"
-      	android:text="FitLogger Tutorial"
-      	android:gravity="center"
-      	android:background="@drawable/shape1test"  
-      	android:paddingTop="5sp"
-      	android:paddingBottom="5sp"
-    />
+
     
     <ListView 
         android:id="@+android:id/list"

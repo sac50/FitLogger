@@ -1,11 +1,14 @@
 package com.cwru.controller;
 
-import com.cwru.R;
-import com.cwru.fragments.TutorialBankFragment;
-
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.view.View;
+import android.widget.TextView;
+
+import com.cwru.R;
+import com.cwru.fragments.TutorialBankFragment;
 
 /**
  * Activity to view the tutorial. Launches the tutorial bank fragment
@@ -13,6 +16,7 @@ import android.support.v4.app.FragmentTransaction;
  *
  */
 public class TutorialActivity extends FragmentActivity {
+	private TextView appTitleBar;
 	
 	@Override
 	/**
@@ -22,6 +26,9 @@ public class TutorialActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.tutorial_information);
 		
+		appTitleBar = (TextView) findViewById(R.id.tvTutorialInformationAppTitleBar);
+		appTitleBar.setOnClickListener(goHomeListener);
+
 		if (HomeScreen.isTablet) {
 			TutorialBankFragment bank = new TutorialBankFragment();
 			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -35,4 +42,16 @@ public class TutorialActivity extends FragmentActivity {
 			transaction.commit();
 		}
 	}
+	
+	/**
+	 * Top title bar on click event handler.  Takes user back to home screen.  Resets back stack to clear history.
+	 */
+	View.OnClickListener goHomeListener = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			Intent intent = new Intent(TutorialActivity.this, HomeScreen.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+		}
+	};
 }
