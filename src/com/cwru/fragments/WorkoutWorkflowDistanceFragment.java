@@ -1,10 +1,13 @@
 package com.cwru.fragments;
 
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +22,7 @@ import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cwru.R;
 import com.cwru.controller.HomeScreen;
@@ -26,6 +30,7 @@ import com.cwru.dao.DbAdapter;
 import com.cwru.model.Distance;
 import com.cwru.model.DistanceResult;
 import com.cwru.model.Exercise;
+import com.cwru.model.ExerciseGoal;
 import com.cwru.model.WorkoutResult;
 import com.cwru.model.goToHistoryListener;
 import com.cwru.model.goToNotesListener;
@@ -177,7 +182,19 @@ public class WorkoutWorkflowDistanceFragment extends Fragment {
 			double length = Double.parseDouble(etDistanceEntry.getText().toString());
 			String units = (String) spnDistanceUnits.getSelectedItem();
 			DistanceResult distanceResult = new DistanceResult(workoutResultId, length, units);
-			mDbHelper.storeDistanceResult(distanceResult);			
+			mDbHelper.storeDistanceResult(distanceResult);	
+			
+			workoutResult.setId(workoutResultId);
+			workoutResult.setMode(WorkoutResult.DISTANCE_BASED_EXERCISE);
+			ArrayList<ExerciseGoal> goals = mDbHelper.getNewlyCompletedExerciseGoals(workoutResult);
+			for (ExerciseGoal goal : goals) {
+				Context context = v.getContext().getApplicationContext();
+				CharSequence text = "Goal completed: " + goal.getName();
+				int duration = Toast.LENGTH_SHORT;
+				Toast toast = Toast.makeText(context, text, duration);
+				toast.setGravity(Gravity.CENTER, 0, 0);
+				toast.show();
+			}
 			
 			/* Show recorded time on screen */
 			TableRow tr = new TableRow(WorkoutWorkflowDistanceFragment.this.getActivity());
