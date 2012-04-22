@@ -115,11 +115,19 @@ public class ExerciseAnalyticsFragment extends Fragment {
 		}
 		
 		int start = timeResults.size() > 50 ? timeResults.size() - 50 : 0;
+		String units = null;
 		
 		for (int i = start; i < timeResults.size(); i++) {
 			TimeResult result = timeResults.get(i);
-			double num = MeasurementConversions.convert(result.getLength(), result.getUnits(), time.getUnits());
-			map.put(i, num);
+			if (time != null) {
+				units = time.getUnits();
+				double num = MeasurementConversions.convert(result.getLength(), result.getUnits(), units);
+				map.put(i, num);
+			} else {
+				units = "seconds";
+				double num = MeasurementConversions.convert(result.getLength(), result.getUnits(), units);
+				map.put(i, num);
+			}
 		}
 		
 		if (map.isEmpty()) {
@@ -129,7 +137,7 @@ public class ExerciseAnalyticsFragment extends Fragment {
 		}
 		
 		GraphBuilder gb = new GraphBuilder();
-		html = gb.buildHTML(map, "Recent (up to 50) results for " + ex.getName() + ", in " + time.getUnits());
+		html = gb.buildHTML(map, "Recent (up to 50) results for " + ex.getName() + ", in " + units);
 				
 		return html;
 	}
@@ -158,7 +166,7 @@ public class ExerciseAnalyticsFragment extends Fragment {
 		
 		if (map.isEmpty()) {
 			for (int i = 0; i < 5; i ++) {
-				map.put(5, 0.0);
+				map.put(i, 0.0);
 			}
 		}
 		

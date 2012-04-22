@@ -677,6 +677,7 @@ public class DbAdapter {
 				createInterval(exercise);
 				break;	
 			case Exercise.COUNTUP_BASED_EXERCISE:
+				createTime(exercise);
 				break;
 			case Exercise.COUNTDOWN_BASED_EXERCISE:
 				createTime(exercise);

@@ -1,11 +1,14 @@
 package com.cwru.fragments;
 
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +18,13 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cwru.R;
 import com.cwru.controller.HomeScreen;
 import com.cwru.dao.DbAdapter;
 import com.cwru.model.Exercise;
+import com.cwru.model.ExerciseGoal;
 import com.cwru.model.Time;
 import com.cwru.model.TimeResult;
 import com.cwru.model.WorkoutResult;
@@ -241,6 +246,18 @@ public class WorkoutWorkflowCountDownTimerFragment extends Fragment{
 			String units = "seconds";
 			TimeResult timeResult = new TimeResult(workoutResultId, timeDone, units);
 			mDbHelper.storeTimeResult(timeResult);
+			
+			workoutResult.setId(workoutResultId);
+			workoutResult.setMode(WorkoutResult.TIME_BASED_EXERCISE);
+			ArrayList<ExerciseGoal> goals = mDbHelper.getNewlyCompletedExerciseGoals(workoutResult);
+			for (ExerciseGoal goal : goals) {
+				Context context = v.getContext().getApplicationContext();
+				CharSequence text = "Goal completed: " + goal.getName();
+				int duration = Toast.LENGTH_SHORT;
+				Toast toast = Toast.makeText(context, text, duration);
+				toast.setGravity(Gravity.CENTER, 0, 0);
+				toast.show();
+			}
 		}
 	};
 	
