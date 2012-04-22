@@ -158,19 +158,13 @@ public class EditWorkoutInformationFragment extends Fragment {
 			}
 			else {
 				// Get Workout Type
-				String workoutType = (String) spnWorkoutType.getSelectedItem();
-				// Get Repeat Weeks 
-				String workoutRepeatWeeks = (String) spnRepeatWeeks.getSelectedItem();
-								
-				
-							
+				String workoutType = (String) spnWorkoutType.getSelectedItem();							
 				
 				Log.d("STEVE", "-----------------------------------------------------");
 				Workout workoutToUpdate = new Workout(workoutName, workoutType);
 				Log.d("Button", "Create Workout Clicked");
 				Log.d("Workout Name", workoutName);
 				Log.d("Workout Type", workoutType);
-				Log.d("Workout Repeat Weeks", workoutRepeatWeeks);
 				
 				/** TODO
 				 * Add workout repeat information to insert command
