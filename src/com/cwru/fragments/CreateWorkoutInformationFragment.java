@@ -192,7 +192,14 @@ public class CreateWorkoutInformationFragment extends Fragment {
 		rgEndOnDate.setOnClickListener(radioButtonListener);
 		btnEndOnDate.setOnClickListener(getEndDateListener);
 		Calendar calendar = Calendar.getInstance();
-		String currentDate = calendar.get(Calendar.MONTH) + "-" + calendar.get(Calendar.DAY_OF_MONTH) + "-" + calendar.get(Calendar.YEAR);
+		int m = calendar.get(Calendar.MONTH) + 1;
+		int d = calendar.get(Calendar.DAY_OF_MONTH);
+		String currentDate = calendar.get(Calendar.YEAR) + "/";
+		if (m < 10) { currentDate += "0" + m + "/"; }
+		else { currentDate += m + "/"; }
+		if (d < 10) { currentDate += "0" + d; }
+		else { currentDate += d; }
+		
 		btnEndOnDate.setText(currentDate);
 		
 		LinearLayout ll = (LinearLayout) view.findViewById(R.id.llCreateWorkoutInformationContainer);
