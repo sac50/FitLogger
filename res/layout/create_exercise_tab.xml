@@ -142,17 +142,25 @@
                 
                 <Button
                     android:id="@+id/btnCreateExerciseRemoveInterval"
-                    android:layout_width="60dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="60dp"
-                    android:layout_marginRight="68dp"
-                    android:text="@string/minus" />
+                    android:layout_weight=".3"
+                    android:text="@string/minus"
+                    android:layout_marginLeft="30dp" />
+                    
+                <TextView 
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".4"
+                    android:visibility="invisible"/>
 
                 <Button
                     android:id="@+id/btnCreateExerciseAddInterval"
-                    android:layout_width="60dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/plus" />
+                    android:layout_weight=".3"
+                    android:text="@string/plus"
+                    android:layout_marginRight="30dp" />
                 
             </LinearLayout>
             
@@ -181,22 +189,25 @@
 
                 <Button
                     android:id="@+id/btnCreateExerciseRemoveIntervalSet"
-                    android:layout_width="60dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="60dp"
+                    android:layout_weight=".3"
+                    android:layout_marginLeft="30dp"
                     android:text="@string/minus" />
 
                 <TextView
                     android:id="@+id/tvIntervalSetNum"
-                    android:layout_width="16dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="30dp"
-                    android:layout_marginRight="22dp" />
+                    android:gravity="center"
+                    android:layout_weight=".4" />
 
                 <Button
                     android:id="@+id/btnCreateExerciseAddIntervalSet"
-                    android:layout_width="60dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight=".3"
+                    android:layout_marginRight="30dp"
                     android:text="@string/plus" />
             </LinearLayout>
         </LinearLayout>
@@ -224,16 +235,24 @@
 
                 <Button
                     android:id="@+id/btnCreateExerciseRemoveSet"
-                    android:layout_width="60dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="70dp"
+                    android:layout_weight=".3"
+                    android:layout_marginLeft="30dp"
                     android:text="@string/minus" />
+                
+                <TextView 
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".4"
+                    android:visibility="invisible"/>
 
                 <Button
                     android:id="@+id/btnCreateExerciseAddSet"
-                    android:layout_width="60dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="60dp"
+                    android:layout_weight=".3"
+                    android:layout_marginRight="30dp"
                     android:text="@string/plus" />
             </LinearLayout>
         </LinearLayout>
@@ -242,8 +261,9 @@
             android:id="@+id/btnCreateExerciseDone"
             android:layout_width="116dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="100dp"
+            android:layout_gravity="center_horizontal"
             android:text="@string/done" />
+
     </LinearLayout>
 
 </ScrollView>

@@ -120,16 +120,24 @@
                 
                 <Button
                     android:id="@+id/btnEditExerciseRemoveInterval"
-                    android:layout_width="60dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="60dp"
-                    android:layout_marginRight="68dp"
+                    android:layout_weight=".3"
+                    android:layout_marginLeft="30dp"
                     android:text="@string/minus" />
+                
+                <TextView 
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".4"
+                    android:visibility="invisible"/>
 
                 <Button
                     android:id="@+id/btnEditExerciseAddInterval"
-                    android:layout_width="60dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight=".3"
+                    android:layout_marginRight="30dp"
                     android:text="@string/plus" />
                 
             </LinearLayout>
@@ -159,22 +167,24 @@
 
                 <Button
                     android:id="@+id/btnEditExerciseRemoveIntervalSet"
-                    android:layout_width="60dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="60dp"
+                    android:layout_weight=".3"
+                    android:layout_marginLeft="30dp"
                     android:text="@string/minus" />
 
                 <TextView
                     android:id="@+id/tvEditExerciseIntervalSetNum"
-                    android:layout_width="16dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="30dp"
-                    android:layout_marginRight="22dp" />
-
+                    android:layout_weight=".4"
+                    android:gravity="center" />
                 <Button
                     android:id="@+id/btnEditExerciseAddIntervalSet"
-                    android:layout_width="60dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight=".3"
+                    android:layout_marginRight="30dp"
                     android:text="@string/plus" />
             </LinearLayout>
         </LinearLayout>
@@ -202,16 +212,24 @@
 
                 <Button
                     android:id="@+id/btnEditExerciseRemoveSet"
-                    android:layout_width="60dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="70dp"
+                    android:layout_weight=".3"
+                    android:layout_marginLeft="30dp"
                     android:text="@string/minus" />
+                
+                <TextView 
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".4"
+                    android:visibility="invisible"/>
 
                 <Button
                     android:id="@+id/btnEditExerciseAddSet"
-                    android:layout_width="60dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="60dp"
+                    android:layout_weight=".3"
+                    android:layout_marginRight="30dp"
                     android:text="@string/plus" />
             </LinearLayout>
         </LinearLayout>
@@ -220,7 +238,8 @@
             android:id="@+id/btnEditExerciseDone"
             android:layout_width="116dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="100dp"
+            android:layout_gravity="center_horizontal"
             android:text="@string/done" />
+
     </LinearLayout>
 </ScrollView>
