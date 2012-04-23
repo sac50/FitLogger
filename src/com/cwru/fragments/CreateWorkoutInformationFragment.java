@@ -194,11 +194,12 @@ public class CreateWorkoutInformationFragment extends Fragment {
 		Calendar calendar = Calendar.getInstance();
 		int m = calendar.get(Calendar.MONTH) + 1;
 		int d = calendar.get(Calendar.DAY_OF_MONTH);
-		String currentDate = calendar.get(Calendar.YEAR) + "/";
+		String currentDate = "";
 		if (m < 10) { currentDate += "0" + m + "/"; }
 		else { currentDate += m + "/"; }
 		if (d < 10) { currentDate += "0" + d; }
 		else { currentDate += d; }
+		currentDate += "/" + calendar.get(Calendar.YEAR);
 		
 		btnEndOnDate.setText(currentDate);
 		

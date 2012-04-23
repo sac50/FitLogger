@@ -237,7 +237,9 @@ public class WorkoutWorkflowIntervalFragment extends Fragment {
 			else {
 				double min = Double.parseDouble(tvTimer.getText().toString().substring(0,2));
 				double sec = Double.parseDouble(tvTimer.getText().toString().substring(3));
-				length = min*60 + sec;
+				double initialTime = initialMinutes * 60 + initialSeconds;
+				length = initialTime - (min*60 + sec);
+				Log.d("Steve", "SECONDS: " + length);
 				units = "seconds";
 			}
 			
