@@ -302,6 +302,17 @@ public class CreateWorkoutInformationFragment extends Fragment {
 				if (friday.isChecked()) { repeatFriday = 0; }
 				if (saturday.isChecked()) { repeatSaturday = 0; }
 				
+				if (repeatSunday == 1 && repeatMonday == 1 && repeatTuesday == 1 && repeatWednesday == 1 && repeatThursday == 1 && 
+					repeatFriday == 1 && repeatSaturday == 1) {
+					repeatSunday = 0;
+					repeatMonday = 0;
+					repeatTuesday = 0; 
+					repeatWednesday = 0;
+					repeatThursday = 0;
+					repeatFriday = 0; 
+					repeatSaturday = 0;
+				}
+				
 				String exerciseSequence = "";
 				Workout workoutToCreate = new Workout(workoutName, workoutType, exerciseSequence, workoutRepeatWeeks, 
 													  repeatSunday, repeatMonday, repeatTuesday, 

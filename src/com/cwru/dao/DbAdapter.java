@@ -386,7 +386,7 @@ public class DbAdapter {
 	 */
 	public void updateWorkoutInformation(Workout workout, String initialWorkoutName) {
 		String query = "update workouts " + 
-					   "set name = '" + workout.getName() + "', type = '" + workout.getType() + " where name = '" + initialWorkoutName + "'";
+					   "set name = '" + workout.getName() + "', type = '" + workout.getType() + "' where name = '" + initialWorkoutName + "'";
 		open();
 		db.execSQL(query);
 		close();
