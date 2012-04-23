@@ -91,7 +91,7 @@ public class CalendarDayViewFragment extends ListFragment {
 		if (workoutName.equals("No Workouts Scheduled for Day")) {
 			// Do Nothing
 		}
-		else if(position == 0) {
+		else if(position == 0 && workoutName.equals("Schedule a workout...")) {
 			workoutScheduleListener.scheduleWorkout(date);
 		}
 		else {

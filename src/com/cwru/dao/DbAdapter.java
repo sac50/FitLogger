@@ -2069,6 +2069,13 @@ public class DbAdapter {
 			Log.d("Steve", "Date: " + date);
 			hash.put(date, true);
 		}
+		query = "select date from workout_result " + whereClause;
+		cursor = db.rawQuery(query, null);
+		while (cursor.moveToNext()) {
+			String date = cursor.getString(cursor.getColumnIndex("date"));
+			Log.d("Steve", "Date: " + date);
+			hash.put(date, true);
+		}
 		cursor.close();
 		close();
 		return hash;
@@ -2083,13 +2090,26 @@ public class DbAdapter {
 		ArrayList<String> workoutList = new ArrayList<String>();
 		// select distinct name, workouts.id from calendar join workouts on 
 		// calendar.workout_id = workouts.id and date = '2012/04/17'
+		Hashtable<String, Boolean> exists = new Hashtable<String, Boolean>();
 		String query = "select distinct name from calendar join workouts on " +
 					   "calendar.workout_id = workouts.id and date = '" + date + "'";
 		open();
 		Cursor cursor = db.rawQuery(query, null);
 		while (cursor.moveToNext()) {
 			String name = cursor.getString(cursor.getColumnIndex("name"));
-			workoutList.add(name);
+			if (!exists.containsKey(name)) {
+				exists.put(name, true);
+				workoutList.add(name);
+			}			
+		}
+		query = "select distinct name from workout_result join workouts on workout_result.workout_id = workouts.id and date = '" + date + "'";
+		cursor = db.rawQuery(query, null);
+		while (cursor.moveToNext()) {
+			String name = cursor.getString(cursor.getColumnIndex("name"));
+			if (!exists.containsKey(name)) {
+				exists.put(name, true);
+				workoutList.add(name);
+			}			
 		}
 		cursor.close();
 		close();
