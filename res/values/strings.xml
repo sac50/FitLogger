@@ -40,8 +40,12 @@
     </string-array>
     <string-array name="exerciseStrengthTypes">
         	<item>Strength - Generic</item>
+        	<item>Strength - Abs</item>
+        	<item>Strength - Back</item>
         	<item>Strength - Bicep</item>
         	<item>Strength - Chest</item>
+        	<item>Strength - Legs</item>
+        	<item>Strength - Shoulder</item>
         	<item>Strength - Tricep</item>
     </string-array>
     
@@ -138,6 +142,7 @@
     <string name="description">Description</string>
     
     <string name="bodyGoalCategory">Goal Category</string>
+    <string name="bodyGoalCurrent">Current:</string>
     <string name="bodyGoalHint">Ex: Body Weight</string>
     <string name="bodyGoalInformation">Goal Information</string>
     <string name="bodyGoalStarted">Starting #</string>
