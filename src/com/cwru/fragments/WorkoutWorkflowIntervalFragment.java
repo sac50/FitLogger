@@ -50,7 +50,8 @@ public class WorkoutWorkflowIntervalFragment extends Fragment {
 	private int minutes;
 	private boolean stop;
 	private boolean complete;
-
+	private int initialSeconds;
+	private int initialMinutes;
 	
 	private DbAdapter mDbHelper;
 
@@ -167,8 +168,11 @@ public class WorkoutWorkflowIntervalFragment extends Fragment {
 				
 			}
 			
+			initialMinutes = minutes;
+			initialSeconds = seconds;
 			time = minutes*60 + seconds;
 			time = time * 1000;
+			
 			
 			tvTimer.setText(getFormatedTime());
 
@@ -233,7 +237,9 @@ public class WorkoutWorkflowIntervalFragment extends Fragment {
 			else {
 				double min = Double.parseDouble(tvTimer.getText().toString().substring(0,2));
 				double sec = Double.parseDouble(tvTimer.getText().toString().substring(3));
-				length = min*60 + sec;
+				double initialTime = initialMinutes * 60 + initialSeconds;
+				length = initialTime - (min*60 + sec);
+				Log.d("Steve", "SECONDS: " + length);
 				units = "seconds";
 			}
 			
